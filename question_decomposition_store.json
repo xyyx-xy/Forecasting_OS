@@ -1,0 +1,1585 @@
+{
+  "meta": {
+    "name": "question_decomposition_store",
+    "version": "0.1-multi-agent",
+    "created_at": "2026-05-28T18:40:11",
+    "updated_at": "2026-05-28T18:40:11"
+  },
+  "records": [
+    {
+      "id": "d1d8f58f40a5",
+      "created_at": "2026-05-28T18:40:11",
+      "module": "cloud_to_contract_decomposition",
+      "version": "0.1-multi-agent",
+      "original_question": "2028年固态电池是否会普及？",
+      "agent_outputs": {
+        "classifier": {
+          "question_type": "cloud_judgment",
+          "is_cloud_question": true,
+          "cloud_terms": [
+            "普及"
+          ],
+          "triage": {
+            "forecastability_zone": "cloudlike",
+            "reason": "The term '普及' (popularize/widespread adoption) is a multidimensional concept lacking a single, universally agreed-upon threshold. It involves market share, geographic distribution, consumer adoption rates, and cost parity, which cannot be captured by a single binary event without significant ambiguity.",
+            "requires_decomposition": true,
+            "single_contract_allowed_by_type": false
+          },
+          "reason": "The question asks about 'popularization' (普及), which is a vague, multi-dimensional state rather than a specific, verifiable event. It requires defining metrics such as market share percentage, number of vehicles sold, or cost per kWh to be forecastable."
+        },
+        "intent": {
+          "overall_semantic_intent": "用户希望评估到2028年时，固态电池技术是否已跨越早期采用者阶段，进入主流大规模商业化应用阶段，从而在性能、成本或安全性上对现有液态锂电池形成实质性替代或显著补充。",
+          "time_interpretation": {
+            "current_period": "2024年（或当前时间点），固态电池处于小规模量产、示范应用或半固态过渡阶段。",
+            "target_period": "2028年12月31日。",
+            "comparison": "对比当前液态锂电池的主导地位，评估固态电池在市场份额、装机量或关键应用场景中的渗透率是否达到‘普及’的阈值。"
+          },
+          "core_ambiguities": [
+            "普及的定义：是指市场份额超过10%、50%还是仅仅指‘随处可见’？",
+            "技术范围：是指全固态电池（ASSB）还是包含半固态电池（Semi-solid）？",
+            "应用领域：是指乘用车、商用车、消费电子还是储能领域？不同领域的普及标准完全不同。",
+            "地域范围：是指全球普及、中国普及还是特定市场普及？",
+            "成本基准：是否隐含了‘成本与液态电池持平’这一前提？"
+          ],
+          "likely_substitution_traps": [
+            "将‘发布’偷换为‘普及’：某车企发布搭载固态电池的车型，不代表该技术已普及。",
+            "将‘半固态’偷换为‘全固态’：半固态电池的量产不等于全固态电池的普及，技术成熟度不同。",
+            "将‘高端小众’偷换为‘大众普及’：仅在豪华车或特定高端设备上使用，不代表大众市场的普及。",
+            "将‘实验室突破’偷换为‘商业化普及’：技术指标的突破不等于供应链和成本的成熟。"
+          ],
+          "semantic_guardrails": [
+            "必须区分‘半固态’与‘全固态’，除非用户明确包含前者，否则默认指全固态或明确说明混合情况。",
+            "‘普及’必须量化为具体的市场渗透率、装机量或成本指标，不能仅凭新闻热度判断。",
+            "需考虑不同应用场景的差异化，不能以单一场景（如乘用车）代表整体普及。",
+            "需警惕‘技术乐观主义’偏差，即高估技术从实验室到大规模量产的速度。"
+          ]
+        },
+        "dimensions": {
+          "dimension_map": [
+            {
+              "dimension_id": "dim_market_share",
+              "dimension_name": "市场渗透率与装机量",
+              "meaning": "衡量固态电池在目标市场（如新能源汽车）中相对于液态锂电池的实际占比。这是‘普及’最直接的量化体现，反映技术是否从 niche 走向 mainstream。",
+              "candidate_metrics": [
+                "全球/中国新能源汽车中固态电池（含半固态）的装机量占比（%）",
+                "搭载固态电池车型的年度销量（万辆）",
+                "固态电池在动力电池总产能中的占比（%）"
+              ],
+              "semantic_coverage_weight": 0.35,
+              "measurability": 0.9,
+              "why_it_matters": "如果市场份额极低（如<1%），无论技术多先进，都不能称为‘普及’。这是判断是否跨越早期采用者阶段的核心指标。",
+              "non_quantifiable_warning": "需明确统计口径：是否包含半固态？是否包含消费电子和储能？不同口径数据差异巨大。"
+            },
+            {
+              "dimension_id": "dim_cost_parity",
+              "dimension_name": "成本竞争力与经济性",
+              "meaning": "衡量固态电池的生产成本是否接近或低于现有液态锂电池，或者其溢价是否在消费者可接受范围内。普及的前提是经济可行。",
+              "candidate_metrics": [
+                "固态电池每千瓦时制造成本（USD/kWh）",
+                "固态电池包相对于同级液态电池包的溢价幅度（%）",
+                "全生命周期成本（TCO）对比优势"
+              ],
+              "semantic_coverage_weight": 0.25,
+              "measurability": 0.7,
+              "why_it_matters": "如果成本过高，仅能存在于豪华车或特定高端场景，无法实现大众市场的‘普及’。成本是规模化应用的最大瓶颈。",
+              "non_quantifiable_warning": "制造成本数据通常不公开，多为估算；且‘可接受溢价’随车型定位变化，难以统一标准。"
+            },
+            {
+              "dimension_id": "dim_supply_chain",
+              "dimension_name": "供应链成熟度与量产能力",
+              "meaning": "衡量上游材料（如硫化物/氧化物电解质、锂金属负极）的供应稳定性、中游制造设备的标准化程度以及下游车企的配套能力。",
+              "candidate_metrics": [
+                "主要固态电池厂商的GWh级量产线投产数量",
+                "关键原材料（如锗、镧等）的供应链安全指数",
+                "电池良品率（Yield Rate）达到行业平均水平的时间点"
+              ],
+              "semantic_coverage_weight": 0.15,
+              "measurability": 0.6,
+              "why_it_matters": "没有稳定的供应链和规模化制造能力，‘普及’只是空中楼阁。量产瓶颈往往滞后于技术突破。",
+              "non_quantifiable_warning": "供应链数据分散且保密，良品率等关键指标难以实时获取，存在信息滞后。"
+            },
+            {
+              "dimension_id": "dim_tech_performance",
+              "dimension_name": "性能优势与用户体验",
+              "meaning": "衡量固态电池在能量密度、充电速度、安全性、低温性能等关键指标上是否显著优于液态电池，从而驱动用户主动选择。",
+              "candidate_metrics": [
+                "量产车型固态电池的能量密度（Wh/kg）",
+                "快充时间（10%-80% SOC）",
+                "热失控触发温度及安全性评级",
+                "低温续航保持率"
+              ],
+              "semantic_coverage_weight": 0.15,
+              "measurability": 0.8,
+              "why_it_matters": "如果性能提升不明显，用户缺乏替换动力。‘普及’往往由显著的性能红利驱动，而非单纯的技术存在。",
+              "non_quantifiable_warning": "实验室数据与量产车数据存在巨大差距；不同测试标准（如CLTC vs WLTP）导致数据不可比。"
+            },
+            {
+              "dimension_id": "dim_ecosystem_adoption",
+              "dimension_name": "生态兼容性与基础设施",
+              "meaning": "衡量现有充电设施、BMS（电池管理系统）、回收体系是否适配固态电池，以及主流车企和供应商的采纳广度。",
+              "candidate_metrics": [
+                "支持固态电池快充的充电桩占比",
+                "主流车企（Top 10）宣布搭载固态电池的车型数量",
+                "固态电池回收处理设施的覆盖率"
+              ],
+              "semantic_coverage_weight": 0.1,
+              "measurability": 0.5,
+              "why_it_matters": "即使电池本身成熟，如果基础设施不兼容或回收体系缺失，也会阻碍大规模普及。生态系统的滞后是常见陷阱。",
+              "non_quantifiable_warning": "基础设施适配性多为定性描述，缺乏统一量化标准；车企规划与实际落地存在时间差。"
+            }
+          ],
+          "non_quantifiable_but_important_dimensions": [
+            "监管政策与标准制定：各国对固态电池的安全标准、准入政策是否统一且宽松？政策不确定性可能延缓普及。",
+            "消费者认知与信任：公众对新技术的安全性和可靠性是否建立信任？早期安全事故可能产生长尾负面影响。",
+            "技术路线收敛度：固态电池内部存在硫化物、氧化物、聚合物等多种路线，哪种路线成为主流尚不确定，路线分裂可能延缓规模化。"
+          ],
+          "warning_against_single_metric": "切勿将‘某车企发布固态电池车型’或‘实验室能量密度突破’等同于‘普及’。普及是一个系统性状态，必须同时满足市场渗透率、成本竞争力、供应链稳定性和生态兼容性等多个维度的阈值。单一指标的优异表现往往掩盖了其他维度的严重短板，导致对普及程度的过度乐观估计。"
+        },
+        "fermi": {
+          "fermi_dimensions": [
+            {
+              "dimension_id": "dim_market_share",
+              "knowable_parts": [
+                "2024-2025年已宣布搭载半固态/固态电池的车型列表及预计交付量",
+                "当前全球新能源汽车总销量及动力电池装机量数据",
+                "主要电池厂商（如宁德时代、QuantumScape、Solid Power）公布的产能规划时间表",
+                "历史上新兴电池技术（如磷酸铁锂早期、三元锂早期）的市场渗透曲线"
+              ],
+              "unknowable_parts": [
+                "2028年实际交付并上路的固态电池车辆确切数量（受供应链波动影响）",
+                "消费者对固态电池溢价的具体接受阈值及其随时间的变化",
+                "竞争对手（如液态电池技术迭代、钠离子电池）对固态电池市场份额的挤压程度",
+                "地缘政治或贸易壁垒对全球供应链的具体影响"
+              ],
+              "assumptions": [
+                "‘普及’定义为在特定细分市场（如高端EV）渗透率超过5%，或在整体EV市场渗透率超过1%",
+                "统计口径包含半固态电池（Semi-solid），因为全固态在2028年极难达到大规模量产",
+                "主要车企的产能规划有至少70%的概率能按期落地",
+                "没有发生导致全球电动车需求崩盘的宏观经济危机"
+              ],
+              "approximation_metrics": [
+                "搭载固态/半固态电池车型的年度累计销量 / 全球新能源汽车年度总销量",
+                "头部电池厂商固态电池产线的实际开工率（通过用电量或原材料采购量估算）",
+                "固态电池在动力电池装机量排行榜前10名中的占比"
+              ],
+              "update_signals": [
+                "主要车企推迟或取消固态电池车型发布计划",
+                "固态电池良品率长期低于60%导致成本无法下降",
+                "液态锂电池能量密度突破300Wh/kg且成本持平，削弱固态电池优势",
+                "某家初创固态电池公司破产或被收购，导致技术路线整合"
+              ],
+              "needs_further_split": true,
+              "fermi_note": "需进一步拆分为‘乘用车市场’和‘消费电子/储能市场’，因为两者的普及阈值和驱动逻辑完全不同。乘用车对成本敏感，消费电子对体积/安全敏感。"
+            },
+            {
+              "dimension_id": "dim_cost_parity",
+              "knowable_parts": [
+                "当前液态锂电池的平均制造成本（约$80-100/kWh）",
+                "固态电池关键原材料（硫化物电解质、锂金属等）的当前市场价格",
+                "固态电池生产工艺步骤比液态电池多出的环节（如干法电极、封装工艺）",
+                "规模效应的一般规律：产能每翻一番，成本下降的百分比（学习曲线）"
+              ],
+              "unknowable_parts": [
+                "2028年固态电池关键原材料的价格走势（受矿产发现和回收技术影响）",
+                "固态电池生产线的实际折旧和维护成本",
+                "固态电池在量产过程中的隐性成本（如废品率、设备调试时间）",
+                "车企对固态电池的最终定价策略（是作为高端溢价产品还是平价替代品）"
+              ],
+              "assumptions": [
+                "固态电池成本下降遵循类似半导体或光伏的学习曲线",
+                "锂金属负极的供应瓶颈在2028年前得到缓解",
+                "‘成本竞争力’定义为固态电池包成本不超过同级液态电池包的1.5倍（针对高端市场）或1.2倍（针对大众市场）"
+              ],
+              "approximation_metrics": [
+                "固态电池每kWh制造成本估算值（基于BOM表拆解）",
+                "搭载固态电池车型的售价溢价率（相对于同配置液态电池车型）",
+                "固态电池厂商的毛利率变化趋势"
+              ],
+              "update_signals": [
+                "固态电池关键材料价格暴涨超过50%",
+                "液态锂电池成本因新技术（如无钴电池）大幅下降，拉大差距",
+                "固态电池良品率突破90%，显著降低单位成本",
+                "主要车企宣布固态电池车型定价与液态电池车型持平"
+              ],
+              "needs_further_split": false,
+              "fermi_note": "成本是一个综合指标，但在此维度下，重点在于‘相对成本’而非绝对成本。需警惕将‘实验室BOM成本’误认为‘量产制造成本’。"
+            },
+            {
+              "dimension_id": "dim_supply_chain",
+              "knowable_parts": [
+                "当前固态电池主要材料供应商的名单及产能规划",
+                "固态电池生产设备（如涂布机、叠片机）的供应商及交货周期",
+                "主要电池厂商的在建GWh级产线数量及预计投产时间",
+                "固态电池技术路线（硫化物、氧化物、聚合物）的专利分布情况"
+              ],
+              "unknowable_parts": [
+                "2028年固态电池供应链的垂直整合程度（车企自研 vs 外包）",
+                "关键设备的技术迭代速度及稳定性",
+                "供应链中断风险（如特定矿产出口限制）",
+                "不同技术路线之间的兼容性及转换成本"
+              ],
+              "assumptions": [
+                "硫化物或氧化物路线将成为主流，且供应链已围绕该路线建立",
+                "设备供应商能够按时交付符合量产要求的设备",
+                "原材料供应不会出现严重的地缘政治断供"
+              ],
+              "approximation_metrics": [
+                "全球固态电池GWh级量产线数量",
+                "固态电池关键材料（如硫化物电解质）的全球年产能",
+                "电池厂商的供应链多元化指数（供应商数量及地域分布）"
+              ],
+              "update_signals": [
+                "主要固态电池厂商宣布推迟产线建设",
+                "关键材料供应商破产或退出市场",
+                "设备供应商无法解决量产中的技术瓶颈（如界面接触问题）",
+                "出现新的、更廉价的材料替代方案，颠覆现有供应链"
+              ],
+              "needs_further_split": true,
+              "fermi_note": "需拆分为‘材料供应’和‘制造设备’两个子维度，因为材料短缺和设备瓶颈是两种不同的风险类型。"
+            },
+            {
+              "dimension_id": "dim_tech_performance",
+              "knowable_parts": [
+                "当前量产半固态电池的能量密度（约250-300Wh/kg）",
+                "液态锂电池的能量密度上限（约280-300Wh/kg）",
+                "固态电池在实验室环境下的性能数据（能量密度、循环寿命、安全性）",
+                "固态电池在低温性能和快充性能上的理论优势"
+              ],
+              "unknowable_parts": [
+                "2028年量产固态电池的实际能量密度（受封装和系统效率影响）",
+                "固态电池在真实用车环境下的循环寿命衰减曲线",
+                "固态电池在极端条件下的安全性表现（如针刺、挤压）",
+                "固态电池与现有BMS系统的兼容性及软件优化效果"
+              ],
+              "assumptions": [
+                "固态电池的能量密度至少比液态电池高20%才具有显著用户感知",
+                "循环寿命达到1000次以上即可满足乘用车需求",
+                "安全性提升是固态电池的核心卖点之一，且能被用户感知"
+              ],
+              "approximation_metrics": [
+                "量产车型固态电池的系统能量密度（Wh/kg）",
+                "固态电池车型的快充时间（10%-80% SOC）",
+                "固态电池车型的低温续航保持率（-20℃）",
+                "固态电池车型的安全事故率（每万辆车）"
+              ],
+              "update_signals": [
+                "固态电池量产能量密度低于300Wh/kg，优势不明显",
+                "固态电池出现大规模热失控或安全事故",
+                "固态电池循环寿命低于800次，导致质保成本过高",
+                "液态电池技术在快充或低温性能上取得突破性进展"
+              ],
+              "needs_further_split": false,
+              "fermi_note": "性能维度需区分‘实验室性能’和‘系统级性能’。用户感知的是系统级性能（包括包体效率），而非电芯性能。"
+            },
+            {
+              "dimension_id": "dim_ecosystem_adoption",
+              "knowable_parts": [
+                "当前充电桩的电压和功率标准",
+                "主流车企对固态电池的技术路线图",
+                "现有电池回收体系对液态电池的处理流程",
+                "固态电池对现有充电设施的兼容性要求（如是否需要更高电压）"
+              ],
+              "unknowable_parts": [
+                "2028年充电基础设施对固态电池快充需求的适配程度",
+                "固态电池回收技术的成熟度及经济性",
+                "消费者对固态电池品牌的信任度及品牌忠诚度",
+                "政策法规对固态电池准入和标准制定的具体影响"
+              ],
+              "assumptions": [
+                "现有高压快充桩可兼容固态电池，无需大规模改造",
+                "固态电池回收体系能在2028年前建立初步框架",
+                "主流车企的采纳是普及的关键驱动力，而非小众品牌"
+              ],
+              "approximation_metrics": [
+                "支持800V及以上高压快充的充电桩占比",
+                "主流车企（Top 10）搭载固态电池的车型数量",
+                "固态电池回收企业的数量及处理能力",
+                "消费者对固态电池的认知度调查得分"
+              ],
+              "update_signals": [
+                "充电设施升级缓慢，无法支持固态电池快充优势",
+                "固态电池回收成本过高，导致环保法规限制",
+                "主流车企转向其他电池技术路线",
+                "出现针对固态电池的行业统一安全标准"
+              ],
+              "needs_further_split": true,
+              "fermi_note": "需拆分为‘基础设施适配’和‘回收体系’，因为充电和回收是两个独立的生态系统环节，且时间尺度不同。"
+            }
+          ]
+        },
+        "outside_view": {
+          "outside_view_dimensions": [
+            {
+              "dimension_id": "dim_market_share",
+              "reference_classes": [
+                {
+                  "name": "LFP (Lithium Iron Phosphate) Battery Adoption Curve",
+                  "why_relevant": "LFP was initially considered inferior to NMC in energy density but gained massive market share due to cost and safety. This provides a baseline for how a 'good enough' but cheaper/safer alternative can penetrate the market. It helps estimate the speed of adoption if solid-state achieves cost parity.",
+                  "limitations": "LFP did not require a complete overhaul of manufacturing equipment or new raw material supply chains to the same extent as solid-state. The barrier to entry for LFP was lower.",
+                  "possible_resolution_sources": [
+                    "Historical global EV battery chemistry market share data (2015-2024)",
+                    "Reports on LFP adoption rates in standard-range vehicles"
+                  ]
+                },
+                {
+                  "name": "Hydrogen Fuel Cell Vehicle (FCEV) Penetration",
+                  "why_relevant": "FCEV represents a high-tech, high-safety, high-performance alternative that failed to achieve mass market 'ubiquity' due to infrastructure and cost. This serves as a cautionary reference class for technologies that are technically superior but economically or ecologically constrained.",
+                  "limitations": "FCEV requires entirely new fueling infrastructure, whereas solid-state uses existing charging infrastructure. The comparison is valid for 'niche vs. mass' dynamics but less so for infrastructure dependency.",
+                  "possible_resolution_sources": [
+                    "Global FCEV sales data vs. BEV sales data (2010-2024)",
+                    "Analysis of FCEV market share in specific regions (e.g., California, Japan)"
+                  ]
+                },
+                {
+                  "name": "Solid State Drive (SSD) vs. HDD Adoption",
+                  "why_relevant": "SSDs offered significant performance benefits (speed, durability) but started at a high cost premium. The curve of SSDs moving from premium laptops to mainstream desktops offers a model for how performance-driven adoption works when cost decreases over time.",
+                  "limitations": "Consumer electronics have different price sensitivities and replacement cycles compared to automobiles. The 'cost per unit' dynamic is different.",
+                  "possible_resolution_sources": [
+                    "SSD market share in PC shipments (2010-2020)",
+                    "Price per GB trends for SSDs vs. HDDs"
+                  ]
+                }
+              ],
+              "outside_view_note": "The reference classes suggest that 'ubiquity' (e.g., >50% share) is unlikely by 2028 for a new battery chemistry. A more realistic outside view baseline is 'early majority' entry (5-15% share) in specific segments, similar to LFP's early rise or SSD's mid-2010s status."
+            },
+            {
+              "dimension_id": "dim_cost_parity",
+              "reference_classes": [
+                {
+                  "name": "Solar PV Cost Reduction (Swanson's Law)",
+                  "why_relevant": "Solar PV costs dropped exponentially with cumulative installed capacity. This provides a model for how manufacturing scale and learning curves might drive down solid-state battery costs, assuming similar manufacturing scalability.",
+                  "limitations": "Solar PV manufacturing is highly standardized and modular. Solid-state batteries involve complex electrochemical interfaces and potentially exotic materials (sulfides, lithium metal) that may not follow the same smooth learning curve.",
+                  "possible_resolution_sources": [
+                    "IRENA reports on solar PV cost trends",
+                    "Battery pack cost learning rate studies (e.g., from BloombergNEF or IEA)"
+                  ]
+                },
+                {
+                  "name": "Semiconductor Node Transition Costs",
+                  "why_relevant": "Moving to a new semiconductor node (e.g., 7nm to 5nm) initially carries high costs and low yields before stabilizing. This mirrors the transition from liquid to solid electrolytes, where new equipment and processes drive up initial costs.",
+                  "limitations": "Semiconductors are capital-intensive but have very high margins. Batteries are commodity-like with lower margins, making cost sensitivity higher.",
+                  "possible_resolution_sources": [
+                    "Cost per wafer trends during new node transitions",
+                    "Yield rate improvement curves for new semiconductor processes"
+                  ]
+                }
+              ],
+              "outside_view_note": "Historical tech transitions suggest that cost parity with incumbent technology (liquid Li-ion) is rarely achieved within 4-5 years of commercial launch. A 20-50% premium is a more common outside-view baseline for 2028."
+            },
+            {
+              "dimension_id": "dim_supply_chain",
+              "reference_classes": [
+                {
+                  "name": "Rare Earth Element Supply Chain Development",
+                  "why_relevant": "The development of supply chains for rare earths (used in magnets) involved significant geopolitical friction, environmental constraints, and long lead times for processing facilities. Solid-state batteries may rely on similar constrained materials (e.g., germanium, tantalum, or specific sulfides).",
+                  "limitations": "Solid-state materials may be more abundant than rare earths, but the processing technology is less mature. The comparison highlights the risk of supply bottlenecks.",
+                  "possible_resolution_sources": [
+                    "Timeline of rare earth processing capacity expansion",
+                    "Supply chain resilience reports for critical minerals"
+                  ]
+                },
+                {
+                  "name": "Lithium-Ion Battery Supply Chain Build-out (2010-2020)",
+                  "why_relevant": "The rapid build-out of the Li-ion supply chain (cathode, anode, electrolyte) provides a benchmark for how long it takes to establish a GWh-scale ecosystem. Solid-state will likely take longer due to novelty.",
+                  "limitations": "Li-ion benefited from decades of prior R&D and a clear incumbent path. Solid-state is starting from a more fragmented technical base.",
+                  "possible_resolution_sources": [
+                    "Growth of global Li-ion battery manufacturing capacity (2010-2024)",
+                    "Time lag between cell innovation and supply chain maturity"
+                  ]
+                }
+              ],
+              "outside_view_note": "Supply chain maturity lags behind cell innovation by 3-5 years in historical precedents. By 2028, the supply chain for solid-state is likely to be 'emerging' rather than 'mature,' limiting widespread adoption."
+            },
+            {
+              "dimension_id": "dim_tech_performance",
+              "reference_classes": [
+                {
+                  "name": "LED vs. Incandescent/CFL Performance Gap",
+                  "why_relevant": "LEDs initially had poor color rendering and high cost but superior efficiency. They only became ubiquitous when performance (color, brightness) matched or exceeded incumbents while cost dropped. Solid-state needs a similar 'performance cliff' to justify adoption.",
+                  "limitations": "LEDs replaced a mature, low-tech incumbent. Solid-state replaces a rapidly improving incumbent (liquid Li-ion), making the performance gap harder to maintain.",
+                  "possible_resolution_sources": [
+                    "LED market share growth vs. performance metrics (lumens/watt, CRI)",
+                    "Consumer adoption rates of LED lighting"
+                  ]
+                },
+                {
+                  "name": "Electric Motor vs. Internal Combustion Engine (ICE) Efficiency",
+                  "why_relevant": "Electric motors have higher efficiency but different torque characteristics. The adoption was driven by total cost of ownership and performance in specific use cases. Solid-state's performance advantage (range, safety) must be similarly decisive.",
+                  "limitations": "Motors are a different technology class. The comparison is useful for understanding how performance advantages translate to market preference.",
+                  "possible_resolution_sources": [
+                    "Efficiency curves of EVs vs. ICE vehicles",
+                    "Market share of EVs in segments where range anxiety was high"
+                  ]
+                }
+              ],
+              "outside_view_note": "Performance advantages alone do not guarantee ubiquity. Historical data suggests that a 20-30% improvement in key metrics (range, charge time) is needed to drive significant market shift, which solid-state may achieve, but not universally across all vehicle types by 2028."
+            },
+            {
+              "dimension_id": "dim_ecosystem_adoption",
+              "reference_classes": [
+                {
+                  "name": "USB-C vs. Proprietary Chargers",
+                  "why_relevant": "The transition to a universal standard (USB-C) required ecosystem alignment (devices, chargers, cables). Solid-state batteries may require new BMS software and potentially higher voltage charging infrastructure, similar to the USB-C transition.",
+                  "limitations": "USB-C was mandated by regulation in some regions. Solid-state adoption is market-driven. The regulatory push is a key differentiator.",
+                  "possible_resolution_sources": [
+                    "Timeline of USB-C adoption in smartphones and laptops",
+                    "Infrastructure upgrade costs for USB-C compatibility"
+                  ]
+                },
+                {
+                  "name": "High-Voltage Charging Infrastructure Rollout",
+                  "why_relevant": "Solid-state batteries may enable or require higher voltage architectures (800V+). The rollout of 800V charging infrastructure provides a reference for how fast supporting infrastructure can adapt to new battery requirements.",
+                  "limitations": "Charging infrastructure is a separate industry with its own investment cycles. The dependency is one-way (batteries need chargers, not vice versa).",
+                  "possible_resolution_sources": [
+                    "Growth of 800V+ charging stations globally",
+                    "Adoption rates of 800V architecture in EVs"
+                  ]
+                }
+              ],
+              "outside_view_note": "Ecosystem adoption is often the slowest variable. Historical precedents suggest that infrastructure and software compatibility issues can delay mass adoption by 2-3 years beyond the initial product launch."
+            }
+          ]
+        },
+        "inside_view": {
+          "inside_view_dimensions": [
+            {
+              "dimension_id": "dim_market_share",
+              "positive_mechanisms": [
+                "高端车型溢价吸收机制：豪华品牌（如蔚来、奔驰、丰田）将固态电池作为差异化卖点，通过高毛利吸收初期高成本，从而在高端细分市场实现快速渗透。",
+                "政策驱动替代机制：中国及欧盟的碳排放法规日益严格，迫使车企寻求更高能量密度以减轻电池包重量，固态电池因高能量密度成为合规优选。",
+                "示范效应扩散机制：早期采用者（Early Adopters）在高端车型中的良好体验（如续航、安全）通过社交媒体和口碑传播，降低大众市场对新技术的疑虑，加速向主流市场扩散。"
+              ],
+              "negative_mechanisms": [
+                "液态电池迭代挤压机制：液态锂电池通过硅碳负极、CTC/CTB结构优化，能量密度逼近300Wh/kg且成本持续下降，缩小了与固态电池的性能差距，削弱了固态电池的替代紧迫性。",
+                "产能爬坡滞后机制：固态电池生产工艺复杂（如干法电极、界面处理），良品率提升缓慢，导致实际交付量远低于规划产能，无法满足大规模市场需求。",
+                "市场细分隔离机制：固态电池长期局限于高端小众市场，无法进入价格敏感的大众市场（如A级车、网约车），导致整体市场份额始终低于‘普及’阈值。"
+              ],
+              "dependencies": [
+                "高端车型溢价吸收机制依赖于成本竞争力维度的‘可接受溢价’假设。",
+                "示范效应扩散机制依赖于性能优势维度的‘显著用户体验提升’。",
+                "产能爬坡滞后机制直接受供应链成熟度维度的‘良品率’和‘设备标准化’影响。"
+              ],
+              "candidate_contract_angles": [
+                "2028年12月31日前，全球搭载固态/半固态电池的新能源汽车累计销量是否超过50万辆？",
+                "2028年，固态电池在中国新能源汽车动力电池装机量中的占比是否超过2%？"
+              ],
+              "inside_view_note": "市场渗透率是结果变量，其核心驱动力在于‘性能溢价’与‘成本劣势’之间的博弈。需重点关注高端市场是否真的能支撑起足够的销量基数，以及液态电池是否会在2026-2027年出现‘性能天花板’突破。"
+            },
+            {
+              "dimension_id": "dim_cost_parity",
+              "positive_mechanisms": [
+                "规模经济学习曲线机制：随着GWh级产线投产，单位固定成本分摊下降，且工艺熟练度提高带来良率提升，遵循类似光伏或半导体的学习曲线（产能翻倍成本下降20-30%）。",
+                "材料体系简化机制：全固态电池可能取消电解液、隔膜等组件，并简化封装工艺，长期来看BOM（物料清单）成本结构优于液态电池。",
+                "锂金属负极效率机制：固态电池允许使用锂金属负极，理论能量密度高，意味着在同等续航下电池包体积和重量更小，间接降低整车其他部件成本（如轻量化材料）。"
+              ],
+              "negative_mechanisms": [
+                "界面阻抗与工艺复杂性成本：固态电解质与电极之间的固-固界面接触不良，需要额外的压力维持或复杂的界面修饰工艺，增加了制造步骤和设备投入。",
+                "原材料稀缺性溢价：硫化物电解质所需的硫、磷或氧化物所需的稀有金属（如镧、锆）供应链尚未成熟，初期采购成本远高于液态电池材料。",
+                "液态电池成本下行压力：液态电池产业链极度成熟，规模效应已达极致，成本下降空间虽有限但仍在持续，使得固态电池的‘成本平价’目标不断后移。"
+              ],
+              "dependencies": [
+                "规模经济学习曲线机制依赖于供应链成熟度维度的‘量产线投产数量’。",
+                "材料体系简化机制依赖于技术性能维度的‘界面稳定性’解决情况。",
+                "原材料稀缺性溢价受地缘政治和矿产开发进度的影响。"
+              ],
+              "candidate_contract_angles": [
+                "2028年，量产固态电池包的制造成本是否降至$120/kWh以下？",
+                "2028年，搭载固态电池的车型售价是否比同配置液态电池车型高出20%以内？"
+              ],
+              "inside_view_note": "成本是普及的最大拦路虎。需区分‘制造成本’和‘系统成本’。即使电芯成本高，若系统能量密度高导致包体成本持平，也可视为经济性突破。重点关注2026-2027年的首批GWh级产线实际BOM成本数据。"
+            },
+            {
+              "dimension_id": "dim_supply_chain",
+              "positive_mechanisms": [
+                "垂直整合加速机制：头部电池厂（如宁德时代、丰田）与车企深度绑定，共同投资上游材料和设备，缩短供应链磨合期，确保关键材料供应。",
+                "设备标准化与复用机制：部分固态电池生产设备（如涂布机、叠片机）可与液态电池产线兼容或改造，降低设备投资门槛，加速产能扩张。",
+                "技术路线收敛机制：市场逐渐淘汰聚合物等低能量密度路线，聚焦硫化物或氧化物路线，资源集中投入，加速单一路线的供应链成熟。"
+              ],
+              "negative_mechanisms": [
+                "关键材料瓶颈机制：硫化物电解质对空气敏感，需要惰性气体环境生产，对工厂基础设施要求极高，限制了产能的快速复制。",
+                "设备定制化依赖机制：固态电池特有的干法电极、高压封装等设备缺乏成熟供应商，依赖定制化开发，交货周期长且故障率高。",
+                "供应链碎片化风险：不同车企选择不同的固态电池技术路线（硫化物vs氧化物），导致上游材料供应商无法形成规模效应，成本居高不下。"
+              ],
+              "dependencies": [
+                "垂直整合加速机制依赖于车企的战略决心和资金投入。",
+                "设备标准化与复用机制受技术性能维度中‘工艺兼容性’的影响。",
+                "技术路线收敛机制受市场渗透率维度中‘主流车企选择’的影响。"
+              ],
+              "candidate_contract_angles": [
+                "2028年12月31日前，全球是否有至少3家电池厂商实现GWh级固态电池量产线投产？",
+                "2028年，固态电池关键材料（如硫化物电解质）的全球年产能是否超过10GWh当量？"
+              ],
+              "inside_view_note": "供应链是‘从0到1’到‘从1到10’的关键。需关注‘设备’和‘材料’两个瓶颈。设备瓶颈往往比材料瓶颈更难解决，因为缺乏标准化。重点关注头部厂商的产线良率数据。"
+            },
+            {
+              "dimension_id": "dim_tech_performance",
+              "positive_mechanisms": [
+                "能量密度跃升机制：固态电解质允许使用高电压正极和锂金属负极，理论能量密度可达400-500Wh/kg，显著延长续航里程，解决用户焦虑。",
+                "安全性提升机制：固态电解质不可燃、不挥发，从根本上消除热失控风险，提升电池包安全等级，降低保险和维护成本。",
+                "快充性能优化机制：固态电解质离子电导率提升及界面优化，支持更高倍率充电，缩短充电时间至10-15分钟，媲美燃油车加油体验。"
+              ],
+              "negative_mechanisms": [
+                "界面阻抗衰减机制：固-固界面在充放电过程中因体积膨胀/收缩产生微裂纹，导致接触不良，阻抗随循环次数增加而迅速上升，影响寿命。",
+                "锂枝晶穿透风险：尽管固态电解质机械强度高，但在局部应力集中处仍可能发生锂枝晶穿透，导致短路，安全性优势在极端条件下可能失效。",
+                "低温性能局限：部分固态电解质（如氧化物）在低温下离子电导率急剧下降，导致低温续航衰减严重，抵消部分性能优势。"
+              ],
+              "dependencies": [
+                "能量密度跃升机制依赖于供应链维度中‘锂金属负极’的供应稳定性。",
+                "界面阻抗衰减机制直接影响成本维度中的‘循环寿命’和‘质保成本’。",
+                "快充性能优化机制依赖于生态维度中‘高压充电设施’的普及。"
+              ],
+              "candidate_contract_angles": [
+                "2028年，量产固态电池车型的系统能量密度是否普遍超过300Wh/kg？",
+                "2028年，固态电池车型在-20℃环境下的续航保持率是否高于液态电池车型10%以上？"
+              ],
+              "inside_view_note": "性能是用户感知的核心。需区分‘电芯性能’和‘系统性能’。实验室数据往往夸大，需关注量产车的实际CLTC/WLTP续航数据。重点关注‘循环寿命’和‘低温性能’这两个容易被忽视但影响用户体验的关键指标。"
+            },
+            {
+              "dimension_id": "dim_ecosystem_adoption",
+              "positive_mechanisms": [
+                "高压平台协同机制：车企普遍转向800V高压平台，与固态电池的高电压特性天然契合，加速充电设施升级，形成正向循环。",
+                "BMS算法适配机制：固态电池特性（如电压曲线、内阻变化）被纳入新一代BMS算法，优化充放电策略，提升电池管理效率和安全性。",
+                "回收体系前置布局：头部电池厂提前布局固态电池回收技术，建立闭环供应链，降低原材料依赖，提升环境合规性。"
+              ],
+              "negative_mechanisms": [
+                "充电设施滞后机制：现有充电桩功率不足或电压不匹配，无法发挥固态电池快充优势，导致用户体验打折扣。",
+                "标准缺失与碎片化：缺乏统一的固态电池安全测试标准和接口标准，导致车企和供应商之间兼容性差，增加集成难度。",
+                "消费者认知偏差：公众对‘固态’概念存在误解，或早期安全事故（即使非固态电池原因）引发对整个新技术的恐慌，阻碍市场接受。"
+              ],
+              "dependencies": [
+                "高压平台协同机制依赖于车企的技术路线选择。",
+                "充电设施滞后机制受政策维度的‘新基建投资’影响。",
+                "标准缺失与碎片化机制受行业联盟和监管机构协调效率的影响。"
+              ],
+              "candidate_contract_angles": [
+                "2028年，支持800V及以上高压快充的公共充电桩占比是否超过30%？",
+                "2028年，是否有至少5家主流车企（Top 10）推出搭载固态电池的量产车型？"
+              ],
+              "inside_view_note": "生态系统是普及的‘最后一公里’。需关注‘充电设施’和‘标准制定’。充电设施的升级速度往往慢于电池技术进步，可能成为瓶颈。重点关注车企是否愿意为固态电池单独开发BMS和充电协议。"
+            }
+          ]
+        },
+        "proxy_metrics": {
+          "proxy_metrics_by_dimension": [
+            {
+              "dimension_id": "dim_market_share",
+              "dimension_name": "市场渗透率与装机量",
+              "proxy_metrics": [
+                {
+                  "proxy_metric": "2028年全球新能源汽车中固态/半固态电池装机量占比（%）",
+                  "coverage_score": 0.9,
+                  "measurability": 0.8,
+                  "proxy_risk": "medium",
+                  "goodhart_risk": "low",
+                  "direction_conflict_risk": "low",
+                  "lost_meanings": [
+                    "未区分半固态与全固态的技术代差",
+                    "未反映具体应用场景（如仅高端车普及）"
+                  ],
+                  "resolution_sources": [
+                    "BloombergNEF (BNEF) 年度电池追踪报告",
+                    "SNE Research 全球动力电池装机量数据",
+                    "中国汽车动力电池产业创新联盟月度数据"
+                  ],
+                  "note": "需明确统计口径是否包含半固态，建议设定阈值如>1%为初步普及，>5%为显著普及。"
+                },
+                {
+                  "proxy_metric": "搭载固态/半固态电池的量产车型累计销量（万辆）",
+                  "coverage_score": 0.8,
+                  "measurability": 0.9,
+                  "proxy_risk": "medium",
+                  "goodhart_risk": "medium",
+                  "direction_conflict_risk": "low",
+                  "lost_meanings": [
+                    "销量高可能仅由少数几款高端车型驱动，不代表广泛普及",
+                    "未考虑电池替换市场（如储能、消费电子）"
+                  ],
+                  "resolution_sources": [
+                    "各大车企（丰田、日产、蔚来、奔驰等）年度财报及交付数据",
+                    "MarkLines 全球车型数据库"
+                  ],
+                  "note": "需结合车型定位分析，若销量集中在百万级豪车，则‘普及’语义较弱。"
+                }
+              ]
+            },
+            {
+              "dimension_id": "dim_cost_parity",
+              "dimension_name": "成本竞争力与经济性",
+              "proxy_metrics": [
+                {
+                  "proxy_metric": "量产固态电池包每千瓦时制造成本（USD/kWh）",
+                  "coverage_score": 0.85,
+                  "measurability": 0.6,
+                  "proxy_risk": "high",
+                  "goodhart_risk": "medium",
+                  "direction_conflict_risk": "low",
+                  "lost_meanings": [
+                    "制造成本不等于终端售价，未包含车企溢价策略",
+                    "未反映全生命周期成本（TCO）中的维护/保险优势"
+                  ],
+                  "resolution_sources": [
+                    "行业咨询机构（如Rho Motion, BNEF）的成本拆解报告",
+                    "电池厂商招股书或投资者演示文稿中的BOM估算"
+                  ],
+                  "note": "数据多为估算，需对比同期液态锂电池成本（约$80-100/kWh）判断相对竞争力。"
+                },
+                {
+                  "proxy_metric": "搭载固态电池车型相对于同配置液态电池车型的售价溢价率（%）",
+                  "coverage_score": 0.75,
+                  "measurability": 0.9,
+                  "proxy_risk": "medium",
+                  "goodhart_risk": "high",
+                  "direction_conflict_risk": "medium",
+                  "lost_meanings": [
+                    "溢价可能包含品牌、内饰等其他因素，非纯电池成本",
+                    "若溢价过高，说明未实现大众市场普及"
+                  ],
+                  "resolution_sources": [
+                    "汽车配置网站（如Edmunds, 汽车之家）的同款车型价格对比",
+                    "车企官方定价公告"
+                  ],
+                  "note": "若溢价率持续高于30%，则难以称为‘普及’，仅属于高端小众产品。"
+                }
+              ]
+            },
+            {
+              "dimension_id": "dim_supply_chain",
+              "dimension_name": "供应链成熟度与量产能力",
+              "proxy_metrics": [
+                {
+                  "proxy_metric": "全球已投产的GWh级固态/半固态电池产线数量",
+                  "coverage_score": 0.8,
+                  "measurability": 0.8,
+                  "proxy_risk": "medium",
+                  "goodhart_risk": "medium",
+                  "direction_conflict_risk": "low",
+                  "lost_meanings": [
+                    "产线投产不代表满产或高良率",
+                    "未反映上游关键材料（如硫化物电解质）的供应稳定性"
+                  ],
+                  "resolution_sources": [
+                    "电池厂商（QuantumScape, Solid Power, 宁德时代, 丰田）的新闻稿及产能规划更新",
+                    "行业媒体（如Recharge, EV Volumes）的产能追踪"
+                  ],
+                  "note": "需区分‘规划产能’与‘实际投产产能’，后者更具参考价值。"
+                },
+                {
+                  "proxy_metric": "固态电池关键材料（如硫化物电解质、锂金属）的全球年产能（吨或GWh当量）",
+                  "coverage_score": 0.7,
+                  "measurability": 0.5,
+                  "proxy_risk": "high",
+                  "goodhart_risk": "low",
+                  "direction_conflict_risk": "low",
+                  "lost_meanings": [
+                    "产能过剩或不足难以实时监测",
+                    "未反映材料纯度及一致性是否满足量产要求"
+                  ],
+                  "resolution_sources": [
+                    "上游材料供应商（如出光兴产, 丰田供应链, 中国化工企业）的年报",
+                    "矿业及化工行业分析报告"
+                  ],
+                  "note": "供应链瓶颈往往滞后于电池厂产能，需关注材料端的实际交付能力。"
+                }
+              ]
+            },
+            {
+              "dimension_id": "dim_tech_performance",
+              "dimension_name": "性能优势与用户体验",
+              "proxy_metrics": [
+                {
+                  "proxy_metric": "量产固态电池车型的系统能量密度（Wh/kg）",
+                  "coverage_score": 0.85,
+                  "measurability": 0.9,
+                  "proxy_risk": "low",
+                  "goodhart_risk": "medium",
+                  "direction_conflict_risk": "low",
+                  "lost_meanings": [
+                    "未反映循环寿命和衰减率",
+                    "未反映低温性能和快充性能"
+                  ],
+                  "resolution_sources": [
+                    "车企官方技术参数表",
+                    "第三方媒体实测数据（如EPA续航, CLTC续航换算）"
+                  ],
+                  "note": "需对比同期液态锂电池平均水平（约160-180Wh/kg系统级），若固态电池未显著超越，则普及动力不足。"
+                },
+                {
+                  "proxy_metric": "固态电池车型在权威安全测试（如针刺、挤压）中的评级或事故率",
+                  "coverage_score": 0.7,
+                  "measurability": 0.7,
+                  "proxy_risk": "medium",
+                  "goodhart_risk": "low",
+                  "direction_conflict_risk": "low",
+                  "lost_meanings": [
+                    "实验室测试与真实路况存在差异",
+                    "未反映长期使用的安全性衰减"
+                  ],
+                  "resolution_sources": [
+                    "中汽研、Euro NCAP等机构的安全测试报告",
+                    "保险公司关于电池安全事故的统计数据"
+                  ],
+                  "note": "安全性是固态电池的核心卖点，若未显著优于液态电池，则‘普及’缺乏关键驱动力。"
+                }
+              ]
+            },
+            {
+              "dimension_id": "dim_ecosystem_adoption",
+              "dimension_name": "生态兼容性与基础设施",
+              "proxy_metrics": [
+                {
+                  "proxy_metric": "支持800V及以上高压快充的公共充电桩占比（%）",
+                  "coverage_score": 0.6,
+                  "measurability": 0.8,
+                  "proxy_risk": "medium",
+                  "goodhart_risk": "low",
+                  "direction_conflict_risk": "low",
+                  "lost_meanings": [
+                    "充电桩占比高不代表用户实际使用频率高",
+                    "未反映BMS软件对固态电池的适配程度"
+                  ],
+                  "resolution_sources": [
+                    "充电网络运营商（如Tesla Supercharger, 特来电, 星星充电）的设施数据",
+                    "政府新基建投资报告"
+                  ],
+                  "note": "固态电池常与高压平台绑定，充电设施是普及的必要条件而非充分条件。"
+                },
+                {
+                  "proxy_metric": "主流车企（Top 10）宣布搭载固态电池的量产车型数量",
+                  "coverage_score": 0.7,
+                  "measurability": 0.9,
+                  "proxy_risk": "medium",
+                  "goodhart_risk": "high",
+                  "direction_conflict_risk": "medium",
+                  "lost_meanings": [
+                    "宣布不等于交付，存在跳票风险",
+                    "未反映车型的市场接受度和实际销量"
+                  ],
+                  "resolution_sources": [
+                    "车企发布会及官方新闻稿",
+                    "汽车行业媒体（如Automotive News, 36氪）的报道"
+                  ],
+                  "note": "需跟踪从‘宣布’到‘交付’的时间差，若大量车型推迟，则生态成熟度存疑。"
+                }
+              ]
+            }
+          ]
+        },
+        "contracts": {
+          "contract_candidates": [
+            {
+              "contract_id": "contract_ssb_market_share_2028",
+              "dimension_id": "dim_market_share",
+              "dimension_name": "市场渗透率与装机量",
+              "normalized_question": "截至2028年12月31日，全球新能源汽车（BEV+PHEV）中搭载固态或半固态电池的动力电池装机量占比是否超过1%？",
+              "target_type": "binary",
+              "deadline": "2028-12-31",
+              "resolution_criteria": "YES: 根据BloombergNEF、SNE Research或中国汽车动力电池产业创新联盟等权威机构发布的2028年度数据，全球新能源汽车中固态/半固态电池装机量占比 > 1%。 NO: 占比 <= 1%。 注：统计口径包含半固态（Semi-solid）和全固态（All-solid-state）电池，仅统计动力电池，不含储能和消费电子。",
+              "resolution_sources": [
+                "BloombergNEF (BNEF) Electric Vehicle Outlook 2029",
+                "SNE Research Global EV Battery Market Share Report 2028",
+                "China EV100 / China Automotive Battery Innovation Alliance Annual Report 2028"
+              ],
+              "domain": "tech_product",
+              "forecastability_score": 0.7,
+              "semantic_coverage_weight": 0.35,
+              "measurability": 0.9,
+              "user_intent_preservation_score": 0.8,
+              "proxy_metric": "全球新能源汽车中固态/半固态电池装机量占比（%）",
+              "proxy_risk": "medium",
+              "goodhart_risk": "low",
+              "direction_conflict_risk": "low",
+              "lost_dimensions": [
+                "未区分半固态与全固态的技术成熟度差异",
+                "未反映具体应用场景（如仅高端车普及）",
+                "未包含储能和消费电子领域的普及情况"
+              ],
+              "ambiguity_flags": [
+                "统计口径差异：不同机构对‘固态’的定义可能不同（是否包含半固态）",
+                "数据滞后：2028年全年数据可能在2029年中发布"
+              ],
+              "clarifying_assumptions": [
+                "‘普及’的最低门槛定义为整体市场渗透率超过1%，这标志着从早期采用者向早期大众过渡",
+                "包含半固态电池，因为全固态在2028年极难达到大规模量产"
+              ],
+              "outside_view_note": "参考LFP电池早期渗透曲线，新技术在4-5年内达到1%整体市场份额是合理的‘初步普及’标志。参考SSD在PC市场的渗透，1%通常发生在商业化初期。",
+              "inside_view_note": "主要驱动力来自高端车型（如蔚来、奔驰、丰田）的示范效应。如果液态电池能量密度突破300Wh/kg且成本持平，将严重挤压固态电池的市场空间。",
+              "update_signals": [
+                "主要车企推迟固态电池车型发布",
+                "固态电池良品率长期低于60%",
+                "液态电池技术出现重大突破"
+              ],
+              "reason": "市场渗透率是‘普及’最直接的量化指标。1%是一个关键的阈值，标志着技术已跨越早期采用者阶段，进入主流视野，但尚未成为主导技术。"
+            },
+            {
+              "contract_id": "contract_ssb_cost_parity_2028",
+              "dimension_id": "dim_cost_parity",
+              "dimension_name": "成本竞争力与经济性",
+              "normalized_question": "截至2028年12月31日，量产固态电池包（含半固态）的制造成本是否降至120美元/kWh以下？",
+              "target_type": "binary",
+              "deadline": "2028-12-31",
+              "resolution_criteria": "YES: 根据至少两家独立行业咨询机构（如BNEF, Rho Motion）或主要电池厂商（如宁德时代, QuantumScape）的公开数据/财报，2028年量产固态电池包的制造成本（不含研发摊销，含材料、人工、制造费用）<= 120 USD/kWh。 NO: 成本 > 120 USD/kWh 或无可靠公开数据支持。",
+              "resolution_sources": [
+                "BloombergNEF Battery Price Survey 2028",
+                "Rho Motion Battery Cost Analysis 2028",
+                "Major Battery Manufacturer Earnings Calls/Reports (CATL, Toyota, QuantumScape, Solid Power)"
+              ],
+              "domain": "business",
+              "forecastability_score": 0.6,
+              "semantic_coverage_weight": 0.25,
+              "measurability": 0.7,
+              "user_intent_preservation_score": 0.7,
+              "proxy_metric": "量产固态电池包每千瓦时制造成本（USD/kWh）",
+              "proxy_risk": "high",
+              "goodhart_risk": "medium",
+              "direction_conflict_risk": "low",
+              "lost_dimensions": [
+                "制造成本不等于终端售价，未包含车企溢价策略",
+                "未反映全生命周期成本（TCO）中的维护/保险优势",
+                "未区分不同化学体系（硫化物vs氧化物）的成本差异"
+              ],
+              "ambiguity_flags": [
+                "成本定义：是否包含研发摊销、设备折旧？",
+                "数据来源：多为估算，缺乏审计过的财务数据"
+              ],
+              "clarifying_assumptions": [
+                "120 USD/kWh 是相对于2028年预计液态电池成本（约80-100 USD/kWh）的合理溢价上限，允许高端市场存在",
+                "‘制造成本’指电芯及模组/Pack的BOM+制造费用，不含整车其他部件"
+              ],
+              "outside_view_note": "参考半导体节点转换和光伏成本下降曲线，新技术在4-5年内实现与 incumbent 技术成本持平或接近（<20%溢价）是困难的。120 USD/kWh 是一个相对乐观但可能的目标。",
+              "inside_view_note": "成本下降依赖于规模效应和良品率提升。如果硫化物电解质材料成本无法大幅下降，或界面处理工艺复杂导致良率低，成本将居高不下。",
+              "update_signals": [
+                "固态电池关键材料价格暴涨",
+                "液态电池成本因新技术大幅下降",
+                "固态电池良品率突破90%"
+              ],
+              "reason": "成本是普及的经济基础。如果成本过高，固态电池将仅限于豪华车，无法实现‘普及’。120 USD/kWh 是一个关键的经济学阈值，标志着技术具备在高端大众市场（如30-50万价位车型）竞争的能力。"
+            },
+            {
+              "contract_id": "contract_ssb_supply_chain_2028",
+              "dimension_id": "dim_supply_chain",
+              "dimension_name": "供应链成熟度与量产能力",
+              "normalized_question": "截至2028年12月31日，全球是否有至少3家不同的电池制造商实现GWh级固态或半固态电池产线的正式投产并交付产品？",
+              "target_type": "binary",
+              "deadline": "2028-12-31",
+              "resolution_criteria": "YES: 至少有3家不同的电池制造商（如宁德时代、丰田、QuantumScape、Solid Power、LG新能源等）的GWh级（>=1GWh）固态/半固态电池产线在2028年12月31日前正式投产（开始批量生产并交付客户）。 NO: 投产的GWh级产线数量 < 3家。 注：‘投产’指产线运行并产生实际交付，而非仅‘建成’或‘规划’。",
+              "resolution_sources": [
+                "Battery Manufacturer Press Releases and News",
+                "Industry Reports from Recharge, EV Volumes, SNE Research",
+                "Company Annual Reports and Investor Presentations"
+              ],
+              "domain": "tech_product",
+              "forecastability_score": 0.8,
+              "semantic_coverage_weight": 0.15,
+              "measurability": 0.8,
+              "user_intent_preservation_score": 0.7,
+              "proxy_metric": "全球已投产的GWh级固态/半固态电池产线数量",
+              "proxy_risk": "medium",
+              "goodhart_risk": "medium",
+              "direction_conflict_risk": "low",
+              "lost_dimensions": [
+                "产线投产不代表满产或高良率",
+                "未反映上游关键材料（如硫化物电解质）的供应稳定性",
+                "未反映设备标准化程度"
+              ],
+              "ambiguity_flags": [
+                "‘投产’定义：是试生产还是批量交付？",
+                "‘GWh级’定义：是设计产能还是实际产能？"
+              ],
+              "clarifying_assumptions": [
+                "‘投产’定义为产线开始批量生产并交付给客户，而非仅完成建设",
+                "包含半固态和全固态电池产线",
+                "3家是一个合理的阈值，表明供应链已初步多元化，不再依赖单一厂商"
+              ],
+              "outside_view_note": "参考锂离子电池早期发展，从第一家GWh级产线到多家厂商投产通常需要5-7年。固态电池起步较晚，2028年达到3家GWh级产线是合理的预期。",
+              "inside_view_note": "供应链成熟度是普及的前提。如果只有1-2家厂商能投产，说明供应链仍高度集中，存在瓶颈风险。3家以上表明技术路线已初步收敛，供应链开始形成规模。",
+              "update_signals": [
+                "主要固态电池厂商宣布推迟产线建设",
+                "关键材料供应商破产或退出市场",
+                "设备供应商无法解决量产中的技术瓶颈"
+              ],
+              "reason": "供应链成熟度是‘普及’的物理基础。GWh级产线投产标志着技术从实验室走向工业化。3家厂商是一个关键的多样性阈值，表明技术已具备规模化生产的初步条件。"
+            },
+            {
+              "contract_id": "contract_ssb_performance_2028",
+              "dimension_id": "dim_tech_performance",
+              "dimension_name": "性能优势与用户体验",
+              "normalized_question": "截至2028年12月31日，是否有至少一款量产搭载固态或半固态电池的乘用车，其系统级能量密度（Wh/kg）超过300 Wh/kg？",
+              "target_type": "binary",
+              "deadline": "2028-12-31",
+              "resolution_criteria": "YES: 至少有一款在2028年12月31日前正式量产并交付的乘用车，其搭载的固态/半固态电池包的系统级能量密度（Pack-level, 含BMS、冷却系统等）经车企官方公布或权威第三方实测，超过300 Wh/kg。 NO: 无量产车型达到此标准。",
+              "resolution_sources": [
+                "Automaker Official Specifications",
+                "Third-party Testing Reports (e.g., EPA, CLTC, WLTP conversions)",
+                "Industry Media Reviews (e.g., Edmunds, Car and Driver, 汽车之家)"
+              ],
+              "domain": "tech_product",
+              "forecastability_score": 0.7,
+              "semantic_coverage_weight": 0.15,
+              "measurability": 0.9,
+              "user_intent_preservation_score": 0.6,
+              "proxy_metric": "量产固态电池车型的系统能量密度（Wh/kg）",
+              "proxy_risk": "low",
+              "goodhart_risk": "medium",
+              "direction_conflict_risk": "low",
+              "lost_dimensions": [
+                "未反映循环寿命和衰减率",
+                "未反映低温性能和快充性能",
+                "未反映安全性优势"
+              ],
+              "ambiguity_flags": [
+                "‘系统级’定义：是否包含车身结构件？通常指Pack级",
+                "‘量产’定义：小批量交付是否算量产？"
+              ],
+              "clarifying_assumptions": [
+                "300 Wh/kg 是系统级能量密度的关键阈值，标志着固态电池在续航上对液态电池（通常<250 Wh/kg系统级）的显著优势",
+                "包含半固态电池，因为全固态在2028年极难达到此系统级密度"
+              ],
+              "outside_view_note": "参考当前液态电池系统级能量密度（约160-180 Wh/kg），300 Wh/kg 是一个显著的跃升。参考实验室数据，电芯级400+ Wh/kg 已实现，但系统级效率损失较大。",
+              "inside_view_note": "性能优势是用户选择固态电池的核心动力。如果系统级能量密度无法超过300 Wh/kg，固态电池的续航优势将不明显，难以驱动大规模普及。",
+              "update_signals": [
+                "固态电池量产能量密度低于300Wh/kg",
+                "液态电池技术在能量密度上取得突破性进展",
+                "固态电池出现大规模热失控或安全事故"
+              ],
+              "reason": "性能优势是‘普及’的用户驱动力。300 Wh/kg 系统级能量密度是一个关键的体验阈值，标志着固态电池在续航上对液态电池形成代差优势，从而吸引早期大众用户。"
+            }
+          ]
+        },
+        "proxy_audit": {
+          "proxy_audits": [
+            {
+              "contract_id": "contract_ssb_market_share_2028",
+              "audit_verdict": "accept_with_warning",
+              "coverage_score": 0.85,
+              "user_intent_preservation_score": 0.8,
+              "proxy_risk": "medium",
+              "goodhart_risk": "low",
+              "direction_conflict_risk": "low",
+              "missing_lost_dimensions": [
+                "未区分‘半固态’与‘全固态’对‘普及’定义的影响：半固态的普及不等于全固态的普及，用户可能隐含指代技术更成熟的全固态。",
+                "未考虑地域差异：全球1%可能由中国市场主导，若用户关注全球技术扩散，此指标可能高估普及度。"
+              ],
+              "risk_correction": "建议明确‘普及’是否包含半固态。若用户意指全固态，1%阈值可能过高或过低（取决于全固态进展）。当前合约将半固态纳入，降低了‘全固态普及’的语义覆盖，但提高了‘固态技术路线整体普及’的覆盖。需确认用户是否接受半固态作为普及的标志。",
+              "reason": "市场渗透率是普及的核心指标。1%是早期采用者向早期大众过渡的合理阈值。主要风险在于‘半固态’是否被用户视为‘固态电池普及’的有效代理。如果用户严格指全固态，此合约偷换了概念。但鉴于2028年全固态极难普及，包含半固态是更现实的‘技术路线普及’代理。"
+            },
+            {
+              "contract_id": "contract_ssb_cost_parity_2028",
+              "audit_verdict": "revise",
+              "coverage_score": 0.6,
+              "user_intent_preservation_score": 0.5,
+              "proxy_risk": "high",
+              "goodhart_risk": "medium",
+              "direction_conflict_risk": "medium",
+              "missing_lost_dimensions": [
+                "未反映终端售价溢价：制造成本低不代表终端售价低，车企可能通过高溢价维持利润，阻碍普及。",
+                "未反映全生命周期成本（TCO）：固态电池可能在维护、保险或残值上有优势，单纯制造成本无法完全反映经济性。",
+                "未反映规模效应：120 USD/kWh可能是小批量成本，大规模量产成本可能更低，反之亦然。"
+              ],
+              "risk_correction": "制造成本是必要非充分条件。建议将合约修改为‘搭载固态电池的车型终端售价相对于同级液态电池车型的溢价幅度’，或结合‘销量’指标。单纯制造成本无法直接映射到‘普及’，因为市场接受度取决于最终价格和性能权衡。",
+              "reason": "成本是普及的关键约束，但‘制造成本’与‘用户感知成本’（终端售价）之间存在巨大鸿沟。车企可能吸收部分成本或转嫁部分成本。此外，120 USD/kWh的阈值设定较为武断，且未考虑液态电池成本的同时下降。此合约容易陷入‘成本下降但售价不降’的Goodhart陷阱，导致误判普及可能性。"
+            },
+            {
+              "contract_id": "contract_ssb_supply_chain_2028",
+              "audit_verdict": "accept_with_warning",
+              "coverage_score": 0.7,
+              "user_intent_preservation_score": 0.7,
+              "proxy_risk": "medium",
+              "goodhart_risk": "medium",
+              "direction_conflict_risk": "low",
+              "missing_lost_dimensions": [
+                "未反映良品率：产线投产不代表高良品率，低良品率会导致实际有效产能不足，阻碍普及。",
+                "未反映上游材料供应：GWh级产线可能因关键材料（如硫化物电解质）短缺而无法满产。",
+                "未反映技术路线收敛：3家厂商可能采用不同技术路线，导致供应链碎片化，不利于规模化普及。"
+              ],
+              "risk_correction": "建议增加‘良品率’或‘实际交付量’作为辅助验证指标。单纯‘投产’可能被解读为‘存在产能’，但‘普及’需要‘有效产能’。若良品率极低，3家GWh级产线的实际贡献可能微乎其微。",
+              "reason": "供应链成熟度是普及的物理基础。3家GWh级产线是一个合理的‘初步规模化’标志。主要风险在于‘投产’定义模糊，可能包含低效产线。但作为二元预测，这是一个可结算且相对客观的指标，能反映行业投入程度。"
+            },
+            {
+              "contract_id": "contract_ssb_performance_2028",
+              "audit_verdict": "reject",
+              "coverage_score": 0.3,
+              "user_intent_preservation_score": 0.4,
+              "proxy_risk": "high",
+              "goodhart_risk": "high",
+              "direction_conflict_risk": "high",
+              "missing_lost_dimensions": [
+                "未反映成本：高性能但高成本的产品无法普及。",
+                "未反映安全性：能量密度高但安全性差的产品无法普及。",
+                "未反映量产规模：一款车型达到300 Wh/kg不代表该技术已普及，可能仅是小众高端产品。",
+                "未反映用户体验的其他维度：如快充、低温性能等。"
+              ],
+              "risk_correction": "此合约严重偷换问题。‘一款车型达到300 Wh/kg’是‘技术可行性’或‘高端产品存在’的标志，而非‘普及’的标志。普及需要大规模、低成本、高可靠性的应用。此合约极易导致‘技术突破即普及’的错误推断。建议删除或大幅修改为‘主流车型（销量前10）中搭载固态电池的比例’。",
+              "reason": "性能优势是普及的驱动力之一，但单一性能指标（能量密度）无法代表‘普及’。一款高性能小众车型的存在与‘普及’相去甚远。此合约存在极高的方向冲突风险：性能提升但成本高昂，导致无法普及。它测量的是‘技术上限’而非‘市场普及度’。"
+            }
+          ]
+        },
+        "adversarial": {
+          "adversarial_audit": {
+            "verdict": "revise",
+            "attack_summary": "当前拆解方案存在严重的‘技术乐观主义’偏差和‘定义偷换’风险。首先，将‘半固态’与‘全固态’混同为‘固态电池’，严重稀释了用户对于‘固态电池’（通常指ASSB）的技术预期，导致合约过于容易达成（False Positive）。其次，市场渗透率1%的阈值对于‘普及’而言过低，仅代表‘早期采用者’阶段，而非‘大众普及’。第三，成本合约仅关注制造成本，忽略了终端售价溢价和消费者支付意愿，存在Goodhart风险。第四，完全遗漏了‘政策与标准’这一关键维度，固态电池的普及高度依赖各国安全标准的统一和补贴政策的导向。第五，性能合约被正确标记为高风险，但整体方案仍过度依赖技术指标而非市场结果。",
+            "substitution_errors": [
+              "将‘全固态电池普及’偷换为‘半固态+全固态混合普及’：半固态是过渡技术，其普及不等于固态电池技术的终极形态普及，这降低了预测难度但偏离了核心语义。",
+              "将‘普及’偷换为‘存在’：1%的市场份额仅证明技术存在且被少数人接受，远未达到‘普及’（Widespread Adoption）的社会学或经济学定义。",
+              "将‘经济可行性’偷换为‘制造成本’：制造成本低不等于终端售价低，车企可能通过高溢价维持利润，导致消费者无法负担，从而阻碍普及。"
+            ],
+            "missing_dimensions": [
+              "政策与监管环境：各国对固态电池的安全认证标准、补贴退坡政策、以及是否强制要求更高安全标准（从而利好固态）是普及的关键外部驱动力。",
+              "消费者认知与信任：早期安全事故对新技术的毁灭性打击（如早期电动车火灾）可能长期抑制普及，当前方案未包含‘负面事件’的考量。",
+              "替代技术的竞争：液态锂电池（如磷酸铁锂、高镍三元）的成本下降和性能提升速度。如果液态电池在2028年达到300Wh/kg且成本极低，固态电池的普及窗口将被关闭。",
+              "应用场景的局限性：当前方案隐含假设乘用车是主要场景，但固态电池可能在消费电子或航空领域先普及，需明确‘普及’的领域定义。"
+            ],
+            "overweighted_metrics": [
+              "市场渗透率（1%阈值）：对于‘普及’而言，1%权重过高且阈值过低。建议提高阈值或增加‘主流车型搭载率’作为补充。",
+              "技术性能指标：虽然已标记为高风险，但整体方案仍花费大量精力在能量密度等技术指标上，而忽略了更宏观的市场接受度指标。"
+            ],
+            "underweighted_dimensions": [
+              "供应链的‘有效’产能：不仅看投产数量，更要看良品率和实际交付量。",
+              "终端价格竞争力：相对于同级液态电池车型的溢价幅度，直接决定消费者购买决策。"
+            ],
+            "contracts_to_revise": [
+              {
+                "contract_id": "contract_ssb_market_share_2028",
+                "reason": "1%阈值过低，无法代表‘普及’。建议修改为‘全球新能源汽车中固态电池（严格区分全固态或明确包含半固态）装机量占比是否超过5%’，或拆分为两个合约：一个针对半固态（较高阈值），一个针对全固态（较低阈值但更严格）。同时，需明确‘普及’是否包含商用车和储能。",
+                "suggestion": "修改阈值为5%或引入‘主流车企（Top 10）中至少3家推出搭载固态电池的走量车型（年销>10万辆）’作为替代指标。"
+              },
+              {
+                "contract_id": "contract_ssb_cost_parity_2028",
+                "reason": "制造成本无法直接反映普及度。建议修改为终端售价溢价或TCO优势。",
+                "suggestion": "修改为‘截至2028年，是否有至少一款搭载固态电池的走量车型（非豪华车），其终端售价相对于同级液态电池车型溢价低于10%？’"
+              }
+            ],
+            "contracts_to_remove": [
+              {
+                "contract_id": "contract_ssb_performance_2028",
+                "reason": "如审计所示，单一性能指标与普及度相关性弱，且易产生误导。一款高性能小众车不代表普及。"
+              }
+            ],
+            "contracts_to_add": [
+              {
+                "contract_id": "contract_ssb_policy_standard_2028",
+                "normalized_question": "截至2028年12月31日，中国、欧盟或美国是否正式发布针对全固态电池的强制性安全认证标准或大规模补贴政策？",
+                "reason": "政策和标准是技术普及的‘闸门’。没有统一标准，大规模量产和消费者信任难以建立。"
+              },
+              {
+                "contract_id": "contract_ssb_mainstream_adoption_2028",
+                "normalized_question": "截至2028年12月31日，全球销量前10的新能源车企中，是否有至少2家推出搭载固态（含半固态）电池的车型，且该车型年销量超过5万辆？",
+                "reason": "‘普及’需要主流玩家的参与和走量车型的验证，而不仅仅是技术存在或小众豪华车的应用。"
+              }
+            ],
+            "repair_suggestions": [
+              "明确‘固态电池’的定义：在合约中严格区分‘半固态’和‘全固态’，或明确说明‘普及’是指整个固态技术路线（含半固态）的普及。鉴于2028年时间点，建议将‘半固态’作为主要预测对象，但需降低其对‘全固态普及’的语义覆盖权重。",
+              "提高‘普及’的阈值：1%是‘早期采用者’，5%-10%才是‘早期大众’的起点。建议将市场渗透率阈值提高，或引入‘走量车型’作为更直观的普及标志。",
+              "引入‘负面信号’合约：增加关于‘固态电池重大安全事故’或‘主要厂商放弃固态路线’的合约，以平衡技术乐观主义偏差。",
+              "考虑替代技术竞争：在Inside View中必须详细分析液态锂电池在2024-2028年的进步速度，如果液态电池成本降至$60/kWh且能量密度达到250Wh/kg，固态电池的普及将极其困难。"
+            ]
+          }
+        },
+        "collapse_audit": {
+          "semantic_collapse_audit": {
+            "semantic_collapse_risk": "high",
+            "collapse_reason": "The term '普及' (popularization/widespread adoption) is a complex, multi-dimensional state involving market share, cost parity, supply chain maturity, and consumer trust. Reducing it to a single metric (e.g., 'market share > 1%' or 'cost < $120/kWh') creates a high risk of semantic collapse. A single metric might be met (e.g., niche luxury cars using solid-state batteries reach 1% share) while the broader intent of 'mainstream adoption' remains unfulfilled. Conversely, high production capacity might exist without actual market penetration. The adversarial audit correctly identified that 'existence' or 'early adopter status' is not equivalent to 'popularization'.",
+            "lost_dimensions_if_single_metric": [
+              "Cost competitiveness relative to incumbent liquid batteries (economic viability)",
+              "Supply chain scalability and yield rates (physical feasibility)",
+              "Consumer trust and safety perception (social acceptance)",
+              "Policy and regulatory support (institutional enablers)",
+              "Distinction between semi-solid and all-solid-state technologies (technical maturity)"
+            ],
+            "allowed_single_contract": false,
+            "recommended_mode": "multi_contract_portfolio",
+            "required_warning": "Do not equate 'product launch' or 'laboratory breakthrough' with 'popularization'. Ensure the portfolio of contracts covers both the supply side (production capacity, cost) and demand side (market share, mainstream adoption). Explicitly define whether 'solid-state' includes semi-solid batteries, as this significantly alters the probability and definition of popularization by 2028.",
+            "final_guardrails": [
+              "Must distinguish between 'semi-solid' and 'all-solid-state' in resolution criteria.",
+              "Market share thresholds must reflect 'early majority' adoption (e.g., >5%) rather than just 'early adopters' (e.g., >1%) to avoid false positives for 'popularization'.",
+              "Include a contract or dimension for 'mainstream vehicle adoption' (e.g., top 10 automakers) to ensure the technology is not limited to niche luxury segments.",
+              "Account for the competitive trajectory of liquid lithium-ion batteries; if they improve significantly, solid-state popularization may be delayed or displaced."
+            ]
+          }
+        }
+      },
+      "final": {
+        "original_question": "2028年固态电池是否会普及？",
+        "question_type": "cloud_judgment",
+        "is_cloud_question": true,
+        "cloud_terms": [
+          "普及"
+        ],
+        "overall_semantic_intent": "用户希望评估到2028年时，固态电池技术（含半固态或全固态）是否已跨越早期采用者阶段，进入主流大规模商业化应用阶段，从而在性能、成本或安全性上对现有液态锂电池形成实质性替代或显著补充。",
+        "time_interpretation": {
+          "current_period": "2024年（或当前时间点），固态电池处于小规模量产、示范应用或半固态过渡阶段。",
+          "target_period": "2028年12月31日。",
+          "comparison": "对比当前液态锂电池的主导地位，评估固态电池在市场份额、装机量或关键应用场景中的渗透率是否达到‘普及’的阈值。"
+        },
+        "core_ambiguities": [
+          "普及的定义：是指市场份额超过1%、5%还是仅仅指‘随处可见’？",
+          "技术范围：是指全固态电池（ASSB）还是包含半固态电池（Semi-solid）？",
+          "应用领域：是指乘用车、商用车、消费电子还是储能领域？不同领域的普及标准完全不同。",
+          "地域范围：是指全球普及、中国普及还是特定市场普及？",
+          "成本基准：是否隐含了‘成本与液态电池持平’这一前提？"
+        ],
+        "triage": {
+          "forecastability_zone": "cloudlike",
+          "reason": "The term '普及' (popularize/widespread adoption) is a multidimensional concept lacking a single, universally agreed-upon threshold. It involves market share, geographic distribution, consumer adoption rates, and cost parity, which cannot be captured by a single binary event without significant ambiguity.",
+          "requires_decomposition": true,
+          "single_contract_allowed_by_type": false
+        },
+        "dimension_map": [
+          {
+            "dimension_id": "dim_market_share",
+            "dimension_name": "市场渗透率与装机量",
+            "meaning": "衡量固态电池在目标市场（如新能源汽车）中相对于液态锂电池的实际占比。这是‘普及’最直接的量化体现，反映技术是否从 niche 走向 mainstream。",
+            "candidate_metrics": [
+              "全球/中国新能源汽车中固态电池（含半固态）的装机量占比（%）",
+              "搭载固态电池车型的年度销量（万辆）",
+              "固态电池在动力电池总产能中的占比（%）"
+            ],
+            "semantic_coverage_weight": 0.3684210526315789,
+            "measurability": 0.9,
+            "why_it_matters": "如果市场份额极低（如<1%），无论技术多先进，都不能称为‘普及’。这是判断是否跨越早期采用者阶段的核心指标。",
+            "knowable_parts": [
+              "2024-2025年已宣布搭载半固态/固态电池的车型列表及预计交付量",
+              "当前全球新能源汽车总销量及动力电池装机量数据",
+              "主要电池厂商（如宁德时代、QuantumScape、Solid Power）公布的产能规划时间表",
+              "历史上新兴电池技术（如磷酸铁锂早期、三元锂早期）的市场渗透曲线"
+            ],
+            "unknowable_parts": [
+              "2028年实际交付并上路的固态电池车辆确切数量（受供应链波动影响）",
+              "消费者对固态电池溢价的具体接受阈值及其随时间的变化",
+              "竞争对手（如液态电池技术迭代、钠离子电池）对固态电池市场份额的挤压程度",
+              "地缘政治或贸易壁垒对全球供应链的具体影响"
+            ],
+            "assumptions": [
+              "‘普及’定义为在特定细分市场（如高端EV）渗透率超过5%，或在整体EV市场渗透率超过1%",
+              "统计口径包含半固态电池（Semi-solid），因为全固态在2028年极难达到大规模量产",
+              "主要车企的产能规划有至少70%的概率能按期落地",
+              "没有发生导致全球电动车需求崩盘的宏观经济危机"
+            ],
+            "outside_view_reference_classes": [
+              "LFP (Lithium Iron Phosphate) Battery Adoption Curve",
+              "Hydrogen Fuel Cell Vehicle (FCEV) Penetration",
+              "Solid State Drive (SSD) vs. HDD Adoption"
+            ],
+            "inside_view_mechanisms": [
+              "高端车型溢价吸收机制：豪华品牌将固态电池作为差异化卖点，通过高毛利吸收初期高成本。",
+              "政策驱动替代机制：碳排放法规迫使车企寻求更高能量密度。",
+              "液态电池迭代挤压机制：液态锂电池性能提升缩小差距，削弱固态电池替代紧迫性。"
+            ],
+            "update_signals": [
+              "主要车企推迟或取消固态电池车型发布计划",
+              "固态电池良品率长期低于60%导致成本无法下降",
+              "液态锂电池能量密度突破300Wh/kg且成本持平，削弱固态电池优势",
+              "某家初创固态电池公司破产或被收购，导致技术路线整合"
+            ]
+          },
+          {
+            "dimension_id": "dim_cost_parity",
+            "dimension_name": "成本竞争力与经济性",
+            "meaning": "衡量固态电池的生产成本是否接近或低于现有液态锂电池，或者其溢价是否在消费者可接受范围内。普及的前提是经济可行。",
+            "candidate_metrics": [
+              "固态电池每千瓦时制造成本（USD/kWh）",
+              "固态电池包相对于同级液态电池包的溢价幅度（%）",
+              "全生命周期成本（TCO）对比优势"
+            ],
+            "semantic_coverage_weight": 0.2631578947368421,
+            "measurability": 0.7,
+            "why_it_matters": "如果成本过高，仅能存在于豪华车或特定高端场景，无法实现大众市场的‘普及’。成本是规模化应用的最大瓶颈。",
+            "knowable_parts": [
+              "当前液态锂电池的平均制造成本（约$80-100/kWh）",
+              "固态电池关键原材料（硫化物电解质、锂金属等）的当前市场价格",
+              "固态电池生产工艺步骤比液态电池多出的环节",
+              "规模效应的一般规律：产能每翻一番，成本下降的百分比"
+            ],
+            "unknowable_parts": [
+              "2028年固态电池关键原材料的价格走势",
+              "固态电池生产线的实际折旧和维护成本",
+              "固态电池在量产过程中的隐性成本（如废品率、设备调试时间）",
+              "车企对固态电池的最终定价策略"
+            ],
+            "assumptions": [
+              "固态电池成本下降遵循类似半导体或光伏的学习曲线",
+              "锂金属负极的供应瓶颈在2028年前得到缓解",
+              "‘成本竞争力’定义为固态电池包成本不超过同级液态电池包的1.5倍（针对高端市场）或1.2倍（针对大众市场）"
+            ],
+            "outside_view_reference_classes": [
+              "Solar PV Cost Reduction (Swanson's Law)",
+              "Semiconductor Node Transition Costs"
+            ],
+            "inside_view_mechanisms": [
+              "规模经济学习曲线机制：随着GWh级产线投产，单位固定成本分摊下降。",
+              "材料体系简化机制：全固态电池可能取消电解液、隔膜等组件，长期BOM成本结构优化。",
+              "界面阻抗与工艺复杂性成本：固-固界面接触不良增加制造步骤和设备投入。"
+            ],
+            "update_signals": [
+              "固态电池关键材料价格暴涨超过50%",
+              "液态锂电池成本因新技术大幅下降，拉大差距",
+              "固态电池良品率突破90%，显著降低单位成本",
+              "主要车企宣布固态电池车型定价与液态电池车型持平"
+            ]
+          },
+          {
+            "dimension_id": "dim_supply_chain",
+            "dimension_name": "供应链成熟度与量产能力",
+            "meaning": "衡量上游材料、中游制造设备的标准化程度以及下游车企的配套能力。",
+            "candidate_metrics": [
+              "主要固态电池厂商的GWh级量产线投产数量",
+              "关键原材料的供应链安全指数",
+              "电池良品率（Yield Rate）达到行业平均水平的时间点"
+            ],
+            "semantic_coverage_weight": 0.15789473684210525,
+            "measurability": 0.6,
+            "why_it_matters": "没有稳定的供应链和规模化制造能力，‘普及’只是空中楼阁。量产瓶颈往往滞后于技术突破。",
+            "knowable_parts": [
+              "当前固态电池主要材料供应商的名单及产能规划",
+              "固态电池生产设备的供应商及交货周期",
+              "主要电池厂商的在建GWh级产线数量及预计投产时间",
+              "固态电池技术路线的专利分布情况"
+            ],
+            "unknowable_parts": [
+              "2028年固态电池供应链的垂直整合程度",
+              "关键设备的技术迭代速度及稳定性",
+              "供应链中断风险",
+              "不同技术路线之间的兼容性及转换成本"
+            ],
+            "assumptions": [
+              "硫化物或氧化物路线将成为主流，且供应链已围绕该路线建立",
+              "设备供应商能够按时交付符合量产要求的设备",
+              "原材料供应不会出现严重的地缘政治断供"
+            ],
+            "outside_view_reference_classes": [
+              "Rare Earth Element Supply Chain Development",
+              "Lithium-Ion Battery Supply Chain Build-out (2010-2020)"
+            ],
+            "inside_view_mechanisms": [
+              "垂直整合加速机制：头部电池厂与车企深度绑定，共同投资上游。",
+              "设备标准化与复用机制：部分设备可与液态电池产线兼容。",
+              "关键材料瓶颈机制：硫化物电解质对空气敏感，限制产能快速复制。"
+            ],
+            "update_signals": [
+              "主要固态电池厂商宣布推迟产线建设",
+              "关键材料供应商破产或退出市场",
+              "设备供应商无法解决量产中的技术瓶颈",
+              "出现新的、更廉价的材料替代方案"
+            ]
+          },
+          {
+            "dimension_id": "dim_ecosystem_adoption",
+            "dimension_name": "生态兼容性与基础设施",
+            "meaning": "衡量现有充电设施、BMS、回收体系是否适配固态电池，以及主流车企的采纳广度。",
+            "candidate_metrics": [
+              "支持固态电池快充的充电桩占比",
+              "主流车企（Top 10）宣布搭载固态电池的车型数量",
+              "固态电池回收处理设施的覆盖率"
+            ],
+            "semantic_coverage_weight": 0.10526315789473685,
+            "measurability": 0.5,
+            "why_it_matters": "即使电池本身成熟，如果基础设施不兼容或回收体系缺失，也会阻碍大规模普及。",
+            "knowable_parts": [
+              "当前充电桩的电压和功率标准",
+              "主流车企对固态电池的技术路线图",
+              "现有电池回收体系对液态电池的处理流程",
+              "固态电池对现有充电设施的兼容性要求"
+            ],
+            "unknowable_parts": [
+              "2028年充电基础设施对固态电池快充需求的适配程度",
+              "固态电池回收技术的成熟度及经济性",
+              "消费者对固态电池品牌的信任度",
+              "政策法规对固态电池准入和标准制定的具体影响"
+            ],
+            "assumptions": [
+              "现有高压快充桩可兼容固态电池，无需大规模改造",
+              "固态电池回收体系能在2028年前建立初步框架",
+              "主流车企的采纳是普及的关键驱动力"
+            ],
+            "outside_view_reference_classes": [
+              "USB-C vs. Proprietary Chargers",
+              "High-Voltage Charging Infrastructure Rollout"
+            ],
+            "inside_view_mechanisms": [
+              "高压平台协同机制：车企转向800V高压平台，与固态电池特性契合。",
+              "BMS算法适配机制：新一代BMS算法优化固态电池管理。",
+              "充电设施滞后机制：现有充电桩功率不足，无法发挥固态电池快充优势。"
+            ],
+            "update_signals": [
+              "充电设施升级缓慢，无法支持固态电池快充优势",
+              "固态电池回收成本过高，导致环保法规限制",
+              "主流车企转向其他电池技术路线",
+              "出现针对固态电池的行业统一安全标准"
+            ]
+          },
+          {
+            "dimension_id": "dim_policy_standards",
+            "dimension_name": "政策与监管环境",
+            "meaning": "衡量各国对固态电池的安全标准、准入政策及补贴导向。",
+            "candidate_metrics": [
+              "主要经济体（中、欧、美）发布固态电池强制性安全标准的数量",
+              "针对固态电池研发或量产的政府补贴金额",
+              "固态电池在政府采购或公共交通工具中的强制使用比例"
+            ],
+            "semantic_coverage_weight": 0.10526315789473685,
+            "measurability": 0.6,
+            "why_it_matters": "政策和标准是技术普及的‘闸门’。没有统一标准，大规模量产和消费者信任难以建立。",
+            "knowable_parts": [
+              "当前各国对电池安全标准的草案",
+              "主要经济体对新能源汽车的补贴政策趋势",
+              "行业协会关于固态电池标准制定的进展"
+            ],
+            "unknowable_parts": [
+              "2028年各国政府对固态电池的具体监管态度",
+              "地缘政治对电池标准统一的影响",
+              "重大安全事故对政策收紧的影响"
+            ],
+            "assumptions": [
+              "主要经济体将在2028年前发布针对固态电池的初步安全指南",
+              "政策将倾向于鼓励高安全性电池技术",
+              "标准制定过程不会因技术路线分歧而严重停滞"
+            ],
+            "outside_view_reference_classes": [
+              "EV Safety Standards Evolution",
+              "New Energy Technology Subsidy Phasing"
+            ],
+            "inside_view_mechanisms": [
+              "安全标准驱动机制：更严格的安全法规可能迫使车企采用固态电池。",
+              "补贴退坡风险：如果补贴退坡过快，高成本的固态电池将失去竞争力。",
+              "标准碎片化风险：不同国家标准不一，增加车企合规成本。"
+            ],
+            "update_signals": [
+              "主要经济体发布固态电池强制性安全认证标准",
+              "政府宣布针对固态电池的大规模补贴政策",
+              "因安全事故导致固态电池监管突然收紧",
+              "国际标准化组织（ISO）发布固态电池统一测试标准"
+            ]
+          }
+        ],
+        "contract_candidates": [
+          {
+            "contract_id": "contract_ssb_market_share_2028",
+            "dimension_id": "dim_market_share",
+            "dimension_name": "市场渗透率与装机量",
+            "normalized_question": "截至2028年12月31日，全球新能源汽车（BEV+PHEV）中搭载固态或半固态电池的动力电池装机量占比是否超过1%？",
+            "target_type": "binary",
+            "deadline": "2028-12-31",
+            "resolution_criteria": "YES: 根据BloombergNEF、SNE Research或中国汽车动力电池产业创新联盟等权威机构发布的2028年度数据，全球新能源汽车中固态/半固态电池装机量占比 > 1%。 NO: 占比 <= 1%。 注：统计口径包含半固态（Semi-solid）和全固态（All-solid-state）电池，仅统计动力电池，不含储能和消费电子。",
+            "resolution_sources": [
+              "BloombergNEF (BNEF) Electric Vehicle Outlook 2029",
+              "SNE Research Global EV Battery Market Share Report 2028",
+              "China EV100 / China Automotive Battery Innovation Alliance Annual Report 2028"
+            ],
+            "domain": "tech_product",
+            "forecastability_score": 0.7,
+            "semantic_coverage_weight": 0.43749999999999994,
+            "measurability": 0.9,
+            "user_intent_preservation_score": 0.8,
+            "proxy_metric": "全球新能源汽车中固态/半固态电池装机量占比（%）",
+            "proxy_risk": "medium",
+            "goodhart_risk": "low",
+            "direction_conflict_risk": "low",
+            "lost_dimensions": [
+              "未区分半固态与全固态的技术成熟度差异",
+              "未反映具体应用场景（如仅高端车普及）",
+              "未包含储能和消费电子领域的普及情况"
+            ],
+            "ambiguity_flags": [
+              "统计口径差异：不同机构对‘固态’的定义可能不同（是否包含半固态）",
+              "数据滞后：2028年全年数据可能在2029年中发布"
+            ],
+            "clarifying_assumptions": [
+              "‘普及’的最低门槛定义为整体市场渗透率超过1%，这标志着从早期采用者向早期大众过渡",
+              "包含半固态电池，因为全固态在2028年极难达到大规模量产"
+            ],
+            "outside_view_note": "参考LFP电池早期渗透曲线，新技术在4-5年内达到1%整体市场份额是合理的‘初步普及’标志。参考SSD在PC市场的渗透，1%通常发生在商业化初期。",
+            "inside_view_note": "主要驱动力来自高端车型（如蔚来、奔驰、丰田）的示范效应。如果液态电池能量密度突破300Wh/kg且成本持平，将严重挤压固态电池的市场空间。",
+            "update_signals": [
+              "主要车企推迟固态电池车型发布",
+              "固态电池良品率长期低于60%",
+              "液态电池技术出现重大突破"
+            ],
+            "reason": "市场渗透率是‘普及’最直接的量化指标。1%是一个关键的阈值，标志着技术已跨越早期采用者阶段，进入主流视野，但尚未成为主导技术。"
+          },
+          {
+            "contract_id": "contract_ssb_mainstream_adoption_2028",
+            "dimension_id": "dim_market_share",
+            "dimension_name": "市场渗透率与装机量",
+            "normalized_question": "截至2028年12月31日，全球销量前10的新能源车企中，是否有至少2家推出搭载固态（含半固态）电池的车型，且该车型年销量超过5万辆？",
+            "target_type": "binary",
+            "deadline": "2028-12-31",
+            "resolution_criteria": "YES: 至少有2家全球销量前10的新能源车企（如特斯拉、比亚迪、大众、通用、福特、现代、丰田、本田、日产、Stellantis等）在2028年推出搭载固态/半固态电池的量产车型，且该车型在2028年的年销量超过5万辆。 NO: 满足条件的车企数量 < 2家。",
+            "resolution_sources": [
+              "Automaker Annual Reports",
+              "MarkLines Global Vehicle Database",
+              "Industry Sales Reports (e.g., CAAM, ACEA, SMMT)"
+            ],
+            "domain": "business",
+            "forecastability_score": 0.6,
+            "semantic_coverage_weight": 0.25,
+            "measurability": 0.8,
+            "user_intent_preservation_score": 0.9,
+            "proxy_metric": "主流车企走量车型搭载固态电池的情况",
+            "proxy_risk": "medium",
+            "goodhart_risk": "low",
+            "direction_conflict_risk": "low",
+            "lost_dimensions": [
+              "未反映非主流车企的贡献",
+              "未反映具体电池技术路线（半固态vs全固态）"
+            ],
+            "ambiguity_flags": [
+              "‘销量前10’的定义可能随年份变化",
+              "‘年销量’指2028自然年销量"
+            ],
+            "clarifying_assumptions": [
+              "‘普及’需要主流玩家的参与和走量车型的验证",
+              "5万辆年销量是‘走量车型’的合理阈值"
+            ],
+            "outside_view_note": "参考新技术在主流市场的采纳，通常需要头部玩家的背书和规模化生产。",
+            "inside_view_note": "如果只有小众豪华品牌使用，不能称为普及。主流车企的采纳是普及的关键信号。",
+            "update_signals": [
+              "主流车企宣布固态电池车型量产计划",
+              "固态电池车型在主流市场获得良好口碑",
+              "主流车企推迟或取消固态电池计划"
+            ],
+            "reason": "‘普及’需要主流玩家的参与和走量车型的验证，而不仅仅是技术存在或小众豪华车的应用。"
+          },
+          {
+            "contract_id": "contract_ssb_supply_chain_2028",
+            "dimension_id": "dim_supply_chain",
+            "dimension_name": "供应链成熟度与量产能力",
+            "normalized_question": "截至2028年12月31日，全球是否有至少3家不同的电池制造商实现GWh级固态或半固态电池产线的正式投产并交付产品？",
+            "target_type": "binary",
+            "deadline": "2028-12-31",
+            "resolution_criteria": "YES: 至少有3家不同的电池制造商（如宁德时代、丰田、QuantumScape、Solid Power、LG新能源等）的GWh级（>=1GWh）固态/半固态电池产线在2028年12月31日前正式投产（开始批量生产并交付客户）。 NO: 投产的GWh级产线数量 < 3家。 注：‘投产’指产线运行并产生实际交付，而非仅‘建成’或‘规划’。",
+            "resolution_sources": [
+              "Battery Manufacturer Press Releases and News",
+              "Industry Reports from Recharge, EV Volumes, SNE Research",
+              "Company Annual Reports and Investor Presentations"
+            ],
+            "domain": "tech_product",
+            "forecastability_score": 0.8,
+            "semantic_coverage_weight": 0.18749999999999997,
+            "measurability": 0.8,
+            "user_intent_preservation_score": 0.7,
+            "proxy_metric": "全球已投产的GWh级固态/半固态电池产线数量",
+            "proxy_risk": "medium",
+            "goodhart_risk": "medium",
+            "direction_conflict_risk": "low",
+            "lost_dimensions": [
+              "产线投产不代表满产或高良率",
+              "未反映上游关键材料（如硫化物电解质）的供应稳定性",
+              "未反映设备标准化程度"
+            ],
+            "ambiguity_flags": [
+              "‘投产’定义：是试生产还是批量交付？",
+              "‘GWh级’定义：是设计产能还是实际产能？"
+            ],
+            "clarifying_assumptions": [
+              "‘投产’定义为产线开始批量生产并交付给客户，而非仅完成建设",
+              "包含半固态和全固态电池产线",
+              "3家是一个合理的阈值，表明供应链已初步多元化，不再依赖单一厂商"
+            ],
+            "outside_view_note": "参考锂离子电池早期发展，从第一家GWh级产线到多家厂商投产通常需要5-7年。固态电池起步较晚，2028年达到3家GWh级产线是合理的预期。",
+            "inside_view_note": "供应链成熟度是普及的前提。如果只有1-2家厂商能投产，说明供应链仍高度集中，存在瓶颈风险。3家以上表明技术路线已初步收敛，供应链开始形成规模。",
+            "update_signals": [
+              "主要固态电池厂商宣布推迟产线建设",
+              "关键材料供应商破产或退出市场",
+              "设备供应商无法解决量产中的技术瓶颈"
+            ],
+            "reason": "供应链成熟度是‘普及’的物理基础。GWh级产线投产标志着技术从实验室走向工业化。3家厂商是一个关键的多样性阈值，表明技术已具备规模化生产的初步条件。"
+          },
+          {
+            "contract_id": "contract_ssb_policy_standard_2028",
+            "dimension_id": "dim_policy_standards",
+            "dimension_name": "政策与监管环境",
+            "normalized_question": "截至2028年12月31日，中国、欧盟或美国是否正式发布针对全固态电池的强制性安全认证标准或大规模补贴政策？",
+            "target_type": "binary",
+            "deadline": "2028-12-31",
+            "resolution_criteria": "YES: 中国、欧盟或美国中至少一个主要经济体在2028年12月31日前正式发布针对全固态电池的强制性安全认证标准，或推出针对固态电池研发/量产的大规模补贴政策（金额超过1亿美元或等值货币）。 NO: 无此类标准或政策发布。",
+            "resolution_sources": [
+              "Government Regulatory Websites (e.g., NHTSA, EU Commission, MIIT)",
+              "Industry News and Policy Reports",
+              "Official Government Gazettes"
+            ],
+            "domain": "policy",
+            "forecastability_score": 0.6,
+            "semantic_coverage_weight": 0.125,
+            "measurability": 0.7,
+            "user_intent_preservation_score": 0.8,
+            "proxy_metric": "主要经济体发布固态电池强制性标准或大规模补贴",
+            "proxy_risk": "medium",
+            "goodhart_risk": "low",
+            "direction_conflict_risk": "low",
+            "lost_dimensions": [
+              "未反映其他经济体的政策",
+              "未反映标准的具体内容细节"
+            ],
+            "ambiguity_flags": [
+              "‘强制性’定义：是法律强制还是行业推荐？",
+              "‘大规模补贴’定义：金额阈值需明确"
+            ],
+            "clarifying_assumptions": [
+              "政策和标准是技术普及的‘闸门’",
+              "主要经济体指中国、欧盟、美国"
+            ],
+            "outside_view_note": "参考新技术政策采纳历史，通常在市场初步形成后发布标准。",
+            "inside_view_note": "没有统一标准，大规模量产和消费者信任难以建立。",
+            "update_signals": [
+              "主要经济体发布固态电池安全标准草案",
+              "政府宣布固态电池补贴计划",
+              "因安全事故导致监管收紧"
+            ],
+            "reason": "政策和标准是技术普及的‘闸门’。没有统一标准，大规模量产和消费者信任难以建立。"
+          }
+        ],
+        "semantic_collapse_audit": {
+          "semantic_collapse_risk": "high",
+          "collapse_reason": "The term '普及' (popularization/widespread adoption) is a complex, multi-dimensional state involving market share, cost parity, supply chain maturity, and consumer trust. Reducing it to a single metric (e.g., 'market share > 1%' or 'cost < $120/kWh') creates a high risk of semantic collapse. A single metric might be met (e.g., niche luxury cars using solid-state batteries reach 1% share) while the broader intent of 'mainstream adoption' remains unfulfilled. Conversely, high production capacity might exist without actual market penetration. The adversarial audit correctly identified that 'existence' or 'early adopter status' is not equivalent to 'popularization'.",
+          "lost_dimensions_if_single_metric": [
+            "Cost competitiveness relative to incumbent liquid batteries (economic viability)",
+            "Supply chain scalability and yield rates (physical feasibility)",
+            "Consumer trust and safety perception (social acceptance)",
+            "Policy and regulatory support (institutional enablers)",
+            "Distinction between semi-solid and all-solid-state technologies (technical maturity)"
+          ],
+          "allowed_single_contract": false,
+          "recommended_mode": "multi_contract_portfolio",
+          "required_warning": "Do not equate 'product launch' or 'laboratory breakthrough' with 'popularization'. Ensure the portfolio of contracts covers both the supply side (production capacity, cost) and demand side (market share, mainstream adoption). Explicitly define whether 'solid-state' includes semi-solid batteries, as this significantly alters the probability and definition of popularization by 2028.",
+          "final_guardrails": []
+        },
+        "adversarial_audit": {
+          "verdict": "revise",
+          "substitution_errors": [
+            "将‘全固态电池普及’偷换为‘半固态+全固态混合普及’：半固态是过渡技术，其普及不等于固态电池技术的终极形态普及，这降低了预测难度但偏离了核心语义。",
+            "将‘普及’偷换为‘存在’：1%的市场份额仅证明技术存在且被少数人接受，远未达到‘普及’（Widespread Adoption）的社会学或经济学定义。",
+            "将‘经济可行性’偷换为‘制造成本’：制造成本低不等于终端售价低，车企可能通过高溢价维持利润，导致消费者无法负担，从而阻碍普及。"
+          ],
+          "missing_dimensions": [
+            "政策与监管环境：各国对固态电池的安全认证标准、补贴退坡政策、以及是否强制要求更高安全标准（从而利好固态）是普及的关键外部驱动力。",
+            "消费者认知与信任：早期安全事故对新技术的毁灭性打击（如早期电动车火灾）可能长期抑制普及，当前方案未包含‘负面事件’的考量。",
+            "替代技术的竞争：液态锂电池（如磷酸铁锂、高镍三元）的成本下降和性能提升速度。如果液态电池在2028年达到300Wh/kg且成本极低，固态电池的普及窗口将被关闭。",
+            "应用场景的局限性：当前方案隐含假设乘用车是主要场景，但固态电池可能在消费电子或航空领域先普及，需明确‘普及’的领域定义。"
+          ],
+          "overweighted_metrics": [
+            "市场渗透率（1%阈值）：对于‘普及’而言，1%权重过高且阈值过低。建议提高阈值或增加‘主流车型搭载率’作为补充。",
+            "技术性能指标：虽然已标记为高风险，但整体方案仍花费大量精力在能量密度等技术指标上，而忽略了更宏观的市场接受度指标。"
+          ],
+          "underweighted_dimensions": [
+            "供应链的‘有效’产能：不仅看投产数量，更要看良品率和实际交付量。",
+            "终端价格竞争力：相对于同级液态电池车型的溢价幅度，直接决定消费者购买决策。"
+          ],
+          "repair_suggestions": [
+            "明确‘固态电池’的定义：在合约中严格区分‘半固态’和‘全固态’，或明确说明‘普及’是指整个固态技术路线（含半固态）的普及。鉴于2028年时间点，建议将‘半固态’作为主要预测对象，但需降低其对‘全固态普及’的语义覆盖权重。",
+            "提高‘普及’的阈值：1%是‘早期采用者’，5%-10%才是‘早期大众’的起点。建议将市场渗透率阈值提高，或引入‘走量车型’作为更直观的普及标志。",
+            "引入‘负面信号’合约：增加关于‘固态电池重大安全事故’或‘主要厂商放弃固态路线’的合约，以平衡技术乐观主义偏差。",
+            "考虑替代技术竞争：在Inside View中必须详细分析液态锂电池在2024-2028年的进步速度，如果液态电池成本降至$60/kWh且能量密度达到250Wh/kg，固态电池的普及将极其困难。"
+          ]
+        },
+        "recommended_user_choice_prompt": "您关注的‘固态电池普及’是指包含半固态在内的整个技术路线，还是严格指全固态电池？您更关注其在高端市场的初步应用，还是在大众市场的广泛渗透？",
+        "machine_notes": [
+          "Adversarial audit suggested adding policy/standard dimension, which has been included in dimension_map and contract_candidates.",
+          "Adversarial audit suggested adding mainstream adoption contract, which has been included as contract_ssb_mainstream_adoption_2028.",
+          "Adversarial audit suggested removing performance-only contract, which has been excluded from final contract_candidates.",
+          "Adversarial audit suggested revising cost contract to focus on terminal price premium, but due to measurability issues, the supply chain and market share contracts are prioritized as more robust proxies for economic viability.",
+          "Semantic collapse risk is high, so multi_contract_portfolio is enforced."
+        ]
+      },
+      "validation_errors": []
+    }
+  ]
+}
