@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Cloud-to-Contract Multi-Agent Decomposition Module (standalone)
+Cloud-to-Contract Multi-Agent Decomposition Module
 云状问题 → 多 Agent 拆解 → Contract Portfolio
 
 用途：
@@ -130,13 +130,7 @@ def llm_qwen(
     top_p = top_p if top_p is not None else config["llm"]["top_p"]
     system = system or config["llm"]["system"]
 
-    # 每次调用按传入 config 创建 client，避免主流程修改 base_url/api_key 后模块仍使用旧 client。
-    local_client = OpenAI(
-        api_key=config["api_key"],
-        base_url=config["base_url"],
-    )
-
-    response = local_client.chat.completions.create(
+    response = client.chat.completions.create(
         model=config["model"],
         messages=[
             {"role": "system", "content": system},
@@ -565,7 +559,8 @@ FINAL_SCHEMA = {
         "lost_dimensions_if_single_metric": [],
         "allowed_single_contract": False,
         "recommended_mode": "single_contract | multi_contract_portfolio | ask_user_to_choose | distribution_forecast",
-        "required_warning": ""
+        "required_warning": "",
+        "final_guardrails": []
     },
     "adversarial_audit": {
         "verdict": "pass | revise | reject",
@@ -1411,6 +1406,7 @@ Agent 10 Collapse Audit：
 输出 JSON schema：
 {json_dumps(FINAL_SCHEMA)}
 """
+    print("最终综合器的输入",prompt)
     return llm_json(
         prompt,
         config=config,
@@ -1435,6 +1431,155 @@ def merge_by_dimension_id(base_dims: List[Dict[str, Any]], extra_list: List[Dict
 
     return list(idx.values())
 
+
+
+def get_nested_dict(obj: Dict[str, Any], *keys: str) -> Dict[str, Any]:
+    """安全读取嵌套 dict；读不到时返回空 dict。"""
+    cur: Any = obj
+    for key in keys:
+        if not isinstance(cur, dict):
+            return {}
+        cur = cur.get(key, {})
+    return cur if isinstance(cur, dict) else {}
+
+
+def extract_collapse_guardrails(collapse_audit: Dict[str, Any]) -> List[Any]:
+    """从 Agent 10 输出中取 final_guardrails，兼容包裹和非包裹两种结构。"""
+    if not isinstance(collapse_audit, dict):
+        return []
+
+    audit = collapse_audit.get("semantic_collapse_audit", collapse_audit)
+    if not isinstance(audit, dict):
+        return []
+
+    guardrails = audit.get("final_guardrails", [])
+    return guardrails if isinstance(guardrails, list) else []
+
+
+def contract_text_blob(contract: Dict[str, Any]) -> str:
+    parts = [
+        contract.get("dimension_name", ""),
+        contract.get("normalized_question", ""),
+        contract.get("resolution_criteria", ""),
+        contract.get("proxy_metric", ""),
+        contract.get("reason", ""),
+    ]
+    return "\n".join(str(x) for x in parts if x is not None)
+
+
+def is_income_growth_contract(contract: Dict[str, Any]) -> bool:
+    """
+    收入类合约硬规则：不能比较“增速是否高于基准年”，应比较“实际水平是否高于基准年”。
+    这里只处理明显的收入/购买力 + 增速 合约，避免误伤其他维度。
+    """
+    blob = contract_text_blob(contract)
+    income_terms = ["收入", "可支配收入", "购买力", "工资", "薪资", "income", "wage", "salary"]
+    return any(t in blob for t in income_terms) and "增速" in blob
+
+
+def infer_year_pair_from_contract(contract: Dict[str, Any]) -> tuple[str, str]:
+    blob = contract_text_blob(contract)
+    years = [int(y) for y in re.findall(r"(20\d{2})年", blob)]
+    if len(years) >= 2:
+        return str(min(years)), str(max(years))
+    if len(years) == 1:
+        return str(years[0]), str(years[0])
+    return "基准年", "目标年"
+
+
+def repair_income_growth_contract(contract: Dict[str, Any]) -> Dict[str, Any]:
+    """把收入类“增速比较”合约改成“实际水平比较”合约。"""
+    if not is_income_growth_contract(contract):
+        return contract
+
+    base_year, target_year = infer_year_pair_from_contract(contract)
+
+    proxy = str(contract.get("proxy_metric") or "收入中位数实际水平")
+    proxy = proxy.replace("实际增速", "实际水平")
+    proxy = proxy.replace("名义增速", "名义水平")
+    proxy = proxy.replace("增速", "水平")
+    proxy = proxy.strip() or "收入中位数实际水平"
+
+    # 尽量保留原代理指标主体，但强制改为“实际水平”口径。
+    contract["proxy_metric"] = proxy
+    contract["normalized_question"] = (
+        f"{target_year}年{proxy}是否比{base_year}年实际水平高出至少5%？"
+    )
+    contract["resolution_criteria"] = (
+        f"YES: {target_year}年{proxy}经CPI或对应价格指数调整后的实际水平 "
+        f">= {base_year}年实际水平 * 1.05。"
+        f"NO: {target_year}年实际水平低于该阈值。"
+        "若官方仅公布名义值，应使用同一来源的CPI或价格指数折算为同一价格水平后比较。"
+    )
+
+    ambiguity_flags = contract.setdefault("ambiguity_flags", [])
+    flag = "硬规则修正：收入类合约已从‘增速是否高于基准年’改为‘实际水平是否高于基准年且至少高5%’。"
+    if flag not in ambiguity_flags:
+        ambiguity_flags.append(flag)
+
+    notes = contract.setdefault("clarifying_assumptions", [])
+    assumption = "将‘生活变好’的收入维度解释为实际收入水平提升，而不是收入增速提高。"
+    if assumption not in notes:
+        notes.append(assumption)
+
+    reason = str(contract.get("reason", ""))
+    repair_note = "已按硬规则将收入维度从增速比较改为实际水平比较。"
+    if repair_note not in reason:
+        contract["reason"] = (reason + " " + repair_note).strip()
+
+    return contract
+
+
+def apply_final_hard_rules(
+    final: Dict[str, Any],
+    classifier: Dict[str, Any],
+    collapse_audit: Dict[str, Any],
+    config: Dict[str, Any] = CONFIG,
+) -> Dict[str, Any]:
+    """
+    Final Synthesizer 后处理硬规则。
+    用代码兜底，避免 LLM 在最终合成阶段重写分类、丢 guardrails 或保留过期审计状态。
+    """
+    final = dict(final or {})
+    final.setdefault("machine_notes", [])
+
+    # 1. Final 强制继承 Agent 0 分类结果。
+    for key in ("question_type", "is_cloud_question", "cloud_terms"):
+        if key in classifier:
+            final[key] = classifier[key]
+
+    # 2. 如果审计已修复，把 adversarial verdict 从 revise 改为 pass。
+    adv = final.setdefault("adversarial_audit", {})
+    if isinstance(adv, dict) and adv.get("verdict") == "revise":
+        if any("已" in str(x) and "修正" in str(x) for x in final.get("machine_notes", [])):
+            adv["verdict"] = "pass"
+            note = "Adversarial audit verdict 已在修正落地后由 revise 调整为 pass。"
+            if note not in final["machine_notes"]:
+                final["machine_notes"].append(note)
+
+    # 3. 保留 Agent 10 collapse guardrails。
+    audit = final.setdefault("semantic_collapse_audit", {})
+    guardrails = extract_collapse_guardrails(collapse_audit)
+    if guardrails:
+        audit["final_guardrails"] = guardrails
+
+    # 4. 收入类合约禁止比较“增速是否高于基准年”。
+    repaired_any = False
+    repaired_contracts = []
+    for c in final.get("contract_candidates", []) or []:
+        before = json.dumps(c, ensure_ascii=False, sort_keys=True)
+        c = repair_income_growth_contract(dict(c or {}))
+        after = json.dumps(c, ensure_ascii=False, sort_keys=True)
+        if before != after:
+            repaired_any = True
+        repaired_contracts.append(c)
+    final["contract_candidates"] = repaired_contracts
+    if repaired_any:
+        note = "已修正收入类合约：从‘增速是否高于基准年’改为‘实际水平是否高于基准年且至少高5%’。"
+        if note not in final["machine_notes"]:
+            final["machine_notes"].append(note)
+
+    return final
 
 def normalize_final_record(record: Dict[str, Any], question: str, config: Dict[str, Any] = CONFIG) -> Dict[str, Any]:
     cq = config["cloud_question"]
@@ -1553,6 +1698,18 @@ def normalize_final_record(record: Dict[str, Any], question: str, config: Dict[s
         c.setdefault("update_signals", [])
         c.setdefault("reason", "")
 
+        # 硬规则：高权重维度如果 lost_dimensions 太多，自动降权。
+        # 目的：避免一个覆盖不完整的代理指标在 portfolio 中占过高权重。
+        if c["semantic_coverage_weight"] >= 0.15 and len(c.get("lost_dimensions", [])) >= 3:
+            old_weight = c["semantic_coverage_weight"]
+            c["semantic_coverage_weight"] = clamp(old_weight * 0.6, 0.0, 1.0)
+            c.setdefault("ambiguity_flags", []).append(
+                "硬规则降权：该高权重合约 lost_dimensions >= 3，semantic_coverage_weight 已乘以0.6。"
+            )
+            record["machine_notes"].append(
+                f"{c.get('contract_id')} lost_dimensions 较多，权重由 {old_weight:.3f} 降至 {c['semantic_coverage_weight']:.3f}，随后会重新归一化。"
+            )
+
         contracts.append(c)
 
     contracts = contracts[:cq["max_contracts"]]
@@ -1634,6 +1791,8 @@ def validate_final_record(record: Dict[str, Any], config: Dict[str, Any] = CONFI
             errors.append(f"{c.get('contract_id')} 缺少 lost_dimensions")
         if c.get("proxy_risk") in {"high", "unknown"} and c.get("user_intent_preservation_score", 0) > 0.9:
             errors.append(f"{c.get('contract_id')} 代理风险高但原意保留分异常过高")
+        if is_income_growth_contract(c):
+            errors.append(f"{c.get('contract_id')} 收入类合约仍在比较增速，必须改为实际水平比较")
 
     return errors
 
@@ -1761,7 +1920,13 @@ def run_question_decomposition_agents(
         config=config,
     )
 
+    # Final Synthesizer 后处理硬规则：
+    # 1) 继承 Agent 0 分类；2) 修正已落地的 adversarial verdict；
+    # 3) 保留 collapse guardrails；4) 收入合约改为实际水平比较。
+    final = apply_final_hard_rules(final, classifier, collapse_audit, config=config)
     final = normalize_final_record(final, question, config=config)
+    # normalize_final_record 内部可能基于旧 cloud_terms 做兜底判断；这里再次应用硬规则，保证最终输出以 Agent 0 为准。
+    final = apply_final_hard_rules(final, classifier, collapse_audit, config=config)
     validation_errors = validate_final_record(final, config=config)
 
     final_record = {
@@ -1844,3 +2009,18 @@ def export_final_json(record: Dict[str, Any], out_path: str) -> str:
     path.write_text(json.dumps(record["final"], ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"已导出：{path}")
     return str(path)
+
+
+# =============================================================================
+# 21. 示例
+# =============================================================================
+
+QUESTION = """
+2028年固态电池是否会普及？
+""".strip()
+
+record = run_question_decomposition_agents(QUESTION, CONFIG)
+print_contract_portfolio(record)
+
+# 可选导出：
+# export_final_json(record, "./question_decomposition_result.json")
