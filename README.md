@@ -4,6 +4,119 @@ conda activate forecasting_os
 =================================================
 版本：LLM 结构化先验 + bayesian_causal_graph_logistic_cpd_monte_carlo
 模型：qwen/qwen3.6-27b
+问题：2028年后北京房价会不会小幅上涨？
+结果：
+预测类型：multi_contract_portfolio原始问题：2028年后北京房价会不会小幅上涨？综合概率：46.4%粗略区间：21.7% - 73.1%问题类型：cloud_judgment语义坍缩风险：high推荐模式：multi_contract_portfolio
+
+原始语义
+
+用户希望了解在2028年之后的时间段内，北京住宅房地产市场价格是否会出现温和的、非剧烈的正向增长趋势，且这种增长具有真实购买力支撑而非单纯通胀或统计噪音。
+
+语义坍缩说明：将‘2028年后’这一长期、开放的时间范围坍缩为‘2029年同比2028年’的单年短期波动；将‘小幅上涨’这一主观、多维的感知坍缩为固定的‘0-5%名义涨幅’，忽略了通胀背景下的实际购买力变化、市场流动性健康度以及区域分化带来的结构性风险。单一指标无法捕捉‘温和且可持续’的市场状态。
+
+如果强行单指标化，会丢失这些维度：
+
+实际购买力变化（剔除通胀后的真实增值）
+
+市场流动性与成交量支撑（排除有价无市的虚假上涨）
+
+区域分化程度（核心区与郊区的结构性差异）
+
+时间维度的长期趋势（2028年后的持续状态而非单年快照）
+
+政策与宏观环境的稳定性（上涨的可持续性）
+
+维度展开
+
+名义价格变动幅度 | weight=0.40 | measurability=0.95 | 覆盖‘上涨’的方向性和‘小幅’的数值定义。这是用户最核心的关注点，即价格是否正向增长且幅度有限。
+
+实际购买力变化（剔除通胀） | weight=0.25 | measurability=0.90 | 覆盖‘上涨’的真实经济含义。如果名义价格上涨但通胀更高，实际购买力下降，这不符合‘变好’或‘温和上涨’的直觉预期。
+
+市场流动性与成交量 | weight=0.15 | measurability=0.95 | 覆盖‘上涨’的健康程度。有价无市的上涨（成交量极低）与有量有价的上涨（成交量活跃）意义不同。‘小幅上涨’通常暗示市场平稳而非僵死。
+
+区域分化程度 | weight=0.10 | measurability=0.85 | 覆盖‘北京房价’的空间异质性。‘小幅上涨’是全市普遍现象，还是仅核心区上涨、郊区下跌后的平均结果？
+
+政策与预期稳定性 | weight=0.10 | measurability=0.70 | 覆盖‘2028年后’这一时间背景下的宏观环境。房价走势受政策影响极大，‘小幅上涨’往往对应政策宽松但不过热的状态。
+
+Contract Portfolio 结果
+
+名义价格变动幅度 | P=37.5% | weight=0.466 | proxy=2029年北京全市二手房成交均价同比2028年的增长率 | proxy_risk=medium
+
+预测题：2029年北京全市二手房成交均价同比2028年是否上涨且涨幅在0%至5%之间？
+
+实际购买力变化（剔除通胀） | P=46.5% | weight=0.347 | proxy=2029年北京房价名义同比涨幅减去北京CPI同比涨幅后的差值 | proxy_risk=medium
+
+预测题：2029年北京房价实际涨幅（名义涨幅减去CPI涨幅）是否在0%至3%之间？
+
+市场流动性与成交量 | P=68.3% | weight=0.186 | proxy=2029年北京二手房月均成交量同比2028年的变化率 | proxy_risk=low
+
+预测题：2029年北京二手房月均成交量是否高于2028年，且价格未出现大幅下跌（跌幅<5%）？
+
+子预测摘要
+
+名义价格变动幅度：37.5% 区间 11.9% - 72.8%
+
+contract：2029年北京全市二手房成交均价同比2028年是否上涨且涨幅在0%至5%之间？
+
+base=35.0%, evidence=31.5%, causal=40.3%, panel=37.4%
+
+causal_graph：method=bayesian_causal_graph_logistic_cpd_monte_carlo, samples=12000, nodes=6, edges=0, causal_interval=10.8%-79.1%
+
+top causal sensitivity：
+
+存量房供给压力: do_true=29.9%, do_false=56.8%, swing=0.268
+
+人口净流入与刚需支撑: do_true=48.5%, do_false=26.4%, swing=0.221
+
+货币政策与利率环境: do_true=45.2%, do_false=27.6%, swing=0.176
+
+实际购买力变化（剔除通胀）：46.5% 区间 16.9% - 78.8%
+
+contract：2029年北京房价实际涨幅（名义涨幅减去CPI涨幅）是否在0%至3%之间？
+
+base=45.0%, evidence=39.0%, causal=53.4%, panel=48.0%
+
+causal_graph：method=bayesian_causal_graph_logistic_cpd_monte_carlo, samples=12000, nodes=5, edges=1, causal_interval=21.5%-83.8%
+
+top causal sensitivity：
+
+货币政策宽松程度: do_true=61.0%, do_false=34.0%, swing=0.270
+
+房地产政策稳定性: do_true=60.1%, do_false=40.0%, swing=0.201
+
+北京人口净流入与结构: do_true=62.5%, do_false=46.6%, swing=0.160
+
+市场流动性与成交量：68.3% 区间 34.1% - 90.0%
+
+contract：2029年北京二手房月均成交量是否高于2028年，且价格未出现大幅下跌（跌幅<5%）？
+
+base=65.0%, evidence=71.5%, causal=79.0%, panel=63.8%
+
+causal_graph：method=bayesian_causal_graph_logistic_cpd_monte_carlo, samples=12000, nodes=6, edges=2, causal_interval=55.4%-92.2%
+
+top causal sensitivity：
+
+货币政策宽松程度: do_true=82.3%, do_false=63.2%, swing=0.192
+
+政策调控稳定性: do_true=81.7%, do_false=70.3%, swing=0.114
+
+法拍房与急售房源冲击: do_true=71.8%, do_false=82.1%, swing=0.102
+
+聚合方法
+
+使用 weighted logit portfolio，不是简单平均概率。
+
+权重由 semantic_coverage_weight、measurability、user_intent_preservation_score、proxy_risk 共同决定。
+
+子预测 logit 分歧：0.537
+
+portfolio logit sigma：1.142
+
+结论
+
+对原始云状问题，当前综合概率是 46.4%。
+
+
 问题：2030年中美会不会发生军事冲突？
 结果：
 **预测类型**：multi_contract_portfolio
