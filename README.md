@@ -2,6 +2,78 @@
 conda create -n forecasting_os python=3.12
 conda activate forecasting_os
 =================================================
+版本：LLM 结构化先验 + bayesian_causal_graph_logistic_cpd_monte_carlo
+模型：qwen/qwen3.6-27b
+问题：2030年中美会不会发生军事冲突？
+结果：
+**预测类型**：multi_contract_portfolio
+**原始问题**：2030年中美会不会发生军事冲突？
+**综合概率**：9.1%
+**粗略区间**：5.9% - 13.8%
+**问题类型**：explicit_binary
+**语义坍缩风险**：low
+**推荐模式**：multi_contract_portfolio
+
+## 原始语义
+用户旨在评估在2030年12月31日之前，中华人民共和国与美利坚合众国之间是否会发生任何形式的、可被国际公认定义的直接军事对抗、武装冲突或重大代理人战争事件。
+
+语义坍缩说明：分解避免了将‘军事冲突’简化为单一指标（如GDP或军费），而是涵盖了直接、间接和新维度冲突。
+
+如果强行单指标化，会丢失这些维度：
+- 代理人战争。
+- 准军事力量冲突。
+- 网络/太空物理攻击。
+
+## 维度展开
+- **Direct Military Engagement (Kinetic & Paramilitary)** | weight=0.60 | measurability=0.90 | 中美双方军事或准军事力量之间的直接武力接触，包括正规军交火、导弹发射、舰机碰撞导致的战斗行为，以及海警/民兵在争议区域的致命武力使用。
+- **Proxy Military Conflict** | weight=0.25 | measurability=0.70 | 中美在第三国或地区支持对立双方，并导致双方军事力量（或由其直接指挥/武装的力量）发生直接战斗或重大军事对抗。
+- **Cyber/Space Kinetic Equivalent** | weight=0.15 | measurability=0.40 | 网络或太空攻击造成物理破坏、人员伤亡或关键基础设施瘫痪，且被归因于对方，并引发军事层面的回应或被视为战争行为。
+
+## Contract Portfolio 结果
+- **Direct Military Engagement** | P=9.5% | weight=0.847 | proxy=官方确认的军事人员伤亡或动能武器发射。 | proxy_risk=low
+  - 预测题：在2026年6月2日至2030年12月31日期间，中美双方是否会发生直接军事交战（包括正规军及执行军事任务的准军事力量）？
+- **Proxy Military Conflict** | P=6.9% | weight=0.141 | proxy=中美军队在第三国的直接交战记录。 | proxy_risk=medium
+  - 预测题：在2026年6月2日至2030年12月31日期间，中美是否在第三国发生直接军事对抗或重大代理人战争？
+- **Cyber/Space Kinetic Equivalent** | P=7.6% | weight=0.013 | proxy=造成物理后果的归因网络/太空攻击。 | proxy_risk=high
+  - 预测题：在2026年6月2日至2030年12月31日期间，中美是否发生造成物理破坏或人员伤亡的网络/太空攻击，并被认定为军事冲突？
+
+## 子预测摘要
+- **Direct Military Engagement**：9.5% 区间 1.5% - 42.2%
+  - contract：在2026年6月2日至2030年12月31日期间，中美双方是否会发生直接军事交战（包括正规军及执行军事任务的准军事力量）？
+  - base=5.0%, evidence=7.0%, causal=5.5%, panel=9.3%
+  - causal_graph：method=bayesian_causal_graph_logistic_cpd_monte_carlo, samples=12000, nodes=6, edges=0, causal_interval=1.6%-15.8%
+  - top causal sensitivity：
+    - Taiwan Crisis Escalation: do_true=11.9%, do_false=3.4%, swing=0.085
+    - Accidental Skirmish in South China Sea: do_true=10.4%, do_false=4.5%, swing=0.059
+    - Crisis Communication Mechanisms: do_true=4.5%, do_false=7.1%, swing=0.027
+- **Proxy Military Conflict**：6.9% 区间 1.1% - 32.1%
+  - contract：在2026年6月2日至2030年12月31日期间，中美是否在第三国发生直接军事对抗或重大代理人战争？
+  - base=5.0%, evidence=3.3%, causal=1.9%, panel=9.9%
+  - causal_graph：method=bayesian_causal_graph_logistic_cpd_monte_carlo, samples=12000, nodes=5, edges=0, causal_interval=1.0%-4.9%
+  - top causal sensitivity：
+    - Escalation in South China Sea: do_true=4.1%, do_false=1.5%, swing=0.026
+    - Effectiveness of Crisis Communication Channels: do_true=1.4%, do_false=3.0%, swing=0.016
+    - Conflict in Middle East or Africa involving both powers: do_true=3.0%, do_false=1.7%, swing=0.013
+- **Cyber/Space Kinetic Equivalent**：7.6% 区间 1.1% - 37.8%
+  - contract：在2026年6月2日至2030年12月31日期间，中美是否发生造成物理破坏或人员伤亡的网络/太空攻击，并被认定为军事冲突？
+  - base=5.0%, evidence=2.8%, causal=3.1%, panel=7.2%
+  - causal_graph：method=bayesian_causal_graph_logistic_cpd_monte_carlo, samples=12000, nodes=5, edges=1, causal_interval=1.0%-11.7%
+  - top causal sensitivity：
+    - 常规军事冲突升级: do_true=8.2%, do_false=2.3%, swing=0.060
+    - 太空军事化与反卫星武器部署: do_true=6.6%, do_false=1.7%, swing=0.049
+    - 危机管控机制的有效性: do_true=2.1%, do_false=4.5%, swing=0.023
+
+## 聚合方法
+- 使用 weighted logit portfolio，不是简单平均概率。
+- 权重由 semantic_coverage_weight、measurability、user_intent_preservation_score、proxy_risk 共同决定。
+- 子预测 logit 分歧：0.149
+- portfolio logit sigma：0.467
+
+## 结论
+对原始云状问题，当前综合概率是 **9.1%**。
+
+
+=================================================
 版本：LLM 结构化先验 + 数学聚合
 模型：qwen/qwen3.6-27b
 问题：2028年后北京房价会不会小幅上涨？

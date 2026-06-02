@@ -3,7 +3,7 @@
     "name": "superforecast_mvp_json_store",
     "version": "0.2-cloud-expansion",
     "created_at": "2026-05-29T22:32:42",
-    "updated_at": "2026-06-02T15:49:46"
+    "updated_at": "2026-06-02T16:50:42"
   },
   "forecasts": [
     {
@@ -50383,6 +50383,3435 @@
         }
       },
       "markdown_report": "# Forecast 390c5ea2af18\n\n**预测类型**：multi_contract_portfolio\n**原始问题**：2028年后北京房价会不会小幅上涨？\n**综合概率**：46.4%\n**粗略区间**：21.7% - 73.1%\n**问题类型**：cloud_judgment\n**语义坍缩风险**：high\n**推荐模式**：multi_contract_portfolio\n\n## 原始语义\n用户希望了解在2028年之后的时间段内，北京住宅房地产市场价格是否会出现温和的、非剧烈的正向增长趋势，且这种增长具有真实购买力支撑而非单纯通胀或统计噪音。\n\n语义坍缩说明：将‘2028年后’这一长期、开放的时间范围坍缩为‘2029年同比2028年’的单年短期波动；将‘小幅上涨’这一主观、多维的感知坍缩为固定的‘0-5%名义涨幅’，忽略了通胀背景下的实际购买力变化、市场流动性健康度以及区域分化带来的结构性风险。单一指标无法捕捉‘温和且可持续’的市场状态。\n\n如果强行单指标化，会丢失这些维度：\n- 实际购买力变化（剔除通胀后的真实增值）\n- 市场流动性与成交量支撑（排除有价无市的虚假上涨）\n- 区域分化程度（核心区与郊区的结构性差异）\n- 时间维度的长期趋势（2028年后的持续状态而非单年快照）\n- 政策与宏观环境的稳定性（上涨的可持续性）\n\n## 维度展开\n- **名义价格变动幅度** | weight=0.40 | measurability=0.95 | 覆盖‘上涨’的方向性和‘小幅’的数值定义。这是用户最核心的关注点，即价格是否正向增长且幅度有限。\n- **实际购买力变化（剔除通胀）** | weight=0.25 | measurability=0.90 | 覆盖‘上涨’的真实经济含义。如果名义价格上涨但通胀更高，实际购买力下降，这不符合‘变好’或‘温和上涨’的直觉预期。\n- **市场流动性与成交量** | weight=0.15 | measurability=0.95 | 覆盖‘上涨’的健康程度。有价无市的上涨（成交量极低）与有量有价的上涨（成交量活跃）意义不同。‘小幅上涨’通常暗示市场平稳而非僵死。\n- **区域分化程度** | weight=0.10 | measurability=0.85 | 覆盖‘北京房价’的空间异质性。‘小幅上涨’是全市普遍现象，还是仅核心区上涨、郊区下跌后的平均结果？\n- **政策与预期稳定性** | weight=0.10 | measurability=0.70 | 覆盖‘2028年后’这一时间背景下的宏观环境。房价走势受政策影响极大，‘小幅上涨’往往对应政策宽松但不过热的状态。\n\n## Contract Portfolio 结果\n- **名义价格变动幅度** | P=37.5% | weight=0.466 | proxy=2029年北京全市二手房成交均价同比2028年的增长率 | proxy_risk=medium\n  - 预测题：2029年北京全市二手房成交均价同比2028年是否上涨且涨幅在0%至5%之间？\n- **实际购买力变化（剔除通胀）** | P=46.5% | weight=0.347 | proxy=2029年北京房价名义同比涨幅减去北京CPI同比涨幅后的差值 | proxy_risk=medium\n  - 预测题：2029年北京房价实际涨幅（名义涨幅减去CPI涨幅）是否在0%至3%之间？\n- **市场流动性与成交量** | P=68.3% | weight=0.186 | proxy=2029年北京二手房月均成交量同比2028年的变化率 | proxy_risk=low\n  - 预测题：2029年北京二手房月均成交量是否高于2028年，且价格未出现大幅下跌（跌幅<5%）？\n\n## 子预测摘要\n- **名义价格变动幅度**：37.5% 区间 11.9% - 72.8%\n  - contract：2029年北京全市二手房成交均价同比2028年是否上涨且涨幅在0%至5%之间？\n  - base=35.0%, evidence=31.5%, causal=40.3%, panel=37.4%\n  - causal_graph：method=bayesian_causal_graph_logistic_cpd_monte_carlo, samples=12000, nodes=6, edges=0, causal_interval=10.8%-79.1%\n  - top causal sensitivity：\n    - 存量房供给压力: do_true=29.9%, do_false=56.8%, swing=0.268\n    - 人口净流入与刚需支撑: do_true=48.5%, do_false=26.4%, swing=0.221\n    - 货币政策与利率环境: do_true=45.2%, do_false=27.6%, swing=0.176\n- **实际购买力变化（剔除通胀）**：46.5% 区间 16.9% - 78.8%\n  - contract：2029年北京房价实际涨幅（名义涨幅减去CPI涨幅）是否在0%至3%之间？\n  - base=45.0%, evidence=39.0%, causal=53.4%, panel=48.0%\n  - causal_graph：method=bayesian_causal_graph_logistic_cpd_monte_carlo, samples=12000, nodes=5, edges=1, causal_interval=21.5%-83.8%\n  - top causal sensitivity：\n    - 货币政策宽松程度: do_true=61.0%, do_false=34.0%, swing=0.270\n    - 房地产政策稳定性: do_true=60.1%, do_false=40.0%, swing=0.201\n    - 北京人口净流入与结构: do_true=62.5%, do_false=46.6%, swing=0.160\n- **市场流动性与成交量**：68.3% 区间 34.1% - 90.0%\n  - contract：2029年北京二手房月均成交量是否高于2028年，且价格未出现大幅下跌（跌幅<5%）？\n  - base=65.0%, evidence=71.5%, causal=79.0%, panel=63.8%\n  - causal_graph：method=bayesian_causal_graph_logistic_cpd_monte_carlo, samples=12000, nodes=6, edges=2, causal_interval=55.4%-92.2%\n  - top causal sensitivity：\n    - 货币政策宽松程度: do_true=82.3%, do_false=63.2%, swing=0.192\n    - 政策调控稳定性: do_true=81.7%, do_false=70.3%, swing=0.114\n    - 法拍房与急售房源冲击: do_true=71.8%, do_false=82.1%, swing=0.102\n\n## 聚合方法\n- 使用 weighted logit portfolio，不是简单平均概率。\n- 权重由 semantic_coverage_weight、measurability、user_intent_preservation_score、proxy_risk 共同决定。\n- 子预测 logit 分歧：0.537\n- portfolio logit sigma：1.142\n\n## 结论\n对原始云状问题，当前综合概率是 **46.4%**。\n"
+    },
+    {
+      "id": "6cb67fa11d91",
+      "forecast_kind": "multi_contract_portfolio",
+      "created_at": "2026-06-02T16:50:42",
+      "updated_at": "2026-06-02T16:50:42",
+      "status": "open",
+      "outcome": null,
+      "resolved_at": null,
+      "brier_score": null,
+      "original_question": "2030年中美会不会发生军事冲突？",
+      "question_expansion": {
+        "original_question": "2030年中美会不会发生军事冲突？",
+        "question_type": "explicit_binary",
+        "is_cloud_question": false,
+        "cloud_terms": [],
+        "overall_semantic_intent": "用户旨在评估在2030年12月31日之前，中华人民共和国与美利坚合众国之间是否会发生任何形式的、可被国际公认定义的直接军事对抗、武装冲突或重大代理人战争事件。",
+        "time_interpretation": {
+          "current_period": "2026",
+          "target_period": "2030",
+          "comparison": "绝对时间截止点（Deadline），即判断事件是否在2030年12月31日23:59:59之前发生。"
+        },
+        "core_ambiguities": [
+          "军事冲突的定义边界：是否包含网络攻击、太空资产干扰、代理人战争、海上对峙中的擦枪走火，还是仅指国家正规军之间的直接交火？",
+          "主体界定：是否包含各自盟友、准军事组织（如民兵、海警在战时状态下的行动）？",
+          "冲突的规模与性质：是短暂的战术性接触，还是持续的战略级战争？"
+        ],
+        "triage": {
+          "forecastability_zone": "cloudlike",
+          "reason": "虽然问题形式为二元（是/否），但‘军事冲突’的定义具有高度模糊性，且涉及低概率、高影响的复杂地缘政治驱动因素。单一指标无法覆盖所有可能的冲突形态（直接、间接、灰色地带）。",
+          "requires_decomposition": true,
+          "single_contract_allowed_by_type": false
+        },
+        "dimension_map": [
+          {
+            "dimension_id": "dim_1",
+            "dimension_name": "Direct Military Engagement (Kinetic & Paramilitary)",
+            "meaning": "中美双方军事或准军事力量之间的直接武力接触，包括正规军交火、导弹发射、舰机碰撞导致的战斗行为，以及海警/民兵在争议区域的致命武力使用。",
+            "candidate_metrics": [
+              "官方确认的中美军事人员伤亡。",
+              "动能武器（导弹、火炮、小武器）的发射记录。",
+              "军事或准军事资产的严重损毁或沉没。"
+            ],
+            "semantic_coverage_weight": 0.6,
+            "measurability": 0.9,
+            "why_it_matters": "这是最符合大众对‘战争’直觉理解的维度，也是国际法上最明确的冲突定义。",
+            "knowable_parts": [
+              "当前的军事部署态势。",
+              "公开的交战规则（ROE）。",
+              "历史相遇数据。"
+            ],
+            "unknowable_parts": [
+              "危机时刻领导人的具体决策心理。",
+              "意外事件升级的临界点。"
+            ],
+            "assumptions": [
+              "假设‘军事冲突’包含准军事力量在事实上的军事行动。",
+              "假设直接交火是冲突的核心标志。"
+            ],
+            "outside_view_reference_classes": [
+              "冷战期间美苏直接军事接触（极少）。",
+              "印巴边境冲突。",
+              "南海历史事件（如2001年撞机事件）。"
+            ],
+            "inside_view_mechanisms": [
+              "危机误判：高强度演习中的误操作。",
+              "国内政治压力：通过外部冲突转移内部矛盾。",
+              "联盟义务：美国盟友受袭引发的介入。"
+            ],
+            "update_signals": [
+              "军事热线中断。",
+              "交战规则放宽。",
+              "新式进攻性武器前沿部署。"
+            ]
+          },
+          {
+            "dimension_id": "dim_2",
+            "dimension_name": "Proxy Military Conflict",
+            "meaning": "中美在第三国或地区支持对立双方，并导致双方军事力量（或由其直接指挥/武装的力量）发生直接战斗或重大军事对抗。",
+            "candidate_metrics": [
+              "中美军队在第三国战场直接交火。",
+              "一方对另一方支持的武装力量进行直接军事打击。",
+              "军事封锁或海上拦截行动。"
+            ],
+            "semantic_coverage_weight": 0.25,
+            "measurability": 0.7,
+            "why_it_matters": "大国竞争常通过代理人进行，这是避免直接核战争但保持军事对抗的主要形式。",
+            "knowable_parts": [
+              "当前的盟友体系和安全承诺。",
+              "全球热点地区的冲突态势。"
+            ],
+            "unknowable_parts": [
+              "秘密的军事援助协议。",
+              "第三方冲突升级的不可控性。"
+            ],
+            "assumptions": [
+              "假设仅提供武器不算冲突，必须有直接军事介入或指挥。",
+              "假设台湾若发生冲突，可能被视为直接冲突而非纯代理人战争（取决于具体定义，此处归入直接冲突更合适，故本维度主要指其他第三国）。"
+            ],
+            "outside_view_reference_classes": [
+              "冷战时期的朝鲜战争、越南战争。",
+              "现代叙利亚、乌克兰冲突中的大国间接介入。"
+            ],
+            "inside_view_mechanisms": [
+              "联盟拖拽效应。",
+              "战略资源争夺（如航道、矿产）。",
+              "政权更迭干预。"
+            ],
+            "update_signals": [
+              "第三国冲突中大国军事顾问的出现。",
+              "对第三国武装力量的直接空袭或炮击。"
+            ]
+          },
+          {
+            "dimension_id": "dim_3",
+            "dimension_name": "Cyber/Space Kinetic Equivalent",
+            "meaning": "网络或太空攻击造成物理破坏、人员伤亡或关键基础设施瘫痪，且被归因于对方，并引发军事层面的回应或被视为战争行为。",
+            "candidate_metrics": [
+              "导致物理破坏的网络攻击（如电网、水坝）。",
+              "反卫星武器摧毁对方卫星。",
+              "官方宣布网络攻击为‘战争行为’。"
+            ],
+            "semantic_coverage_weight": 0.15,
+            "measurability": 0.4,
+            "why_it_matters": "现代战争的新维度，但归因难、阈值模糊。",
+            "knowable_parts": [
+              "网络攻击的技术能力。",
+              "关键基础设施的脆弱性。"
+            ],
+            "unknowable_parts": [
+              "攻击的真实来源（归因）。",
+              "双方对‘战争行为’的认定标准。"
+            ],
+            "assumptions": [
+              "假设只有造成物理后果的网络攻击才算军事冲突。",
+              "假设归因必须具有高度可信度。"
+            ],
+            "outside_view_reference_classes": [
+              "Stuxnet病毒。",
+              "乌克兰电网攻击。",
+              "反卫星试验。"
+            ],
+            "inside_view_mechanisms": [
+              "隐蔽行动与可否认性。",
+              "升级阶梯的模糊性。"
+            ],
+            "update_signals": [
+              "关键基础设施遭受大规模瘫痪。",
+              "太空资产被摧毁。"
+            ]
+          }
+        ],
+        "contract_candidates": [
+          {
+            "contract_id": "contract_dim1_direct",
+            "dimension_id": "dim_1",
+            "dimension_name": "Direct Military Engagement",
+            "normalized_question": "在2026年6月2日至2030年12月31日期间，中美双方是否会发生直接军事交战（包括正规军及执行军事任务的准军事力量）？",
+            "target_type": "binary",
+            "deadline": "2030-12-31",
+            "resolution_criteria": "YES：1) 中美任何一方军事或准军事人员被对方武力致死或致伤；2) 任何一方对对方军事/准军事目标发射动能武器（导弹、火炮、小武器等）；3) 发生导致重大资产损毁或人员伤亡的故意碰撞或武力拦截。NO：未发生上述事件。排除纯网络攻击、经济制裁、外交驱逐。",
+            "resolution_sources": [
+              "国防部官方声明。",
+              "主流国际通讯社报道。",
+              "卫星图像及目击者证词。"
+            ],
+            "domain": "geopolitics",
+            "forecastability_score": 0.3,
+            "semantic_coverage_weight": 0.78666235027517,
+            "measurability": 0.9,
+            "user_intent_preservation_score": 0.9,
+            "proxy_metric": "官方确认的军事人员伤亡或动能武器发射。",
+            "proxy_risk": "low",
+            "goodhart_risk": "low",
+            "direction_conflict_risk": "low",
+            "lost_dimensions": [
+              "非致命性武力展示（如激光致盲、水炮）。",
+              "纯网络/太空攻击。"
+            ],
+            "ambiguity_flags": [
+              "准军事力量（如海警、民兵）在争议区域的行为是否视为军事行动。",
+              "意外碰撞是否视为冲突（需有武力使用或重大损毁）。"
+            ],
+            "clarifying_assumptions": [
+              "假设‘军事冲突’包含事实上的军事对抗，无论是否宣战。",
+              "假设台湾若发生冲突，视为直接冲突。"
+            ],
+            "outside_view_note": "核大国直接开战概率极低，但局部摩擦风险存在。",
+            "inside_view_note": "台海、南海是主要热点，误判风险随接触频率增加而上升。",
+            "update_signals": [
+              "军事演习规模扩大。",
+              "外交关系断绝。"
+            ],
+            "reason": "覆盖最核心的‘战争’定义，包含直接交火和准军事冲突。",
+            "original_semantic_coverage_weight": 0.6,
+            "proxy_risk_factor": 1.0,
+            "lost_dimension_factor": 0.76,
+            "raw_portfolio_weight": 0.36936
+          },
+          {
+            "contract_id": "contract_dim2_proxy",
+            "dimension_id": "dim_2",
+            "dimension_name": "Proxy Military Conflict",
+            "normalized_question": "在2026年6月2日至2030年12月31日期间，中美是否在第三国发生直接军事对抗或重大代理人战争？",
+            "target_type": "binary",
+            "deadline": "2030-12-31",
+            "resolution_criteria": "YES：1) 中美军队在第三国直接交火；2) 一方对另一方直接指挥或武装的部队进行军事打击；3) 实施军事封锁或海上军事拦截。NO：未发生上述事件。排除仅提供武器或情报支持。",
+            "resolution_sources": [
+              "联合国安理会记录。",
+              "冲突监测数据库（如UCDP）。",
+              "官方军事行动报告。"
+            ],
+            "domain": "geopolitics",
+            "forecastability_score": 0.4,
+            "semantic_coverage_weight": 0.18128844286176754,
+            "measurability": 0.7,
+            "user_intent_preservation_score": 0.8,
+            "proxy_metric": "中美军队在第三国的直接交战记录。",
+            "proxy_risk": "medium",
+            "goodhart_risk": "medium",
+            "direction_conflict_risk": "medium",
+            "lost_dimensions": [
+              "隐蔽的特种作战。",
+              "非直接指挥的代理人行动。"
+            ],
+            "ambiguity_flags": [
+              "‘直接指挥’的定义。",
+              "第三国冲突的归属。"
+            ],
+            "clarifying_assumptions": [
+              "假设台湾冲突归入直接冲突，本合约主要指其他第三国。",
+              "假设仅提供援助不算冲突。"
+            ],
+            "outside_view_note": "大国通过代理人竞争是常见模式，但直接军事对抗较少。",
+            "inside_view_note": "全球南方国家的冲突可能成为大国博弈的战场。",
+            "update_signals": [
+              "大国向冲突方派遣军事顾问。",
+              "对冲突方进行直接空袭。"
+            ],
+            "reason": "覆盖大国竞争的间接军事对抗形式。",
+            "original_semantic_coverage_weight": 0.25,
+            "proxy_risk_factor": 0.8,
+            "lost_dimension_factor": 0.76,
+            "raw_portfolio_weight": 0.08511999999999999
+          },
+          {
+            "contract_id": "contract_dim3_cyber_space",
+            "dimension_id": "dim_3",
+            "dimension_name": "Cyber/Space Kinetic Equivalent",
+            "normalized_question": "在2026年6月2日至2030年12月31日期间，中美是否发生造成物理破坏或人员伤亡的网络/太空攻击，并被认定为军事冲突？",
+            "target_type": "binary",
+            "deadline": "2030-12-31",
+            "resolution_criteria": "YES：1) 归因于对方的网络攻击导致关键基础设施物理破坏或人员伤亡；2) 使用反卫星武器摧毁对方卫星；3) 官方宣布此类攻击为战争行为并引发军事回应。NO：未发生上述事件。",
+            "resolution_sources": [
+              "网络安全机构归因报告。",
+              "太空监视数据。",
+              "官方声明。"
+            ],
+            "domain": "geopolitics",
+            "forecastability_score": 0.2,
+            "semantic_coverage_weight": 0.03204920686306248,
+            "measurability": 0.4,
+            "user_intent_preservation_score": 0.6,
+            "proxy_metric": "造成物理后果的归因网络/太空攻击。",
+            "proxy_risk": "high",
+            "goodhart_risk": "high",
+            "direction_conflict_risk": "high",
+            "lost_dimensions": [
+              "无物理后果的网络攻击。",
+              "电子干扰。"
+            ],
+            "ambiguity_flags": [
+              "归因的确定性。",
+              "‘物理破坏’的阈值。"
+            ],
+            "clarifying_assumptions": [
+              "假设只有造成物理后果的攻击才算军事冲突。",
+              "假设归因需有高度可信证据。"
+            ],
+            "outside_view_note": "此类事件罕见，但后果严重。",
+            "inside_view_note": "归因困难使得此类冲突难以确认，但一旦发生可能迅速升级。",
+            "update_signals": [
+              "关键基础设施遭受攻击。",
+              "太空资产被摧毁。"
+            ],
+            "reason": "覆盖现代战争的新维度，但设定高阈值以避免噪音。",
+            "original_semantic_coverage_weight": 0.15,
+            "proxy_risk_factor": 0.55,
+            "lost_dimension_factor": 0.76,
+            "raw_portfolio_weight": 0.015048
+          }
+        ],
+        "semantic_collapse_audit": {
+          "semantic_collapse_risk": "low",
+          "collapse_reason": "分解避免了将‘军事冲突’简化为单一指标（如GDP或军费），而是涵盖了直接、间接和新维度冲突。",
+          "lost_dimensions_if_single_metric": [
+            "代理人战争。",
+            "准军事力量冲突。",
+            "网络/太空物理攻击。"
+          ],
+          "allowed_single_contract": false,
+          "recommended_mode": "multi_contract_portfolio",
+          "required_warning": "不要仅依据‘正规军交火’来判断，需综合考虑准军事力量和代理人冲突。",
+          "final_guardrails": [
+            "Define 'Military Conflict' to include direct kinetic engagement between regular armed forces.",
+            "Explicitly decide whether to include paramilitary forces (e.g., PLA Maritime Militia, US Coast Guard in wartime status) in the definition of 'Military'.",
+            "Explicitly decide whether to include proxy conflicts (US and China fighting on opposite sides in a third country) as 'Military Conflict between US and China'.",
+            "Exclude purely economic sanctions, diplomatic expulsions, and non-destructive cyber espionage from the definition of 'Military Conflict'.",
+            "Set a clear threshold for 'Cyber/Space' actions: only include if they cause physical destruction or lead to kinetic retaliation."
+          ]
+        },
+        "adversarial_audit": {
+          "verdict": "revise",
+          "substitution_errors": [
+            "将‘军事冲突’偷换为‘宣战’。",
+            "将‘军事冲突’偷换为‘网络攻击’（无物理后果）。"
+          ],
+          "missing_dimensions": [
+            "准军事力量（海警、民兵）的冲突。",
+            "第三国代理人战争中的直接军事介入。"
+          ],
+          "overweighted_metrics": [
+            "直接正规军交火（可能低估灰色地带冲突）。"
+          ],
+          "underweighted_dimensions": [
+            "准军事冲突。",
+            "代理人战争。"
+          ],
+          "repair_suggestions": [
+            "合并直接冲突和准军事冲突为一个合约。",
+            "增加代理人战争合约。",
+            "提高网络/太空冲突的阈值（需物理后果）。"
+          ],
+          "repair_status": "partially_repaired"
+        },
+        "recommended_user_choice_prompt": "您认为‘军事冲突’是否应包含中美在第三国的代理人战争？是否应包含海警/民兵的武力冲突？",
+        "machine_notes": [
+          "根据Adversarial Audit，合并了直接冲突和准军事冲突，以避免定义碎片化。",
+          "根据Proxy Audit，提高了网络/太空冲突的阈值，要求物理后果或官方定性，以降低归因风险。",
+          "增加了代理人战争维度，以覆盖大国竞争的主要形式。",
+          "Adversarial audit verdict 保持为 revise；repair_status=partially_repaired，不再自动改成 pass。"
+        ],
+        "semantic_collapse_risk": "low",
+        "collapse_reason": "分解避免了将‘军事冲突’简化为单一指标（如GDP或军费），而是涵盖了直接、间接和新维度冲突。",
+        "lost_dimensions_if_single_metric": [
+          "代理人战争。",
+          "准军事力量冲突。",
+          "网络/太空物理攻击。"
+        ],
+        "recommended_mode": "multi_contract_portfolio",
+        "allowed_single_contract": false,
+        "decomposition_record_id": "a8395be8ec72",
+        "decomposition_module": "cloud_to_contract_decomposition",
+        "decomposition_validation_errors": []
+      },
+      "sub_forecasts": [
+        {
+          "id": "e2f69a4bd59a",
+          "forecast_kind": "single_contract",
+          "created_at": "2026-06-02T16:43:29",
+          "updated_at": "2026-06-02T16:43:29",
+          "status": "open",
+          "outcome": null,
+          "resolved_at": null,
+          "brier_score": null,
+          "original_question": "2030年中美会不会发生军事冲突？",
+          "question_expansion": {
+            "original_question": "2030年中美会不会发生军事冲突？",
+            "question_type": "explicit_binary",
+            "is_cloud_question": false,
+            "cloud_terms": [],
+            "overall_semantic_intent": "用户旨在评估在2030年12月31日之前，中华人民共和国与美利坚合众国之间是否会发生任何形式的、可被国际公认定义的直接军事对抗、武装冲突或重大代理人战争事件。",
+            "time_interpretation": {
+              "current_period": "2026",
+              "target_period": "2030",
+              "comparison": "绝对时间截止点（Deadline），即判断事件是否在2030年12月31日23:59:59之前发生。"
+            },
+            "core_ambiguities": [
+              "军事冲突的定义边界：是否包含网络攻击、太空资产干扰、代理人战争、海上对峙中的擦枪走火，还是仅指国家正规军之间的直接交火？",
+              "主体界定：是否包含各自盟友、准军事组织（如民兵、海警在战时状态下的行动）？",
+              "冲突的规模与性质：是短暂的战术性接触，还是持续的战略级战争？"
+            ],
+            "triage": {
+              "forecastability_zone": "cloudlike",
+              "reason": "虽然问题形式为二元（是/否），但‘军事冲突’的定义具有高度模糊性，且涉及低概率、高影响的复杂地缘政治驱动因素。单一指标无法覆盖所有可能的冲突形态（直接、间接、灰色地带）。",
+              "requires_decomposition": true,
+              "single_contract_allowed_by_type": false
+            },
+            "dimension_map": [
+              {
+                "dimension_id": "dim_1",
+                "dimension_name": "Direct Military Engagement (Kinetic & Paramilitary)",
+                "meaning": "中美双方军事或准军事力量之间的直接武力接触，包括正规军交火、导弹发射、舰机碰撞导致的战斗行为，以及海警/民兵在争议区域的致命武力使用。",
+                "candidate_metrics": [
+                  "官方确认的中美军事人员伤亡。",
+                  "动能武器（导弹、火炮、小武器）的发射记录。",
+                  "军事或准军事资产的严重损毁或沉没。"
+                ],
+                "semantic_coverage_weight": 0.6,
+                "measurability": 0.9,
+                "why_it_matters": "这是最符合大众对‘战争’直觉理解的维度，也是国际法上最明确的冲突定义。",
+                "knowable_parts": [
+                  "当前的军事部署态势。",
+                  "公开的交战规则（ROE）。",
+                  "历史相遇数据。"
+                ],
+                "unknowable_parts": [
+                  "危机时刻领导人的具体决策心理。",
+                  "意外事件升级的临界点。"
+                ],
+                "assumptions": [
+                  "假设‘军事冲突’包含准军事力量在事实上的军事行动。",
+                  "假设直接交火是冲突的核心标志。"
+                ],
+                "outside_view_reference_classes": [
+                  "冷战期间美苏直接军事接触（极少）。",
+                  "印巴边境冲突。",
+                  "南海历史事件（如2001年撞机事件）。"
+                ],
+                "inside_view_mechanisms": [
+                  "危机误判：高强度演习中的误操作。",
+                  "国内政治压力：通过外部冲突转移内部矛盾。",
+                  "联盟义务：美国盟友受袭引发的介入。"
+                ],
+                "update_signals": [
+                  "军事热线中断。",
+                  "交战规则放宽。",
+                  "新式进攻性武器前沿部署。"
+                ]
+              },
+              {
+                "dimension_id": "dim_2",
+                "dimension_name": "Proxy Military Conflict",
+                "meaning": "中美在第三国或地区支持对立双方，并导致双方军事力量（或由其直接指挥/武装的力量）发生直接战斗或重大军事对抗。",
+                "candidate_metrics": [
+                  "中美军队在第三国战场直接交火。",
+                  "一方对另一方支持的武装力量进行直接军事打击。",
+                  "军事封锁或海上拦截行动。"
+                ],
+                "semantic_coverage_weight": 0.25,
+                "measurability": 0.7,
+                "why_it_matters": "大国竞争常通过代理人进行，这是避免直接核战争但保持军事对抗的主要形式。",
+                "knowable_parts": [
+                  "当前的盟友体系和安全承诺。",
+                  "全球热点地区的冲突态势。"
+                ],
+                "unknowable_parts": [
+                  "秘密的军事援助协议。",
+                  "第三方冲突升级的不可控性。"
+                ],
+                "assumptions": [
+                  "假设仅提供武器不算冲突，必须有直接军事介入或指挥。",
+                  "假设台湾若发生冲突，可能被视为直接冲突而非纯代理人战争（取决于具体定义，此处归入直接冲突更合适，故本维度主要指其他第三国）。"
+                ],
+                "outside_view_reference_classes": [
+                  "冷战时期的朝鲜战争、越南战争。",
+                  "现代叙利亚、乌克兰冲突中的大国间接介入。"
+                ],
+                "inside_view_mechanisms": [
+                  "联盟拖拽效应。",
+                  "战略资源争夺（如航道、矿产）。",
+                  "政权更迭干预。"
+                ],
+                "update_signals": [
+                  "第三国冲突中大国军事顾问的出现。",
+                  "对第三国武装力量的直接空袭或炮击。"
+                ]
+              },
+              {
+                "dimension_id": "dim_3",
+                "dimension_name": "Cyber/Space Kinetic Equivalent",
+                "meaning": "网络或太空攻击造成物理破坏、人员伤亡或关键基础设施瘫痪，且被归因于对方，并引发军事层面的回应或被视为战争行为。",
+                "candidate_metrics": [
+                  "导致物理破坏的网络攻击（如电网、水坝）。",
+                  "反卫星武器摧毁对方卫星。",
+                  "官方宣布网络攻击为‘战争行为’。"
+                ],
+                "semantic_coverage_weight": 0.15,
+                "measurability": 0.4,
+                "why_it_matters": "现代战争的新维度，但归因难、阈值模糊。",
+                "knowable_parts": [
+                  "网络攻击的技术能力。",
+                  "关键基础设施的脆弱性。"
+                ],
+                "unknowable_parts": [
+                  "攻击的真实来源（归因）。",
+                  "双方对‘战争行为’的认定标准。"
+                ],
+                "assumptions": [
+                  "假设只有造成物理后果的网络攻击才算军事冲突。",
+                  "假设归因必须具有高度可信度。"
+                ],
+                "outside_view_reference_classes": [
+                  "Stuxnet病毒。",
+                  "乌克兰电网攻击。",
+                  "反卫星试验。"
+                ],
+                "inside_view_mechanisms": [
+                  "隐蔽行动与可否认性。",
+                  "升级阶梯的模糊性。"
+                ],
+                "update_signals": [
+                  "关键基础设施遭受大规模瘫痪。",
+                  "太空资产被摧毁。"
+                ]
+              }
+            ],
+            "contract_candidates": [
+              {
+                "contract_id": "contract_dim1_direct",
+                "dimension_id": "dim_1",
+                "dimension_name": "Direct Military Engagement",
+                "normalized_question": "在2026年6月2日至2030年12月31日期间，中美双方是否会发生直接军事交战（包括正规军及执行军事任务的准军事力量）？",
+                "target_type": "binary",
+                "deadline": "2030-12-31",
+                "resolution_criteria": "YES：1) 中美任何一方军事或准军事人员被对方武力致死或致伤；2) 任何一方对对方军事/准军事目标发射动能武器（导弹、火炮、小武器等）；3) 发生导致重大资产损毁或人员伤亡的故意碰撞或武力拦截。NO：未发生上述事件。排除纯网络攻击、经济制裁、外交驱逐。",
+                "resolution_sources": [
+                  "国防部官方声明。",
+                  "主流国际通讯社报道。",
+                  "卫星图像及目击者证词。"
+                ],
+                "domain": "geopolitics",
+                "forecastability_score": 0.3,
+                "semantic_coverage_weight": 0.78666235027517,
+                "measurability": 0.9,
+                "user_intent_preservation_score": 0.9,
+                "proxy_metric": "官方确认的军事人员伤亡或动能武器发射。",
+                "proxy_risk": "low",
+                "goodhart_risk": "low",
+                "direction_conflict_risk": "low",
+                "lost_dimensions": [
+                  "非致命性武力展示（如激光致盲、水炮）。",
+                  "纯网络/太空攻击。"
+                ],
+                "ambiguity_flags": [
+                  "准军事力量（如海警、民兵）在争议区域的行为是否视为军事行动。",
+                  "意外碰撞是否视为冲突（需有武力使用或重大损毁）。"
+                ],
+                "clarifying_assumptions": [
+                  "假设‘军事冲突’包含事实上的军事对抗，无论是否宣战。",
+                  "假设台湾若发生冲突，视为直接冲突。"
+                ],
+                "outside_view_note": "核大国直接开战概率极低，但局部摩擦风险存在。",
+                "inside_view_note": "台海、南海是主要热点，误判风险随接触频率增加而上升。",
+                "update_signals": [
+                  "军事演习规模扩大。",
+                  "外交关系断绝。"
+                ],
+                "reason": "覆盖最核心的‘战争’定义，包含直接交火和准军事冲突。",
+                "original_semantic_coverage_weight": 0.6,
+                "proxy_risk_factor": 1.0,
+                "lost_dimension_factor": 0.76,
+                "raw_portfolio_weight": 0.36936
+              },
+              {
+                "contract_id": "contract_dim2_proxy",
+                "dimension_id": "dim_2",
+                "dimension_name": "Proxy Military Conflict",
+                "normalized_question": "在2026年6月2日至2030年12月31日期间，中美是否在第三国发生直接军事对抗或重大代理人战争？",
+                "target_type": "binary",
+                "deadline": "2030-12-31",
+                "resolution_criteria": "YES：1) 中美军队在第三国直接交火；2) 一方对另一方直接指挥或武装的部队进行军事打击；3) 实施军事封锁或海上军事拦截。NO：未发生上述事件。排除仅提供武器或情报支持。",
+                "resolution_sources": [
+                  "联合国安理会记录。",
+                  "冲突监测数据库（如UCDP）。",
+                  "官方军事行动报告。"
+                ],
+                "domain": "geopolitics",
+                "forecastability_score": 0.4,
+                "semantic_coverage_weight": 0.18128844286176754,
+                "measurability": 0.7,
+                "user_intent_preservation_score": 0.8,
+                "proxy_metric": "中美军队在第三国的直接交战记录。",
+                "proxy_risk": "medium",
+                "goodhart_risk": "medium",
+                "direction_conflict_risk": "medium",
+                "lost_dimensions": [
+                  "隐蔽的特种作战。",
+                  "非直接指挥的代理人行动。"
+                ],
+                "ambiguity_flags": [
+                  "‘直接指挥’的定义。",
+                  "第三国冲突的归属。"
+                ],
+                "clarifying_assumptions": [
+                  "假设台湾冲突归入直接冲突，本合约主要指其他第三国。",
+                  "假设仅提供援助不算冲突。"
+                ],
+                "outside_view_note": "大国通过代理人竞争是常见模式，但直接军事对抗较少。",
+                "inside_view_note": "全球南方国家的冲突可能成为大国博弈的战场。",
+                "update_signals": [
+                  "大国向冲突方派遣军事顾问。",
+                  "对冲突方进行直接空袭。"
+                ],
+                "reason": "覆盖大国竞争的间接军事对抗形式。",
+                "original_semantic_coverage_weight": 0.25,
+                "proxy_risk_factor": 0.8,
+                "lost_dimension_factor": 0.76,
+                "raw_portfolio_weight": 0.08511999999999999
+              },
+              {
+                "contract_id": "contract_dim3_cyber_space",
+                "dimension_id": "dim_3",
+                "dimension_name": "Cyber/Space Kinetic Equivalent",
+                "normalized_question": "在2026年6月2日至2030年12月31日期间，中美是否发生造成物理破坏或人员伤亡的网络/太空攻击，并被认定为军事冲突？",
+                "target_type": "binary",
+                "deadline": "2030-12-31",
+                "resolution_criteria": "YES：1) 归因于对方的网络攻击导致关键基础设施物理破坏或人员伤亡；2) 使用反卫星武器摧毁对方卫星；3) 官方宣布此类攻击为战争行为并引发军事回应。NO：未发生上述事件。",
+                "resolution_sources": [
+                  "网络安全机构归因报告。",
+                  "太空监视数据。",
+                  "官方声明。"
+                ],
+                "domain": "geopolitics",
+                "forecastability_score": 0.2,
+                "semantic_coverage_weight": 0.03204920686306248,
+                "measurability": 0.4,
+                "user_intent_preservation_score": 0.6,
+                "proxy_metric": "造成物理后果的归因网络/太空攻击。",
+                "proxy_risk": "high",
+                "goodhart_risk": "high",
+                "direction_conflict_risk": "high",
+                "lost_dimensions": [
+                  "无物理后果的网络攻击。",
+                  "电子干扰。"
+                ],
+                "ambiguity_flags": [
+                  "归因的确定性。",
+                  "‘物理破坏’的阈值。"
+                ],
+                "clarifying_assumptions": [
+                  "假设只有造成物理后果的攻击才算军事冲突。",
+                  "假设归因需有高度可信证据。"
+                ],
+                "outside_view_note": "此类事件罕见，但后果严重。",
+                "inside_view_note": "归因困难使得此类冲突难以确认，但一旦发生可能迅速升级。",
+                "update_signals": [
+                  "关键基础设施遭受攻击。",
+                  "太空资产被摧毁。"
+                ],
+                "reason": "覆盖现代战争的新维度，但设定高阈值以避免噪音。",
+                "original_semantic_coverage_weight": 0.15,
+                "proxy_risk_factor": 0.55,
+                "lost_dimension_factor": 0.76,
+                "raw_portfolio_weight": 0.015048
+              }
+            ],
+            "semantic_collapse_audit": {
+              "semantic_collapse_risk": "low",
+              "collapse_reason": "分解避免了将‘军事冲突’简化为单一指标（如GDP或军费），而是涵盖了直接、间接和新维度冲突。",
+              "lost_dimensions_if_single_metric": [
+                "代理人战争。",
+                "准军事力量冲突。",
+                "网络/太空物理攻击。"
+              ],
+              "allowed_single_contract": false,
+              "recommended_mode": "multi_contract_portfolio",
+              "required_warning": "不要仅依据‘正规军交火’来判断，需综合考虑准军事力量和代理人冲突。",
+              "final_guardrails": [
+                "Define 'Military Conflict' to include direct kinetic engagement between regular armed forces.",
+                "Explicitly decide whether to include paramilitary forces (e.g., PLA Maritime Militia, US Coast Guard in wartime status) in the definition of 'Military'.",
+                "Explicitly decide whether to include proxy conflicts (US and China fighting on opposite sides in a third country) as 'Military Conflict between US and China'.",
+                "Exclude purely economic sanctions, diplomatic expulsions, and non-destructive cyber espionage from the definition of 'Military Conflict'.",
+                "Set a clear threshold for 'Cyber/Space' actions: only include if they cause physical destruction or lead to kinetic retaliation."
+              ]
+            },
+            "adversarial_audit": {
+              "verdict": "revise",
+              "substitution_errors": [
+                "将‘军事冲突’偷换为‘宣战’。",
+                "将‘军事冲突’偷换为‘网络攻击’（无物理后果）。"
+              ],
+              "missing_dimensions": [
+                "准军事力量（海警、民兵）的冲突。",
+                "第三国代理人战争中的直接军事介入。"
+              ],
+              "overweighted_metrics": [
+                "直接正规军交火（可能低估灰色地带冲突）。"
+              ],
+              "underweighted_dimensions": [
+                "准军事冲突。",
+                "代理人战争。"
+              ],
+              "repair_suggestions": [
+                "合并直接冲突和准军事冲突为一个合约。",
+                "增加代理人战争合约。",
+                "提高网络/太空冲突的阈值（需物理后果）。"
+              ],
+              "repair_status": "partially_repaired"
+            },
+            "recommended_user_choice_prompt": "您认为‘军事冲突’是否应包含中美在第三国的代理人战争？是否应包含海警/民兵的武力冲突？",
+            "machine_notes": [
+              "根据Adversarial Audit，合并了直接冲突和准军事冲突，以避免定义碎片化。",
+              "根据Proxy Audit，提高了网络/太空冲突的阈值，要求物理后果或官方定性，以降低归因风险。",
+              "增加了代理人战争维度，以覆盖大国竞争的主要形式。",
+              "Adversarial audit verdict 保持为 revise；repair_status=partially_repaired，不再自动改成 pass。"
+            ],
+            "semantic_collapse_risk": "low",
+            "collapse_reason": "分解避免了将‘军事冲突’简化为单一指标（如GDP或军费），而是涵盖了直接、间接和新维度冲突。",
+            "lost_dimensions_if_single_metric": [
+              "代理人战争。",
+              "准军事力量冲突。",
+              "网络/太空物理攻击。"
+            ],
+            "recommended_mode": "multi_contract_portfolio",
+            "allowed_single_contract": false,
+            "decomposition_record_id": "a8395be8ec72",
+            "decomposition_module": "cloud_to_contract_decomposition",
+            "decomposition_validation_errors": []
+          },
+          "contract": {
+            "normalized_question": "在2026年6月2日至2030年12月31日期间，中美双方是否会发生直接军事交战（包括正规军及执行军事任务的准军事力量）？",
+            "target_type": "binary",
+            "deadline": "2030-12-31",
+            "resolution_criteria": "YES：1) 中美任何一方军事或准军事人员被对方武力致死或致伤；2) 任何一方对对方军事/准军事目标发射动能武器（导弹、火炮、小武器等）；3) 发生导致重大资产损毁或人员伤亡的故意碰撞或武力拦截。NO：未发生上述事件。排除纯网络攻击、经济制裁、外交驱逐。",
+            "resolution_sources": [
+              "国防部官方声明。",
+              "主流国际通讯社报道。",
+              "卫星图像及目击者证词。"
+            ],
+            "domain": "geopolitics",
+            "forecastability_score": 0.3,
+            "ambiguity_flags": [
+              "准军事力量（如海警、民兵）在争议区域的行为是否视为军事行动。",
+              "意外碰撞是否视为冲突（需有武力使用或重大损毁）。"
+            ],
+            "clarifying_assumptions": [
+              "假设‘军事冲突’包含事实上的军事对抗，无论是否宣战。",
+              "假设台湾若发生冲突，视为直接冲突。"
+            ],
+            "reason": "覆盖最核心的‘战争’定义，包含直接交火和准军事冲突。",
+            "contract_id": "contract_dim1_direct",
+            "dimension_id": "dim_1",
+            "dimension_name": "Direct Military Engagement",
+            "semantic_coverage_weight": 0.78666235027517,
+            "measurability": 0.9,
+            "user_intent_preservation_score": 0.9,
+            "proxy_metric": "官方确认的军事人员伤亡或动能武器发射。",
+            "proxy_risk": "low",
+            "lost_dimensions": [
+              "非致命性武力展示（如激光致盲、水炮）。",
+              "纯网络/太空攻击。"
+            ],
+            "source_question_type": "explicit_binary",
+            "source_semantic_collapse_risk": "low",
+            "source_overall_semantic_intent": "用户旨在评估在2030年12月31日之前，中华人民共和国与美利坚合众国之间是否会发生任何形式的、可被国际公认定义的直接军事对抗、武装冲突或重大代理人战争事件。"
+          },
+          "decomposition": {
+            "base_rate": {
+              "reference_class": "Major Power Pairs (Nuclear Armed) in periods of strategic competition without active war",
+              "base_probability": 0.05,
+              "sample_size_guess": "rough",
+              "confidence": 0.6,
+              "rationale": "Historically, direct kinetic military engagement between nuclear-armed great powers (e.g., US-USSR during Cold War, US-China post-1979) is extremely rare due to Mutual Assured Destruction (MAD) and high economic interdependence. The base rate for 'war' is near zero, but 'direct military engagement' (including accidental or limited skirmishes) is higher. A 5% prior reflects the low but non-zero risk of escalation from current tensions."
+            },
+            "factors": [
+              {
+                "factor": "Taiwan Crisis Escalation",
+                "sub_question": "Will a significant crisis involving the Taiwan Strait occur between 2026 and 2030 that triggers US military intervention or direct confrontation?",
+                "direction_if_true": "increase",
+                "probability": 0.25,
+                "effect_log_odds": 1.4,
+                "confidence": 0.5,
+                "dependencies": [],
+                "rationale": "Taiwan is the primary flashpoint. A crisis here is the most likely path to direct conflict. If a crisis occurs, the probability of direct engagement spikes dramatically due to US security commitments and China's core interest stance."
+              },
+              {
+                "factor": "US-China Economic Decoupling Depth",
+                "sub_question": "Will US-China economic ties weaken significantly enough to reduce the cost of military conflict for both sides?",
+                "direction_if_true": "increase",
+                "probability": 0.6,
+                "effect_log_odds": 0.4,
+                "confidence": 0.7,
+                "dependencies": [],
+                "rationale": "High economic interdependence acts as a deterrent. As decoupling accelerates (tech, trade), the 'peace dividend' of economic ties diminishes, lowering the threshold for military action."
+              },
+              {
+                "factor": "Accidental Skirmish in South China Sea",
+                "sub_question": "Will an accidental collision or incident in the South China Sea escalate to kinetic exchange of fire?",
+                "direction_if_true": "increase",
+                "probability": 0.15,
+                "effect_log_odds": 0.8,
+                "confidence": 0.6,
+                "dependencies": [],
+                "rationale": "Routine encounters are frequent. While most are de-escalated, the risk of a 'Fisher Incident' style escalation remains. This is a lower-intensity but direct form of engagement."
+              },
+              {
+                "factor": "US Domestic Political Shift",
+                "sub_question": "Will US domestic politics favor a more aggressive or isolationist foreign policy that reduces crisis management stability?",
+                "direction_if_true": "mixed",
+                "probability": 0.5,
+                "effect_log_odds": 0.2,
+                "confidence": 0.4,
+                "dependencies": [],
+                "rationale": "Political instability can lead to erratic decision-making (increasing risk) or withdrawal from alliances (decreasing risk of direct engagement but increasing regional instability). Net effect is slightly positive for conflict risk due to unpredictability."
+              },
+              {
+                "factor": "Chinese Military Modernization Pace",
+                "sub_question": "Will China achieve significant anti-access/area-denial (A2/AD) capabilities that challenge US dominance in the First Island Chain by 2030?",
+                "direction_if_true": "increase",
+                "probability": 0.7,
+                "effect_log_odds": 0.3,
+                "confidence": 0.8,
+                "dependencies": [],
+                "rationale": "As China's military parity increases, the US may feel compelled to act preemptively or assertively, while China may feel more confident in challenging US forces. This shifts the balance from deterrence to potential confrontation."
+              },
+              {
+                "factor": "Crisis Communication Mechanisms",
+                "sub_question": "Will effective military-to-military communication channels remain intact and functional during crises?",
+                "direction_if_true": "decrease",
+                "probability": 0.6,
+                "effect_log_odds": -0.5,
+                "confidence": 0.5,
+                "dependencies": [],
+                "rationale": "Strong communication channels reduce the risk of miscalculation. If these channels are severed or ineffective, the probability of accidental escalation rises."
+              }
+            ],
+            "known_unknowns": [
+              "The specific threshold for US intervention in a Taiwan scenario (e.g., blockade vs. invasion).",
+              "The internal political stability of China in the 2026-2030 period.",
+              "The emergence of new black swan events (e.g., cyber-physical attacks misattributed to state actors).",
+              "The extent to which third-party allies (Japan, Philippines) will be drawn into direct conflict."
+            ],
+            "search_queries": [
+              "US China military encounters South China Sea 2024 2025 statistics",
+              "Taiwan crisis probability forecasts 2030",
+              "US China economic decoupling impact on security dilemma",
+              "Historical base rate of direct military conflict between nuclear powers",
+              "China A2AD capabilities timeline 2030"
+            ]
+          },
+          "evidence": {
+            "evidence_cards": [
+              {
+                "claim": "核威慑（相互保证毁灭）作为结构性约束，使得中美双方都极力避免直接的动能军事冲突，因为升级风险不可控。",
+                "source_type": "background",
+                "source": "background_prior",
+                "direction": "decrease",
+                "relevance": 0.9,
+                "reliability": 0.9,
+                "diagnosticity": 0.6,
+                "freshness": 0.8,
+                "independence_group": "structural_deterrence",
+                "impact_log_odds": -0.6,
+                "rationale": "这是防止大国直接战争的最强负向因子。尽管紧张局势升级，但核武器的存在设定了冲突的绝对上限，使得‘直接交战’的概率远低于常规代理人战争。",
+                "independence_penalty": 1.0,
+                "quality_weight": 0.38880000000000003,
+                "weighted_impact_log_odds": -0.23328000000000002
+              },
+              {
+                "claim": "台湾问题是中美关系中最大的单一引爆点，若2026-2030年间发生涉及台湾的重大危机，直接军事冲突的概率将呈指数级上升。",
+                "source_type": "background",
+                "source": "background_prior",
+                "direction": "increase",
+                "relevance": 0.95,
+                "reliability": 0.8,
+                "diagnosticity": 0.8,
+                "freshness": 0.9,
+                "independence_group": "taiwan_flashpoint",
+                "impact_log_odds": 0.7,
+                "rationale": "台湾是中美核心利益交汇点。美国的安全承诺与中国的主权主张在此直接碰撞。任何一方的误判或激进行动都可能导致从对峙迅速升级为交火。",
+                "independence_penalty": 1.0,
+                "quality_weight": 0.5472000000000001,
+                "weighted_impact_log_odds": 0.38304000000000005
+              },
+              {
+                "claim": "南海及西太平洋的日常军事对峙频率增加，增加了意外碰撞或‘费舍尔事件’式误判升级为开火的风险。",
+                "source_type": "background",
+                "source": "background_prior",
+                "direction": "increase",
+                "relevance": 0.8,
+                "reliability": 0.8,
+                "diagnosticity": 0.5,
+                "freshness": 0.9,
+                "independence_group": "accidental_escalation",
+                "impact_log_odds": 0.3,
+                "rationale": "虽然双方有意避免冲突，但高频次的近距离接触增加了技术故障、人为失误或过度反应导致意外开火的可能性。",
+                "independence_penalty": 1.0,
+                "quality_weight": 0.2880000000000001,
+                "weighted_impact_log_odds": 0.08640000000000002
+              },
+              {
+                "claim": "中美经济相互依赖度的下降（脱钩/去风险）降低了军事冲突的经济成本，从而削弱了和平的经济缓冲作用。",
+                "source_type": "background",
+                "source": "background_prior",
+                "direction": "increase",
+                "relevance": 0.7,
+                "reliability": 0.8,
+                "diagnosticity": 0.4,
+                "freshness": 0.8,
+                "independence_group": "economic_interdependence",
+                "impact_log_odds": 0.2,
+                "rationale": "随着供应链重组和技术封锁，双方对彼此经济的依赖减少，使得在危机时刻采取军事行动的国内政治和经济阻力相对减小。",
+                "independence_penalty": 1.0,
+                "quality_weight": 0.1792,
+                "weighted_impact_log_odds": 0.035840000000000004
+              },
+              {
+                "claim": "中国反介入/区域拒止（A2/AD）能力的提升改变了西太平洋的力量平衡，可能促使美国采取更激进的‘前沿存在’策略以维持威慑，增加摩擦概率。",
+                "source_type": "background",
+                "source": "background_prior",
+                "direction": "increase",
+                "relevance": 0.75,
+                "reliability": 0.85,
+                "diagnosticity": 0.5,
+                "freshness": 0.85,
+                "independence_group": "military_modernization",
+                "impact_log_odds": 0.25,
+                "rationale": "军事力量的接近可能导致‘安全困境’加剧。美国可能感到需要更积极地展示武力以抵消中国优势，而中国可能视此为挑衅，形成螺旋上升。",
+                "independence_penalty": 1.0,
+                "quality_weight": 0.2709375,
+                "weighted_impact_log_odds": 0.067734375
+              },
+              {
+                "claim": "现有的军事热线和危机沟通机制虽然脆弱，但在2026-2030年间仍可能发挥防止意外升级的关键作用。",
+                "source_type": "background",
+                "source": "background_prior",
+                "direction": "decrease",
+                "relevance": 0.6,
+                "reliability": 0.6,
+                "diagnosticity": 0.4,
+                "freshness": 0.7,
+                "independence_group": "crisis_communication",
+                "impact_log_odds": -0.2,
+                "rationale": "尽管政治关系紧张，但双方军方通常保留最低限度的沟通渠道，这在处理意外碰撞或近距离遭遇时能有效降低误判导致的交火风险。",
+                "independence_penalty": 1.0,
+                "quality_weight": 0.10079999999999999,
+                "weighted_impact_log_odds": -0.020159999999999997
+              },
+              {
+                "claim": "美国国内政治极化可能导致对外政策的不确定性，既可能因孤立主义减少干预，也可能因民族主义情绪增加冒险行为。",
+                "source_type": "background",
+                "source": "background_prior",
+                "direction": "neutral",
+                "relevance": 0.5,
+                "reliability": 0.5,
+                "diagnosticity": 0.3,
+                "freshness": 0.8,
+                "independence_group": "us_domestic_politics",
+                "impact_log_odds": 0.05,
+                "rationale": "这是一个双向因子。孤立主义倾向可能使美国避免直接军事卷入，但政治不稳定也可能导致决策失误或为了转移国内矛盾而采取外部冒险。净效应微弱且不确定。",
+                "independence_penalty": 1.0,
+                "quality_weight": 0.06,
+                "weighted_impact_log_odds": 0.003
+              },
+              {
+                "claim": "第三方盟友（如日本、菲律宾）的卷入可能将局部摩擦扩大为中美直接冲突，特别是如果美国履行安全条约义务。",
+                "source_type": "background",
+                "source": "background_prior",
+                "direction": "increase",
+                "relevance": 0.65,
+                "reliability": 0.7,
+                "diagnosticity": 0.5,
+                "freshness": 0.85,
+                "independence_group": "alliance_entanglement",
+                "impact_log_odds": 0.2,
+                "rationale": "美国与盟友的安全条约是潜在的冲突放大器。如果盟友与中国发生直接军事摩擦，美国介入的可能性将显著增加，从而将双边摩擦转化为中美直接交战。",
+                "independence_penalty": 1.0,
+                "quality_weight": 0.193375,
+                "weighted_impact_log_odds": 0.038675
+              }
+            ]
+          },
+          "panel": {
+            "agent_forecasts": [
+              {
+                "agent_name": "outside_view",
+                "probability": 0.06,
+                "confidence": 0.7,
+                "rationale": "基于核大国之间直接军事冲突的历史基准率（接近于零），考虑到中美经济相互依赖的残余影响，尽管紧张局势升级，但直接动能交战仍属极小概率事件。参考冷战时期美苏并未发生直接常规战争的历史先例。",
+                "strongest_update_trigger": "出现明确的官方声明表明双方已解除针对对方的核威慑限制，或发生类似1962年古巴导弹危机的全面对峙且沟通渠道完全切断。"
+              },
+              {
+                "agent_name": "inside_view",
+                "probability": 0.18,
+                "confidence": 0.6,
+                "rationale": "关注2026-2030年间的特定风险点：台湾局势的不可预测性、南海高频次对峙导致的意外升级风险（如‘费舍尔事件’重演）、以及美国国内政治波动可能引发的误判。当前机制显示摩擦频率增加，安全缓冲减少。",
+                "strongest_update_trigger": "台海爆发封锁或登陆演习并伴随美军实质性介入部署，或南海发生导致人员伤亡的意外碰撞且双方拒绝降级。"
+              },
+              {
+                "agent_name": "skeptic",
+                "probability": 0.04,
+                "confidence": 0.8,
+                "rationale": "双方均缺乏发动直接军事冲突的战略动机。冲突成本极高，且双方都具备强大的危机管控意愿以避免全面战争。‘直接交战’定义严格（需动能武器或伤亡），大部分摩擦将通过外交或非致命手段解决。",
+                "strongest_update_trigger": "一方政权面临内部崩溃风险并试图通过外部战争转移矛盾，或第三方盟友（如菲律宾）主动挑衅导致美国被迫卷入直接交火。"
+              },
+              {
+                "agent_name": "optimist",
+                "probability": 0.22,
+                "confidence": 0.5,
+                "rationale": "随着中国军力现代化接近美国，以及美国‘印太战略’的激进执行，误判和螺旋升级的风险显著增加。经济脱钩降低了冲突的经济门槛，使得军事冒险的成本相对可控。",
+                "strongest_update_trigger": "建立新的、更有效的中美军事危机沟通机制，或双方达成关于台湾问题的某种长期战略稳定协议。"
+              },
+              {
+                "agent_name": "base_rate_guardian",
+                "probability": 0.055,
+                "confidence": 0.75,
+                "rationale": "坚持历史基准率的核心地位。虽然当前地缘政治紧张，但核威慑和经济相互依赖（尽管减弱）仍是强大的稳定器。将概率略微上调以反映当前高于冷战平均水平的紧张度，但拒绝大幅偏离历史常态。",
+                "strongest_update_trigger": "历史基准率本身被重新评估，例如发现过去被忽略的‘未遂’直接冲突案例，或核威慑逻辑在特定条件下失效的理论证据。"
+              },
+              {
+                "agent_name": "domain_generalist",
+                "probability": 0.12,
+                "confidence": 0.65,
+                "rationale": "综合考量：基准率低（~5%），但内部机制风险高（台湾、南海）。考虑到‘意外’因素和‘准军事’定义的模糊性，风险高于纯历史基准，但低于最坏情况情景。取中间值，反映低概率但高影响的特征。",
+                "strongest_update_trigger": "任何导致中美军事热线中断的事件，或一方在争议海域采取单方面改变现状的激进军事行动。"
+              }
+            ]
+          },
+          "probability_engine": {
+            "base_probability": 0.05,
+            "evidence_probability": 0.07022817621633433,
+            "causal_probability": 0.05506838973057464,
+            "causal_graph_probability": 0.05506838973057464,
+            "causal_graph_result": {
+              "method": "bayesian_causal_graph_logistic_cpd_monte_carlo",
+              "target_probability": 0.05506838973057464,
+              "credible_interval": [
+                0.015778703676087816,
+                0.15799938498205243
+              ],
+              "p50": 0.03188579017553971,
+              "n_samples": 12000,
+              "graph": {
+                "graph_id": "0fa4e5d8365b",
+                "target_node": "Y",
+                "target_label": "在2026年6月2日至2030年12月31日期间，中美双方是否会发生直接军事交战（包括正规军及执行军事任务的准军事力量）？",
+                "nodes": [
+                  {
+                    "node_id": "taiwan_crisis_escalation",
+                    "label": "Taiwan Crisis Escalation",
+                    "node_type": "binary_latent",
+                    "prior_probability": 0.25,
+                    "prior_confidence": 0.5,
+                    "evidence_log_odds_update": 0.0,
+                    "adjusted_prior_probability": 0.25,
+                    "target_effect_log_odds": 1.4,
+                    "target_effect_confidence": 0.5,
+                    "direction_if_true": "increase",
+                    "dependencies_raw": [],
+                    "rationale": "Taiwan is the primary flashpoint. A crisis here is the most likely path to direct conflict. If a crisis occurs, the probability of direct engagement spikes dramatically due to US security commitments and China's core interest stance."
+                  },
+                  {
+                    "node_id": "us_china_economic_decoupling_depth",
+                    "label": "US-China Economic Decoupling Depth",
+                    "node_type": "binary_latent",
+                    "prior_probability": 0.6,
+                    "prior_confidence": 0.7,
+                    "evidence_log_odds_update": 0.0,
+                    "adjusted_prior_probability": 0.6,
+                    "target_effect_log_odds": 0.4,
+                    "target_effect_confidence": 0.7,
+                    "direction_if_true": "increase",
+                    "dependencies_raw": [],
+                    "rationale": "High economic interdependence acts as a deterrent. As decoupling accelerates (tech, trade), the 'peace dividend' of economic ties diminishes, lowering the threshold for military action."
+                  },
+                  {
+                    "node_id": "accidental_skirmish_in_south_china_sea",
+                    "label": "Accidental Skirmish in South China Sea",
+                    "node_type": "binary_latent",
+                    "prior_probability": 0.15,
+                    "prior_confidence": 0.6,
+                    "evidence_log_odds_update": 0.0,
+                    "adjusted_prior_probability": 0.15,
+                    "target_effect_log_odds": 0.8,
+                    "target_effect_confidence": 0.6,
+                    "direction_if_true": "increase",
+                    "dependencies_raw": [],
+                    "rationale": "Routine encounters are frequent. While most are de-escalated, the risk of a 'Fisher Incident' style escalation remains. This is a lower-intensity but direct form of engagement."
+                  },
+                  {
+                    "node_id": "us_domestic_political_shift",
+                    "label": "US Domestic Political Shift",
+                    "node_type": "binary_latent",
+                    "prior_probability": 0.5,
+                    "prior_confidence": 0.4,
+                    "evidence_log_odds_update": 0.0,
+                    "adjusted_prior_probability": 0.5,
+                    "target_effect_log_odds": 0.2,
+                    "target_effect_confidence": 0.4,
+                    "direction_if_true": "mixed",
+                    "dependencies_raw": [],
+                    "rationale": "Political instability can lead to erratic decision-making (increasing risk) or withdrawal from alliances (decreasing risk of direct engagement but increasing regional instability). Net effect is slightly positive for conflict risk due to unpredictability."
+                  },
+                  {
+                    "node_id": "chinese_military_modernization_pace",
+                    "label": "Chinese Military Modernization Pace",
+                    "node_type": "binary_latent",
+                    "prior_probability": 0.7,
+                    "prior_confidence": 0.8,
+                    "evidence_log_odds_update": 0.0,
+                    "adjusted_prior_probability": 0.7,
+                    "target_effect_log_odds": 0.3,
+                    "target_effect_confidence": 0.8,
+                    "direction_if_true": "increase",
+                    "dependencies_raw": [],
+                    "rationale": "As China's military parity increases, the US may feel compelled to act preemptively or assertively, while China may feel more confident in challenging US forces. This shifts the balance from deterrence to potential confrontation."
+                  },
+                  {
+                    "node_id": "crisis_communication_mechanisms",
+                    "label": "Crisis Communication Mechanisms",
+                    "node_type": "binary_latent",
+                    "prior_probability": 0.6,
+                    "prior_confidence": 0.5,
+                    "evidence_log_odds_update": 0.0,
+                    "adjusted_prior_probability": 0.6,
+                    "target_effect_log_odds": -0.5,
+                    "target_effect_confidence": 0.5,
+                    "direction_if_true": "decrease",
+                    "dependencies_raw": [],
+                    "rationale": "Strong communication channels reduce the risk of miscalculation. If these channels are severed or ineffective, the probability of accidental escalation rises."
+                  }
+                ],
+                "edges": [],
+                "target_cpd": {
+                  "type": "logistic",
+                  "base_probability": 0.05,
+                  "target_evidence_log_odds_update": 0.36124937500000004,
+                  "parents": [
+                    "taiwan_crisis_escalation",
+                    "us_china_economic_decoupling_depth",
+                    "accidental_skirmish_in_south_china_sea",
+                    "us_domestic_political_shift",
+                    "chinese_military_modernization_pace",
+                    "crisis_communication_mechanisms"
+                  ],
+                  "weights": {
+                    "taiwan_crisis_escalation": 0.7,
+                    "us_china_economic_decoupling_depth": 0.27999999999999997,
+                    "accidental_skirmish_in_south_china_sea": 0.48,
+                    "us_domestic_political_shift": 0.08000000000000002,
+                    "chinese_military_modernization_pace": 0.24,
+                    "crisis_communication_mechanisms": -0.25
+                  },
+                  "intercept_logit": -2.5831896041664404
+                },
+                "evidence_links": [
+                  {
+                    "claim": "核威慑（相互保证毁灭）作为结构性约束，使得中美双方都极力避免直接的动能军事冲突，因为升级风险不可控。",
+                    "target_node": "Y",
+                    "match_score": 0.0,
+                    "weighted_impact_log_odds": -0.23328000000000002
+                  },
+                  {
+                    "claim": "台湾问题是中美关系中最大的单一引爆点，若2026-2030年间发生涉及台湾的重大危机，直接军事冲突的概率将呈指数级上升。",
+                    "target_node": "Y",
+                    "match_score": 0.015625,
+                    "weighted_impact_log_odds": 0.38304000000000005
+                  },
+                  {
+                    "claim": "南海及西太平洋的日常军事对峙频率增加，增加了意外碰撞或‘费舍尔事件’式误判升级为开火的风险。",
+                    "target_node": "Y",
+                    "match_score": 0.0,
+                    "weighted_impact_log_odds": 0.08640000000000002
+                  },
+                  {
+                    "claim": "中美经济相互依赖度的下降（脱钩/去风险）降低了军事冲突的经济成本，从而削弱了和平的经济缓冲作用。",
+                    "target_node": "Y",
+                    "match_score": 0.0,
+                    "weighted_impact_log_odds": 0.035840000000000004
+                  },
+                  {
+                    "claim": "中国反介入/区域拒止（A2/AD）能力的提升改变了西太平洋的力量平衡，可能促使美国采取更激进的‘前沿存在’策略以维持威慑，增加摩擦概率。",
+                    "target_node": "Y",
+                    "match_score": 0.028169014084507043,
+                    "weighted_impact_log_odds": 0.067734375
+                  },
+                  {
+                    "claim": "现有的军事热线和危机沟通机制虽然脆弱，但在2026-2030年间仍可能发挥防止意外升级的关键作用。",
+                    "target_node": "Y",
+                    "match_score": 0.017241379310344827,
+                    "weighted_impact_log_odds": -0.020159999999999997
+                  },
+                  {
+                    "claim": "美国国内政治极化可能导致对外政策的不确定性，既可能因孤立主义减少干预，也可能因民族主义情绪增加冒险行为。",
+                    "target_node": "Y",
+                    "match_score": 0.0,
+                    "weighted_impact_log_odds": 0.003
+                  },
+                  {
+                    "claim": "第三方盟友（如日本、菲律宾）的卷入可能将局部摩擦扩大为中美直接冲突，特别是如果美国履行安全条约义务。",
+                    "target_node": "Y",
+                    "match_score": 0.0,
+                    "weighted_impact_log_odds": 0.038675
+                  }
+                ],
+                "diagnostics": {
+                  "graph_confidence": 0.5833333333333334,
+                  "node_count": 6,
+                  "edge_count": 0,
+                  "target_evidence_update": 0.36124937500000004,
+                  "known_bad_assumptions": [
+                    "第一版使用 logistic CPD 近似完整条件概率表。",
+                    "factor.dependencies 仅用于弱依赖边；非严格因果发现。",
+                    "evidence-to-node binding 使用轻量文本匹配，后续应升级为 embedding/LLM binding。"
+                  ]
+                }
+              },
+              "node_marginals": {
+                "taiwan_crisis_escalation": 0.25283333333333335,
+                "us_china_economic_decoupling_depth": 0.5995,
+                "accidental_skirmish_in_south_china_sea": 0.1545,
+                "us_domestic_political_shift": 0.5059166666666667,
+                "chinese_military_modernization_pace": 0.6991666666666667,
+                "crisis_communication_mechanisms": 0.6106666666666667
+              },
+              "node_sensitivity": [
+                {
+                  "node_id": "taiwan_crisis_escalation",
+                  "label": "Taiwan Crisis Escalation",
+                  "baseline": 0.05506838973057464,
+                  "do_true": 0.11893976909619872,
+                  "do_false": 0.0338370743989605,
+                  "swing": 0.08510269469723822,
+                  "target_weight": 0.7
+                },
+                {
+                  "node_id": "accidental_skirmish_in_south_china_sea",
+                  "label": "Accidental Skirmish in South China Sea",
+                  "baseline": 0.05506838973057464,
+                  "do_true": 0.10400820401898132,
+                  "do_false": 0.04526184590829253,
+                  "swing": 0.05874635811068879,
+                  "target_weight": 0.48
+                },
+                {
+                  "node_id": "crisis_communication_mechanisms",
+                  "label": "Crisis Communication Mechanisms",
+                  "baseline": 0.05506838973057464,
+                  "do_true": 0.04472473412610335,
+                  "do_false": 0.07143182406111385,
+                  "swing": 0.026707089935010503,
+                  "target_weight": -0.25
+                },
+                {
+                  "node_id": "us_china_economic_decoupling_depth",
+                  "label": "US-China Economic Decoupling Depth",
+                  "baseline": 0.05506838973057464,
+                  "do_true": 0.06401326288869676,
+                  "do_false": 0.03980668827337087,
+                  "swing": 0.02420657461532589,
+                  "target_weight": 0.27999999999999997
+                },
+                {
+                  "node_id": "chinese_military_modernization_pace",
+                  "label": "Chinese Military Modernization Pace",
+                  "baseline": 0.05506838973057464,
+                  "do_true": 0.060719491404902,
+                  "do_false": 0.03997198230263412,
+                  "swing": 0.02074750910226788,
+                  "target_weight": 0.24
+                },
+                {
+                  "node_id": "us_domestic_political_shift",
+                  "label": "US Domestic Political Shift",
+                  "baseline": 0.05506838973057464,
+                  "do_true": 0.05788712468914222,
+                  "do_false": 0.05027886987253737,
+                  "swing": 0.007608254816604848,
+                  "target_weight": 0.08000000000000002
+                }
+              ]
+            },
+            "panel_probability": 0.09312675406419539,
+            "raw_probability": 0.06237198861586655,
+            "calibrated_probability": 0.09542200209259759,
+            "confidence_low": 0.015025731413804677,
+            "confidence_high": 0.4217807856636647,
+            "total_evidence_delta_log_odds": 0.36124937500000004,
+            "avg_evidence_quality": 0.2535390625,
+            "panel_disagreement_logit_std": 0.7116413221362521,
+            "ensemble_weights": {
+              "base": 0.398936170212766,
+              "evidence": 0.2021276595744681,
+              "causal": 0.18617021276595744,
+              "panel": 0.21276595744680854
+            },
+            "calibration": {
+              "calibration_mode": "cold_start_conservative_shrinkage",
+              "temperature": 1.205,
+              "domain_history_n": 0,
+              "domain_avg_brier": null
+            },
+            "interval": {
+              "logit_sigma": 1.9336920060158755
+            }
+          },
+          "runtime_config_snapshot": {
+            "model": "Qwen3.5-27B",
+            "base_url": "http://192.168.0.102:1234/v1",
+            "engine": {
+              "min_probability": 0.01,
+              "max_probability": 0.99,
+              "min_base_probability": 0.02,
+              "max_base_probability": 0.98,
+              "min_evidence_impact_log_odds": -0.8,
+              "max_evidence_impact_log_odds": 0.8,
+              "min_factor_effect_log_odds": -1.5,
+              "max_factor_effect_log_odds": 1.5,
+              "max_factors": 12,
+              "max_evidence_cards": 12,
+              "max_panel_agents": 8,
+              "independence_penalty_power": 0.5,
+              "ensemble_weights": {
+                "base_const": 0.2,
+                "base_low_forecastability_bonus": 0.25,
+                "evidence_const": 0.1,
+                "evidence_forecastability_bonus": 0.3,
+                "causal_const": 0.1,
+                "causal_forecastability_bonus": 0.25,
+                "panel_const": 0.2
+              },
+              "cold_start_min_history": 10,
+              "cold_start_temperature_base": 1.25,
+              "cold_start_temperature_forecastability_discount": 0.15,
+              "brier_temperature": {
+                "bad_threshold": 0.25,
+                "weak_threshold": 0.22,
+                "strong_threshold": 0.17,
+                "bad_temperature": 1.45,
+                "weak_temperature": 1.25,
+                "normal_temperature": 1.12,
+                "strong_temperature": 1.0
+              },
+              "interval": {
+                "base_sigma": 0.55,
+                "forecastability_penalty": 1.15,
+                "panel_disagreement_weight": 0.3,
+                "evidence_quality_penalty": 0.65,
+                "evidence_count_bonus_per_card": 0.03,
+                "max_evidence_count_bonus": 0.25,
+                "min_sigma": 0.35,
+                "max_sigma": 2.0
+              }
+            },
+            "temperature": {
+              "question_expansion": 0.1,
+              "contract": 0.1,
+              "decomposition": 0.25,
+              "evidence": 0.2,
+              "panel": 0.55,
+              "portfolio_summary": 0.2,
+              "json_repair": 0.0
+            }
+          },
+          "markdown_report": "# Forecast e2f69a4bd59a\n\n**预测类型**：single_contract\n**预测题**：在2026年6月2日至2030年12月31日期间，中美双方是否会发生直接军事交战（包括正规军及执行军事任务的准军事力量）？\n**最终概率**：9.5%\n**粗略区间**：1.5% - 42.2%\n**截止日期**：2030-12-31\n**领域**：geopolitics\n**可预测性评分**：0.30\n\n## 语义覆盖信息\n- 当前维度：Direct Military Engagement\n- 代理指标：官方确认的军事人员伤亡或动能武器发射。\n- proxy_risk：low\n- 原意保留分：0.90\n- 语义覆盖权重：0.79\n- 该子合约未覆盖：非致命性武力展示（如激光致盲、水炮）。, 纯网络/太空攻击。\n\n## 判定标准\nYES：1) 中美任何一方军事或准军事人员被对方武力致死或致伤；2) 任何一方对对方军事/准军事目标发射动能武器（导弹、火炮、小武器等）；3) 发生导致重大资产损毁或人员伤亡的故意碰撞或武力拦截。NO：未发生上述事件。排除纯网络攻击、经济制裁、外交驱逐。\n判定来源：国防部官方声明。, 主流国际通讯社报道。, 卫星图像及目击者证词。\n\n## 概率计算拆解\n- Base rate prior：5.0%\n- Evidence update 后：7.0%\n- Bayesian causal graph / Monte Carlo 后：5.5%\n- 多 Agent panel 聚合后：9.3%\n- Raw ensemble：6.2%\n- Calibrated final：9.5%\n\n## Ensemble 权重\n- base: 0.399\n- evidence: 0.202\n- causal: 0.186\n- panel: 0.213\n\n## 参考类 / Base Rate\n参考类：Major Power Pairs (Nuclear Armed) in periods of strategic competition without active war\n先验概率：5.0%\n置信度：0.60\n说明：Historically, direct kinetic military engagement between nuclear-armed great powers (e.g., US-USSR during Cold War, US-China post-1979) is extremely rare due to Mutual Assured Destruction (MAD) and high economic interdependence. The base rate for 'war' is near zero, but 'direct military engagement' (including accidental or limited skirmishes) is higher. A 5% prior reflects the low but non-zero risk of escalation from current tensions.\n\n## 关键因子\n- **Taiwan Crisis Escalation**：P=25.0%，effect_log_odds=+1.40，方向=increase。Taiwan is the primary flashpoint. A crisis here is the most likely path to direct conflict. If a crisis occurs, the probability of direct engagement spikes dramatically due to US security commitments and China's core interest stance.\n- **US-China Economic Decoupling Depth**：P=60.0%，effect_log_odds=+0.40，方向=increase。High economic interdependence acts as a deterrent. As decoupling accelerates (tech, trade), the 'peace dividend' of economic ties diminishes, lowering the threshold for military action.\n- **Accidental Skirmish in South China Sea**：P=15.0%，effect_log_odds=+0.80，方向=increase。Routine encounters are frequent. While most are de-escalated, the risk of a 'Fisher Incident' style escalation remains. This is a lower-intensity but direct form of engagement.\n- **US Domestic Political Shift**：P=50.0%，effect_log_odds=+0.20，方向=mixed。Political instability can lead to erratic decision-making (increasing risk) or withdrawal from alliances (decreasing risk of direct engagement but increasing regional instability). Net effect is slightly positive for conflict risk due to unpredictability.\n- **Chinese Military Modernization Pace**：P=70.0%，effect_log_odds=+0.30，方向=increase。As China's military parity increases, the US may feel compelled to act preemptively or assertively, while China may feel more confident in challenging US forces. This shifts the balance from deterrence to potential confrontation.\n- **Crisis Communication Mechanisms**：P=60.0%，effect_log_odds=-0.50，方向=decrease。Strong communication channels reduce the risk of miscalculation. If these channels are severed or ineffective, the probability of accidental escalation rises.\n\n## Bayesian Causal Graph\n- method：bayesian_causal_graph_logistic_cpd_monte_carlo\n- Monte Carlo samples：12000\n- causal credible interval：1.6% - 15.8%\n- node_count：6, edge_count：0\n- target_evidence_update：+0.361\n- 关键节点：\n  - Taiwan Crisis Escalation | prior=25.0%, adjusted=25.0%, target_weight=+0.700\n  - Accidental Skirmish in South China Sea | prior=15.0%, adjusted=15.0%, target_weight=+0.480\n  - US-China Economic Decoupling Depth | prior=60.0%, adjusted=60.0%, target_weight=+0.280\n  - Crisis Communication Mechanisms | prior=60.0%, adjusted=60.0%, target_weight=-0.250\n  - Chinese Military Modernization Pace | prior=70.0%, adjusted=70.0%, target_weight=+0.240\n  - US Domestic Political Shift | prior=50.0%, adjusted=50.0%, target_weight=+0.080\n- do-intervention sensitivity：\n  - Taiwan Crisis Escalation: do_true=11.9%, do_false=3.4%, swing=0.085\n  - Accidental Skirmish in South China Sea: do_true=10.4%, do_false=4.5%, swing=0.059\n  - Crisis Communication Mechanisms: do_true=4.5%, do_false=7.1%, swing=0.027\n  - US-China Economic Decoupling Depth: do_true=6.4%, do_false=4.0%, swing=0.024\n  - Chinese Military Modernization Pace: do_true=6.1%, do_false=4.0%, swing=0.021\n\n## 最有诊断价值的证据\n- [increase] 台湾问题是中美关系中最大的单一引爆点，若2026-2030年间发生涉及台湾的重大危机，直接军事冲突的概率将呈指数级上升。 | weighted_log_odds=+0.383 | quality_weight=0.547 | source=background/background_prior\n  - 台湾是中美核心利益交汇点。美国的安全承诺与中国的主权主张在此直接碰撞。任何一方的误判或激进行动都可能导致从对峙迅速升级为交火。\n- [decrease] 核威慑（相互保证毁灭）作为结构性约束，使得中美双方都极力避免直接的动能军事冲突，因为升级风险不可控。 | weighted_log_odds=-0.233 | quality_weight=0.389 | source=background/background_prior\n  - 这是防止大国直接战争的最强负向因子。尽管紧张局势升级，但核武器的存在设定了冲突的绝对上限，使得‘直接交战’的概率远低于常规代理人战争。\n- [increase] 南海及西太平洋的日常军事对峙频率增加，增加了意外碰撞或‘费舍尔事件’式误判升级为开火的风险。 | weighted_log_odds=+0.086 | quality_weight=0.288 | source=background/background_prior\n  - 虽然双方有意避免冲突，但高频次的近距离接触增加了技术故障、人为失误或过度反应导致意外开火的可能性。\n- [increase] 中国反介入/区域拒止（A2/AD）能力的提升改变了西太平洋的力量平衡，可能促使美国采取更激进的‘前沿存在’策略以维持威慑，增加摩擦概率。 | weighted_log_odds=+0.068 | quality_weight=0.271 | source=background/background_prior\n  - 军事力量的接近可能导致‘安全困境’加剧。美国可能感到需要更积极地展示武力以抵消中国优势，而中国可能视此为挑衅，形成螺旋上升。\n- [increase] 第三方盟友（如日本、菲律宾）的卷入可能将局部摩擦扩大为中美直接冲突，特别是如果美国履行安全条约义务。 | weighted_log_odds=+0.039 | quality_weight=0.193 | source=background/background_prior\n  - 美国与盟友的安全条约是潜在的冲突放大器。如果盟友与中国发生直接军事摩擦，美国介入的可能性将显著增加，从而将双边摩擦转化为中美直接交战。\n- [increase] 中美经济相互依赖度的下降（脱钩/去风险）降低了军事冲突的经济成本，从而削弱了和平的经济缓冲作用。 | weighted_log_odds=+0.036 | quality_weight=0.179 | source=background/background_prior\n  - 随着供应链重组和技术封锁，双方对彼此经济的依赖减少，使得在危机时刻采取军事行动的国内政治和经济阻力相对减小。\n\n## 多 Agent 分歧\n- **outside_view**：6.0%，confidence=0.70。基于核大国之间直接军事冲突的历史基准率（接近于零），考虑到中美经济相互依赖的残余影响，尽管紧张局势升级，但直接动能交战仍属极小概率事件。参考冷战时期美苏并未发生直接常规战争的历史先例。\n  - 更新触发器：出现明确的官方声明表明双方已解除针对对方的核威慑限制，或发生类似1962年古巴导弹危机的全面对峙且沟通渠道完全切断。\n- **inside_view**：18.0%，confidence=0.60。关注2026-2030年间的特定风险点：台湾局势的不可预测性、南海高频次对峙导致的意外升级风险（如‘费舍尔事件’重演）、以及美国国内政治波动可能引发的误判。当前机制显示摩擦频率增加，安全缓冲减少。\n  - 更新触发器：台海爆发封锁或登陆演习并伴随美军实质性介入部署，或南海发生导致人员伤亡的意外碰撞且双方拒绝降级。\n- **skeptic**：4.0%，confidence=0.80。双方均缺乏发动直接军事冲突的战略动机。冲突成本极高，且双方都具备强大的危机管控意愿以避免全面战争。‘直接交战’定义严格（需动能武器或伤亡），大部分摩擦将通过外交或非致命手段解决。\n  - 更新触发器：一方政权面临内部崩溃风险并试图通过外部战争转移矛盾，或第三方盟友（如菲律宾）主动挑衅导致美国被迫卷入直接交火。\n- **optimist**：22.0%，confidence=0.50。随着中国军力现代化接近美国，以及美国‘印太战略’的激进执行，误判和螺旋升级的风险显著增加。经济脱钩降低了冲突的经济门槛，使得军事冒险的成本相对可控。\n  - 更新触发器：建立新的、更有效的中美军事危机沟通机制，或双方达成关于台湾问题的某种长期战略稳定协议。\n- **base_rate_guardian**：5.5%，confidence=0.75。坚持历史基准率的核心地位。虽然当前地缘政治紧张，但核威慑和经济相互依赖（尽管减弱）仍是强大的稳定器。将概率略微上调以反映当前高于冷战平均水平的紧张度，但拒绝大幅偏离历史常态。\n  - 更新触发器：历史基准率本身被重新评估，例如发现过去被忽略的‘未遂’直接冲突案例，或核威慑逻辑在特定条件下失效的理论证据。\n- **domain_generalist**：12.0%，confidence=0.65。综合考量：基准率低（~5%），但内部机制风险高（台湾、南海）。考虑到‘意外’因素和‘准军事’定义的模糊性，风险高于纯历史基准，但低于最坏情况情景。取中间值，反映低概率但高影响的特征。\n  - 更新触发器：任何导致中美军事热线中断的事件，或一方在争议海域采取单方面改变现状的激进军事行动。\n\n## 关键未知项\n- The specific threshold for US intervention in a Taiwan scenario (e.g., blockade vs. invasion).\n- The internal political stability of China in the 2026-2030 period.\n- The emergence of new black swan events (e.g., cyber-physical attacks misattributed to state actors).\n- The extent to which third-party allies (Japan, Philippines) will be drawn into direct conflict.\n\n## 模糊点与假设\n- 模糊点：准军事力量（如海警、民兵）在争议区域的行为是否视为军事行动。\n- 模糊点：意外碰撞是否视为冲突（需有武力使用或重大损毁）。\n- 假设：假设‘军事冲突’包含事实上的军事对抗，无论是否宣战。\n- 假设：假设台湾若发生冲突，视为直接冲突。\n\n## 校准信息\n- calibration_mode：cold_start_conservative_shrinkage\n- temperature：1.205\n- domain_history_n：0\n- domain_avg_brier：None\n\n## 结论\n当前给出的概率是 **9.5%**。这个数字由 base rate、证据 log-odds、Bayesian causal graph / Monte Carlo、多 Agent panel 和本地校准共同计算得到。\n"
+        },
+        {
+          "id": "3cd8e6af02b2",
+          "forecast_kind": "single_contract",
+          "created_at": "2026-06-02T16:47:10",
+          "updated_at": "2026-06-02T16:47:10",
+          "status": "open",
+          "outcome": null,
+          "resolved_at": null,
+          "brier_score": null,
+          "original_question": "2030年中美会不会发生军事冲突？",
+          "question_expansion": {
+            "original_question": "2030年中美会不会发生军事冲突？",
+            "question_type": "explicit_binary",
+            "is_cloud_question": false,
+            "cloud_terms": [],
+            "overall_semantic_intent": "用户旨在评估在2030年12月31日之前，中华人民共和国与美利坚合众国之间是否会发生任何形式的、可被国际公认定义的直接军事对抗、武装冲突或重大代理人战争事件。",
+            "time_interpretation": {
+              "current_period": "2026",
+              "target_period": "2030",
+              "comparison": "绝对时间截止点（Deadline），即判断事件是否在2030年12月31日23:59:59之前发生。"
+            },
+            "core_ambiguities": [
+              "军事冲突的定义边界：是否包含网络攻击、太空资产干扰、代理人战争、海上对峙中的擦枪走火，还是仅指国家正规军之间的直接交火？",
+              "主体界定：是否包含各自盟友、准军事组织（如民兵、海警在战时状态下的行动）？",
+              "冲突的规模与性质：是短暂的战术性接触，还是持续的战略级战争？"
+            ],
+            "triage": {
+              "forecastability_zone": "cloudlike",
+              "reason": "虽然问题形式为二元（是/否），但‘军事冲突’的定义具有高度模糊性，且涉及低概率、高影响的复杂地缘政治驱动因素。单一指标无法覆盖所有可能的冲突形态（直接、间接、灰色地带）。",
+              "requires_decomposition": true,
+              "single_contract_allowed_by_type": false
+            },
+            "dimension_map": [
+              {
+                "dimension_id": "dim_1",
+                "dimension_name": "Direct Military Engagement (Kinetic & Paramilitary)",
+                "meaning": "中美双方军事或准军事力量之间的直接武力接触，包括正规军交火、导弹发射、舰机碰撞导致的战斗行为，以及海警/民兵在争议区域的致命武力使用。",
+                "candidate_metrics": [
+                  "官方确认的中美军事人员伤亡。",
+                  "动能武器（导弹、火炮、小武器）的发射记录。",
+                  "军事或准军事资产的严重损毁或沉没。"
+                ],
+                "semantic_coverage_weight": 0.6,
+                "measurability": 0.9,
+                "why_it_matters": "这是最符合大众对‘战争’直觉理解的维度，也是国际法上最明确的冲突定义。",
+                "knowable_parts": [
+                  "当前的军事部署态势。",
+                  "公开的交战规则（ROE）。",
+                  "历史相遇数据。"
+                ],
+                "unknowable_parts": [
+                  "危机时刻领导人的具体决策心理。",
+                  "意外事件升级的临界点。"
+                ],
+                "assumptions": [
+                  "假设‘军事冲突’包含准军事力量在事实上的军事行动。",
+                  "假设直接交火是冲突的核心标志。"
+                ],
+                "outside_view_reference_classes": [
+                  "冷战期间美苏直接军事接触（极少）。",
+                  "印巴边境冲突。",
+                  "南海历史事件（如2001年撞机事件）。"
+                ],
+                "inside_view_mechanisms": [
+                  "危机误判：高强度演习中的误操作。",
+                  "国内政治压力：通过外部冲突转移内部矛盾。",
+                  "联盟义务：美国盟友受袭引发的介入。"
+                ],
+                "update_signals": [
+                  "军事热线中断。",
+                  "交战规则放宽。",
+                  "新式进攻性武器前沿部署。"
+                ]
+              },
+              {
+                "dimension_id": "dim_2",
+                "dimension_name": "Proxy Military Conflict",
+                "meaning": "中美在第三国或地区支持对立双方，并导致双方军事力量（或由其直接指挥/武装的力量）发生直接战斗或重大军事对抗。",
+                "candidate_metrics": [
+                  "中美军队在第三国战场直接交火。",
+                  "一方对另一方支持的武装力量进行直接军事打击。",
+                  "军事封锁或海上拦截行动。"
+                ],
+                "semantic_coverage_weight": 0.25,
+                "measurability": 0.7,
+                "why_it_matters": "大国竞争常通过代理人进行，这是避免直接核战争但保持军事对抗的主要形式。",
+                "knowable_parts": [
+                  "当前的盟友体系和安全承诺。",
+                  "全球热点地区的冲突态势。"
+                ],
+                "unknowable_parts": [
+                  "秘密的军事援助协议。",
+                  "第三方冲突升级的不可控性。"
+                ],
+                "assumptions": [
+                  "假设仅提供武器不算冲突，必须有直接军事介入或指挥。",
+                  "假设台湾若发生冲突，可能被视为直接冲突而非纯代理人战争（取决于具体定义，此处归入直接冲突更合适，故本维度主要指其他第三国）。"
+                ],
+                "outside_view_reference_classes": [
+                  "冷战时期的朝鲜战争、越南战争。",
+                  "现代叙利亚、乌克兰冲突中的大国间接介入。"
+                ],
+                "inside_view_mechanisms": [
+                  "联盟拖拽效应。",
+                  "战略资源争夺（如航道、矿产）。",
+                  "政权更迭干预。"
+                ],
+                "update_signals": [
+                  "第三国冲突中大国军事顾问的出现。",
+                  "对第三国武装力量的直接空袭或炮击。"
+                ]
+              },
+              {
+                "dimension_id": "dim_3",
+                "dimension_name": "Cyber/Space Kinetic Equivalent",
+                "meaning": "网络或太空攻击造成物理破坏、人员伤亡或关键基础设施瘫痪，且被归因于对方，并引发军事层面的回应或被视为战争行为。",
+                "candidate_metrics": [
+                  "导致物理破坏的网络攻击（如电网、水坝）。",
+                  "反卫星武器摧毁对方卫星。",
+                  "官方宣布网络攻击为‘战争行为’。"
+                ],
+                "semantic_coverage_weight": 0.15,
+                "measurability": 0.4,
+                "why_it_matters": "现代战争的新维度，但归因难、阈值模糊。",
+                "knowable_parts": [
+                  "网络攻击的技术能力。",
+                  "关键基础设施的脆弱性。"
+                ],
+                "unknowable_parts": [
+                  "攻击的真实来源（归因）。",
+                  "双方对‘战争行为’的认定标准。"
+                ],
+                "assumptions": [
+                  "假设只有造成物理后果的网络攻击才算军事冲突。",
+                  "假设归因必须具有高度可信度。"
+                ],
+                "outside_view_reference_classes": [
+                  "Stuxnet病毒。",
+                  "乌克兰电网攻击。",
+                  "反卫星试验。"
+                ],
+                "inside_view_mechanisms": [
+                  "隐蔽行动与可否认性。",
+                  "升级阶梯的模糊性。"
+                ],
+                "update_signals": [
+                  "关键基础设施遭受大规模瘫痪。",
+                  "太空资产被摧毁。"
+                ]
+              }
+            ],
+            "contract_candidates": [
+              {
+                "contract_id": "contract_dim1_direct",
+                "dimension_id": "dim_1",
+                "dimension_name": "Direct Military Engagement",
+                "normalized_question": "在2026年6月2日至2030年12月31日期间，中美双方是否会发生直接军事交战（包括正规军及执行军事任务的准军事力量）？",
+                "target_type": "binary",
+                "deadline": "2030-12-31",
+                "resolution_criteria": "YES：1) 中美任何一方军事或准军事人员被对方武力致死或致伤；2) 任何一方对对方军事/准军事目标发射动能武器（导弹、火炮、小武器等）；3) 发生导致重大资产损毁或人员伤亡的故意碰撞或武力拦截。NO：未发生上述事件。排除纯网络攻击、经济制裁、外交驱逐。",
+                "resolution_sources": [
+                  "国防部官方声明。",
+                  "主流国际通讯社报道。",
+                  "卫星图像及目击者证词。"
+                ],
+                "domain": "geopolitics",
+                "forecastability_score": 0.3,
+                "semantic_coverage_weight": 0.78666235027517,
+                "measurability": 0.9,
+                "user_intent_preservation_score": 0.9,
+                "proxy_metric": "官方确认的军事人员伤亡或动能武器发射。",
+                "proxy_risk": "low",
+                "goodhart_risk": "low",
+                "direction_conflict_risk": "low",
+                "lost_dimensions": [
+                  "非致命性武力展示（如激光致盲、水炮）。",
+                  "纯网络/太空攻击。"
+                ],
+                "ambiguity_flags": [
+                  "准军事力量（如海警、民兵）在争议区域的行为是否视为军事行动。",
+                  "意外碰撞是否视为冲突（需有武力使用或重大损毁）。"
+                ],
+                "clarifying_assumptions": [
+                  "假设‘军事冲突’包含事实上的军事对抗，无论是否宣战。",
+                  "假设台湾若发生冲突，视为直接冲突。"
+                ],
+                "outside_view_note": "核大国直接开战概率极低，但局部摩擦风险存在。",
+                "inside_view_note": "台海、南海是主要热点，误判风险随接触频率增加而上升。",
+                "update_signals": [
+                  "军事演习规模扩大。",
+                  "外交关系断绝。"
+                ],
+                "reason": "覆盖最核心的‘战争’定义，包含直接交火和准军事冲突。",
+                "original_semantic_coverage_weight": 0.6,
+                "proxy_risk_factor": 1.0,
+                "lost_dimension_factor": 0.76,
+                "raw_portfolio_weight": 0.36936
+              },
+              {
+                "contract_id": "contract_dim2_proxy",
+                "dimension_id": "dim_2",
+                "dimension_name": "Proxy Military Conflict",
+                "normalized_question": "在2026年6月2日至2030年12月31日期间，中美是否在第三国发生直接军事对抗或重大代理人战争？",
+                "target_type": "binary",
+                "deadline": "2030-12-31",
+                "resolution_criteria": "YES：1) 中美军队在第三国直接交火；2) 一方对另一方直接指挥或武装的部队进行军事打击；3) 实施军事封锁或海上军事拦截。NO：未发生上述事件。排除仅提供武器或情报支持。",
+                "resolution_sources": [
+                  "联合国安理会记录。",
+                  "冲突监测数据库（如UCDP）。",
+                  "官方军事行动报告。"
+                ],
+                "domain": "geopolitics",
+                "forecastability_score": 0.4,
+                "semantic_coverage_weight": 0.18128844286176754,
+                "measurability": 0.7,
+                "user_intent_preservation_score": 0.8,
+                "proxy_metric": "中美军队在第三国的直接交战记录。",
+                "proxy_risk": "medium",
+                "goodhart_risk": "medium",
+                "direction_conflict_risk": "medium",
+                "lost_dimensions": [
+                  "隐蔽的特种作战。",
+                  "非直接指挥的代理人行动。"
+                ],
+                "ambiguity_flags": [
+                  "‘直接指挥’的定义。",
+                  "第三国冲突的归属。"
+                ],
+                "clarifying_assumptions": [
+                  "假设台湾冲突归入直接冲突，本合约主要指其他第三国。",
+                  "假设仅提供援助不算冲突。"
+                ],
+                "outside_view_note": "大国通过代理人竞争是常见模式，但直接军事对抗较少。",
+                "inside_view_note": "全球南方国家的冲突可能成为大国博弈的战场。",
+                "update_signals": [
+                  "大国向冲突方派遣军事顾问。",
+                  "对冲突方进行直接空袭。"
+                ],
+                "reason": "覆盖大国竞争的间接军事对抗形式。",
+                "original_semantic_coverage_weight": 0.25,
+                "proxy_risk_factor": 0.8,
+                "lost_dimension_factor": 0.76,
+                "raw_portfolio_weight": 0.08511999999999999
+              },
+              {
+                "contract_id": "contract_dim3_cyber_space",
+                "dimension_id": "dim_3",
+                "dimension_name": "Cyber/Space Kinetic Equivalent",
+                "normalized_question": "在2026年6月2日至2030年12月31日期间，中美是否发生造成物理破坏或人员伤亡的网络/太空攻击，并被认定为军事冲突？",
+                "target_type": "binary",
+                "deadline": "2030-12-31",
+                "resolution_criteria": "YES：1) 归因于对方的网络攻击导致关键基础设施物理破坏或人员伤亡；2) 使用反卫星武器摧毁对方卫星；3) 官方宣布此类攻击为战争行为并引发军事回应。NO：未发生上述事件。",
+                "resolution_sources": [
+                  "网络安全机构归因报告。",
+                  "太空监视数据。",
+                  "官方声明。"
+                ],
+                "domain": "geopolitics",
+                "forecastability_score": 0.2,
+                "semantic_coverage_weight": 0.03204920686306248,
+                "measurability": 0.4,
+                "user_intent_preservation_score": 0.6,
+                "proxy_metric": "造成物理后果的归因网络/太空攻击。",
+                "proxy_risk": "high",
+                "goodhart_risk": "high",
+                "direction_conflict_risk": "high",
+                "lost_dimensions": [
+                  "无物理后果的网络攻击。",
+                  "电子干扰。"
+                ],
+                "ambiguity_flags": [
+                  "归因的确定性。",
+                  "‘物理破坏’的阈值。"
+                ],
+                "clarifying_assumptions": [
+                  "假设只有造成物理后果的攻击才算军事冲突。",
+                  "假设归因需有高度可信证据。"
+                ],
+                "outside_view_note": "此类事件罕见，但后果严重。",
+                "inside_view_note": "归因困难使得此类冲突难以确认，但一旦发生可能迅速升级。",
+                "update_signals": [
+                  "关键基础设施遭受攻击。",
+                  "太空资产被摧毁。"
+                ],
+                "reason": "覆盖现代战争的新维度，但设定高阈值以避免噪音。",
+                "original_semantic_coverage_weight": 0.15,
+                "proxy_risk_factor": 0.55,
+                "lost_dimension_factor": 0.76,
+                "raw_portfolio_weight": 0.015048
+              }
+            ],
+            "semantic_collapse_audit": {
+              "semantic_collapse_risk": "low",
+              "collapse_reason": "分解避免了将‘军事冲突’简化为单一指标（如GDP或军费），而是涵盖了直接、间接和新维度冲突。",
+              "lost_dimensions_if_single_metric": [
+                "代理人战争。",
+                "准军事力量冲突。",
+                "网络/太空物理攻击。"
+              ],
+              "allowed_single_contract": false,
+              "recommended_mode": "multi_contract_portfolio",
+              "required_warning": "不要仅依据‘正规军交火’来判断，需综合考虑准军事力量和代理人冲突。",
+              "final_guardrails": [
+                "Define 'Military Conflict' to include direct kinetic engagement between regular armed forces.",
+                "Explicitly decide whether to include paramilitary forces (e.g., PLA Maritime Militia, US Coast Guard in wartime status) in the definition of 'Military'.",
+                "Explicitly decide whether to include proxy conflicts (US and China fighting on opposite sides in a third country) as 'Military Conflict between US and China'.",
+                "Exclude purely economic sanctions, diplomatic expulsions, and non-destructive cyber espionage from the definition of 'Military Conflict'.",
+                "Set a clear threshold for 'Cyber/Space' actions: only include if they cause physical destruction or lead to kinetic retaliation."
+              ]
+            },
+            "adversarial_audit": {
+              "verdict": "revise",
+              "substitution_errors": [
+                "将‘军事冲突’偷换为‘宣战’。",
+                "将‘军事冲突’偷换为‘网络攻击’（无物理后果）。"
+              ],
+              "missing_dimensions": [
+                "准军事力量（海警、民兵）的冲突。",
+                "第三国代理人战争中的直接军事介入。"
+              ],
+              "overweighted_metrics": [
+                "直接正规军交火（可能低估灰色地带冲突）。"
+              ],
+              "underweighted_dimensions": [
+                "准军事冲突。",
+                "代理人战争。"
+              ],
+              "repair_suggestions": [
+                "合并直接冲突和准军事冲突为一个合约。",
+                "增加代理人战争合约。",
+                "提高网络/太空冲突的阈值（需物理后果）。"
+              ],
+              "repair_status": "partially_repaired"
+            },
+            "recommended_user_choice_prompt": "您认为‘军事冲突’是否应包含中美在第三国的代理人战争？是否应包含海警/民兵的武力冲突？",
+            "machine_notes": [
+              "根据Adversarial Audit，合并了直接冲突和准军事冲突，以避免定义碎片化。",
+              "根据Proxy Audit，提高了网络/太空冲突的阈值，要求物理后果或官方定性，以降低归因风险。",
+              "增加了代理人战争维度，以覆盖大国竞争的主要形式。",
+              "Adversarial audit verdict 保持为 revise；repair_status=partially_repaired，不再自动改成 pass。"
+            ],
+            "semantic_collapse_risk": "low",
+            "collapse_reason": "分解避免了将‘军事冲突’简化为单一指标（如GDP或军费），而是涵盖了直接、间接和新维度冲突。",
+            "lost_dimensions_if_single_metric": [
+              "代理人战争。",
+              "准军事力量冲突。",
+              "网络/太空物理攻击。"
+            ],
+            "recommended_mode": "multi_contract_portfolio",
+            "allowed_single_contract": false,
+            "decomposition_record_id": "a8395be8ec72",
+            "decomposition_module": "cloud_to_contract_decomposition",
+            "decomposition_validation_errors": []
+          },
+          "contract": {
+            "normalized_question": "在2026年6月2日至2030年12月31日期间，中美是否在第三国发生直接军事对抗或重大代理人战争？",
+            "target_type": "binary",
+            "deadline": "2030-12-31",
+            "resolution_criteria": "YES：1) 中美军队在第三国直接交火；2) 一方对另一方直接指挥或武装的部队进行军事打击；3) 实施军事封锁或海上军事拦截。NO：未发生上述事件。排除仅提供武器或情报支持。",
+            "resolution_sources": [
+              "联合国安理会记录。",
+              "冲突监测数据库（如UCDP）。",
+              "官方军事行动报告。"
+            ],
+            "domain": "geopolitics",
+            "forecastability_score": 0.4,
+            "ambiguity_flags": [
+              "‘直接指挥’的定义。",
+              "第三国冲突的归属。"
+            ],
+            "clarifying_assumptions": [
+              "假设台湾冲突归入直接冲突，本合约主要指其他第三国。",
+              "假设仅提供援助不算冲突。"
+            ],
+            "reason": "覆盖大国竞争的间接军事对抗形式。",
+            "contract_id": "contract_dim2_proxy",
+            "dimension_id": "dim_2",
+            "dimension_name": "Proxy Military Conflict",
+            "semantic_coverage_weight": 0.18128844286176754,
+            "measurability": 0.7,
+            "user_intent_preservation_score": 0.8,
+            "proxy_metric": "中美军队在第三国的直接交战记录。",
+            "proxy_risk": "medium",
+            "lost_dimensions": [
+              "隐蔽的特种作战。",
+              "非直接指挥的代理人行动。"
+            ],
+            "source_question_type": "explicit_binary",
+            "source_semantic_collapse_risk": "low",
+            "source_overall_semantic_intent": "用户旨在评估在2030年12月31日之前，中华人民共和国与美利坚合众国之间是否会发生任何形式的、可被国际公认定义的直接军事对抗、武装冲突或重大代理人战争事件。"
+          },
+          "decomposition": {
+            "base_rate": {
+              "reference_class": "Major power pairs (US/USSR, US/China, etc.) engaging in direct military combat in third-party states during a specific 4.5-year window during a period of strategic competition.",
+              "base_probability": 0.05,
+              "sample_size_guess": "rough",
+              "confidence": 0.6,
+              "rationale": "Historically, major powers have avoided direct military confrontation in third-party states to prevent escalation to nuclear war (e.g., US/USSR in Vietnam, Korea, Afghanistan were proxy wars with limited or no direct US-Soviet kinetic engagement). However, the current US-China rivalry is more integrated and tense than the Cold War, slightly increasing the risk compared to the historical average of near-zero direct clashes."
+            },
+            "factors": [
+              {
+                "factor": "Escalation in South China Sea",
+                "sub_question": "Will a maritime incident in the South China Sea involving US and Chinese naval assets lead to kinetic exchange or blockade?",
+                "direction_if_true": "increase",
+                "probability": 0.15,
+                "effect_log_odds": 1.2,
+                "confidence": 0.5,
+                "dependencies": [],
+                "rationale": "The South China Sea is the most likely flashpoint. A collision or accidental exchange of fire could trigger a localized military confrontation that fits the 'direct military confrontation' criteria, especially if interpreted as a blockade or interception."
+              },
+              {
+                "factor": "Conflict in Middle East or Africa involving both powers",
+                "sub_question": "Will a third-party conflict (e.g., Yemen, Sudan, Libya) escalate to the point where US and Chinese military forces (or directly commanded proxies) engage each other?",
+                "direction_if_true": "increase",
+                "probability": 0.08,
+                "effect_log_odds": 0.8,
+                "confidence": 0.4,
+                "dependencies": [],
+                "rationale": "China has growing security interests in the Middle East and Africa. If a local conflict involves US-aligned and China-aligned factions, and both sides deploy military advisors or special forces, a direct clash becomes possible, though both sides currently prefer diplomatic or economic leverage."
+              },
+              {
+                "factor": "US Domestic Political Pressure for Hawkishness",
+                "sub_question": "Will US domestic politics in 2026-2030 force a more aggressive military posture towards China in third-party regions?",
+                "direction_if_true": "increase",
+                "probability": 0.4,
+                "effect_log_odds": 0.5,
+                "confidence": 0.6,
+                "dependencies": [],
+                "rationale": "Political polarization in the US may lead to leaders seeking external victories or demonstrating strength, increasing the likelihood of risky military posturing that could result in accidental conflict."
+              },
+              {
+                "factor": "Chinese Economic Vulnerability",
+                "sub_question": "Will China's economic slowdown by 2030 reduce its willingness to engage in costly military adventures abroad?",
+                "direction_if_true": "decrease",
+                "probability": 0.6,
+                "effect_log_odds": -0.6,
+                "confidence": 0.5,
+                "dependencies": [],
+                "rationale": "Economic stability is a primary concern for the CCP. A severe economic downturn would likely prioritize internal stability and economic recovery over external military confrontation, reducing the risk of proxy wars."
+              },
+              {
+                "factor": "Effectiveness of Crisis Communication Channels",
+                "sub_question": "Will existing military-to-military communication channels (e.g., hotline) effectively de-escalate incidents before they become kinetic?",
+                "direction_if_true": "decrease",
+                "probability": 0.7,
+                "effect_log_odds": -0.8,
+                "confidence": 0.6,
+                "dependencies": [],
+                "rationale": "Despite tensions, both sides have a strong interest in avoiding direct war. Established protocols and diplomatic backchannels are likely to remain functional enough to prevent minor incidents from escalating into full-scale proxy wars."
+              }
+            ],
+            "known_unknowns": [
+              "The specific definition of 'direct command' for proxy forces in future conflicts.",
+              "The potential for a black swan event in a third-party state (e.g., collapse of a key regime) that forces immediate military intervention by both powers.",
+              "The extent of China's willingness to risk direct confrontation to protect its Belt and Road Initiative investments."
+            ],
+            "search_queries": [
+              "US China military encounters in third countries 2020-2026",
+              "China military bases abroad and potential conflict zones",
+              "US strategy for containing China in Middle East and Africa",
+              "Historical cases of major power proxy wars turning into direct clashes"
+            ]
+          },
+          "evidence": {
+            "evidence_cards": [
+              {
+                "claim": "历史上，主要大国（如美苏）在冷战期间的代理人战争中极力避免军队直接交火，以防止冲突升级为核战争。这种‘避免直接对抗’的战略惯性在当前中美关系中依然强烈存在。",
+                "source_type": "background",
+                "source": "background_prior",
+                "direction": "decrease",
+                "relevance": 0.8,
+                "reliability": 0.9,
+                "diagnosticity": 0.7,
+                "freshness": 0.5,
+                "independence_group": "historical_precedent",
+                "impact_log_odds": -0.6,
+                "rationale": "历史基率显示，尽管存在激烈的代理人竞争，但直接军事交火极为罕见。这一结构性约束降低了2030年前发生直接冲突的概率。",
+                "independence_penalty": 1.0,
+                "quality_weight": 0.252,
+                "weighted_impact_log_odds": -0.1512
+              },
+              {
+                "claim": "中美两国在军事层面建立了多条危机沟通渠道（如国防部热线、海上军事安全磋商机制），旨在防止误判和意外升级。这些机制在2020-2026年间虽受政治关系影响，但基本保持运作。",
+                "source_type": "background",
+                "source": "background_prior",
+                "direction": "decrease",
+                "relevance": 0.7,
+                "reliability": 0.8,
+                "diagnosticity": 0.6,
+                "freshness": 0.8,
+                "independence_group": "crisis_management",
+                "impact_log_odds": -0.5,
+                "rationale": "有效的危机管控机制能够显著降低因意外事件（如南海对峙）演变为直接军事冲突的风险。",
+                "independence_penalty": 1.0,
+                "quality_weight": 0.2688,
+                "weighted_impact_log_odds": -0.1344
+              },
+              {
+                "claim": "中国在中东和非洲的安全利益日益增长，包括保护海外公民、投资及能源通道。如果当地局势动荡，中国可能派遣维和部队或安保力量，增加与美军或美军支持方发生摩擦的物理接触面。",
+                "source_type": "background",
+                "source": "background_prior",
+                "direction": "increase",
+                "relevance": 0.6,
+                "reliability": 0.7,
+                "diagnosticity": 0.5,
+                "freshness": 0.8,
+                "independence_group": "geographic_exposure",
+                "impact_log_odds": 0.4,
+                "rationale": "物理接触面的增加是发生直接冲突的必要条件之一。中国在第三国军事存在的扩大提高了‘意外交火’或‘直接干预’的可能性。",
+                "independence_penalty": 1.0,
+                "quality_weight": 0.168,
+                "weighted_impact_log_odds": 0.06720000000000001
+              },
+              {
+                "claim": "美国国内政治极化可能导致对外政策更具冒险性，特别是在2026-2030年期间，政治领导人可能通过展示对华强硬姿态来获取国内支持，从而增加军事对峙的风险。",
+                "source_type": "background",
+                "source": "background_prior",
+                "direction": "increase",
+                "relevance": 0.5,
+                "reliability": 0.6,
+                "diagnosticity": 0.4,
+                "freshness": 0.9,
+                "independence_group": "domestic_politics",
+                "impact_log_odds": 0.3,
+                "rationale": "国内政治压力可能削弱理性决策，增加采取高风险军事行动（如封锁或拦截）的概率，尽管这通常不是首选策略。",
+                "independence_penalty": 1.0,
+                "quality_weight": 0.108,
+                "weighted_impact_log_odds": 0.0324
+              },
+              {
+                "claim": "中美经济相互依赖程度虽有所下降，但仍处于高位。全面军事冲突将对双方经济造成灾难性打击，这种经济成本构成了强大的威慑力，促使双方克制在第三国的军事行动。",
+                "source_type": "background",
+                "source": "background_prior",
+                "direction": "decrease",
+                "relevance": 0.7,
+                "reliability": 0.8,
+                "diagnosticity": 0.6,
+                "freshness": 0.7,
+                "independence_group": "economic_deterrence",
+                "impact_log_odds": -0.5,
+                "rationale": "高昂的经济代价使得双方在进行直接军事对抗前会进行极其谨慎的成本收益分析，倾向于选择非动能手段。",
+                "independence_penalty": 1.0,
+                "quality_weight": 0.23519999999999996,
+                "weighted_impact_log_odds": -0.11759999999999998
+              },
+              {
+                "claim": "南海地区的军事对峙频率增加，但双方均表现出避免直接开火的意图，更多依赖灰色地带战术（如海警船对峙、电子战）。这种模式可能延续至2030年，而非升级为直接军事冲突。",
+                "source_type": "background",
+                "source": "background_prior",
+                "direction": "decrease",
+                "relevance": 0.8,
+                "reliability": 0.7,
+                "diagnosticity": 0.7,
+                "freshness": 0.9,
+                "independence_group": "south_china_sea_dynamics",
+                "impact_log_odds": -0.4,
+                "rationale": "虽然南海是热点，但双方目前的策略是‘管控竞争’而非‘寻求决战’。灰色地带战术的使用表明双方有意避免触发‘直接军事对抗’的定义。",
+                "independence_penalty": 1.0,
+                "quality_weight": 0.35279999999999995,
+                "weighted_impact_log_odds": -0.14112
+              },
+              {
+                "claim": "中国军队现代化进程加快，具备更强的远程打击和区域拒止能力，这可能改变局部冲突的力量平衡，增加美军在第三国行动时的风险感知，从而可能促使美军采取更激进的先发制人策略或封锁行动。",
+                "source_type": "background",
+                "source": "background_prior",
+                "direction": "increase",
+                "relevance": 0.6,
+                "reliability": 0.7,
+                "diagnosticity": 0.5,
+                "freshness": 0.8,
+                "independence_group": "military_modernization",
+                "impact_log_odds": 0.3,
+                "rationale": "军事能力的提升可能引发安全困境，导致一方认为需要采取更果断的军事行动来遏制对方，增加了误判和冲突升级的风险。",
+                "independence_penalty": 1.0,
+                "quality_weight": 0.168,
+                "weighted_impact_log_odds": 0.0504
+              },
+              {
+                "claim": "国际社会（包括联合国、欧盟、东盟等）对大国直接军事冲突的强烈反对和调停意愿，为中美在第三国的冲突提供了外部缓冲和降温机制。",
+                "source_type": "background",
+                "source": "background_prior",
+                "direction": "decrease",
+                "relevance": 0.5,
+                "reliability": 0.6,
+                "diagnosticity": 0.4,
+                "freshness": 0.7,
+                "independence_group": "international_pressure",
+                "impact_log_odds": -0.3,
+                "rationale": "虽然国际压力不能阻止冲突，但能增加冲突的政治成本，促使双方在临界点前寻求妥协。",
+                "independence_penalty": 1.0,
+                "quality_weight": 0.08399999999999999,
+                "weighted_impact_log_odds": -0.025199999999999997
+              }
+            ]
+          },
+          "panel": {
+            "agent_forecasts": [
+              {
+                "agent_name": "outside_view",
+                "probability": 0.06,
+                "confidence": 0.7,
+                "rationale": "基于历史基率，主要大国在冷战期间极力避免在第三国发生直接军事交火以防止核升级。尽管当前中美关系紧张程度高于美苏冷战平均水平，但‘避免直接动能接触’仍是战略常态。参考类显示此类事件在4.5年窗口内的发生率极低。",
+                "strongest_update_trigger": "发现过去20年内其他主要大国对在第三国发生直接军事冲突的概率评估显著高于历史平均值。"
+              },
+              {
+                "agent_name": "inside_view",
+                "probability": 0.18,
+                "confidence": 0.6,
+                "rationale": "当前机制显示风险上升：南海对峙常态化增加了意外交火概率；中国在非洲和中东的军事存在扩大增加了与美军物理接触面；美国国内政治极化可能导致更冒险的军事姿态。虽然危机管控机制存在，但误判风险随接触频率增加而线性上升。",
+                "strongest_update_trigger": "南海或台海发生导致人员伤亡的海上碰撞事件，且双方未能在24小时内通过外交渠道降温。"
+              },
+              {
+                "agent_name": "skeptic",
+                "probability": 0.04,
+                "confidence": 0.65,
+                "rationale": "寻找失败路径：双方都有极强的动机避免直接冲突。经济相互依赖（尽管下降）仍构成巨大威慑。‘直接指挥’和‘直接交战’的定义门槛很高，绝大多数摩擦会被归类为灰色地带战术或代理人战争（仅提供武器/情报），不符合合约YES标准。双方均无意愿承担全面战争风险。",
+                "strongest_update_trigger": "一方公开宣布放弃‘不首先使用核武器’或‘不与中国发生直接冲突’的红线政策。"
+              },
+              {
+                "agent_name": "optimist",
+                "probability": 0.25,
+                "confidence": 0.5,
+                "rationale": "寻找成功路径：地缘政治碎片化可能导致黑天鹅事件，如某第三国政权突然崩溃，迫使中美同时介入以保护利益。美军在印太地区的激进巡逻策略可能与中国的新军事能力发生不可控的互动。一旦擦枪走火，国内民族主义情绪可能迫使领导人升级而非降级。",
+                "strongest_update_trigger": "中美在第三国（如菲律宾、越南或中东某国）的军事演习发生直接火力接触并被媒体广泛报道。"
+              },
+              {
+                "agent_name": "base_rate_guardian",
+                "probability": 0.07,
+                "confidence": 0.75,
+                "rationale": "防止过度偏离基率：inside_view和optimist可能高估了短期政治紧张对长期战略行为的影响。历史数据显示，即使在最紧张的冷战时期，美苏军队在第三国直接交火也是极小概率事件。必须将预测锚定在接近5%的历史基率上，仅因当前技术监控能力增强导致‘被发现’的概率略增而微调。",
+                "strongest_update_trigger": "权威历史学家或国际关系学者发布研究，证明21世纪大国竞争模式已结构性改变，直接冲突风险显著高于20世纪。"
+              },
+              {
+                "agent_name": "domain_generalist",
+                "probability": 0.12,
+                "confidence": 0.6,
+                "rationale": "综合判断：平衡了历史基率的低概率和当前地缘政治的高风险。虽然直接冲突不符合双方核心利益，但南海和中东的复杂性增加了意外升级的可能性。考虑到合约对‘直接交战’的严格定义，概率虽高于基率，但仍远低于50%。主要风险来自意外而非蓄意。",
+                "strongest_update_trigger": "联合国安理会就中美在第三国的军事对峙通过谴责决议，或双方宣布切断军事热线。"
+              }
+            ]
+          },
+          "probability_engine": {
+            "base_probability": 0.05,
+            "evidence_probability": 0.033441021674023276,
+            "causal_probability": 0.01852418212507404,
+            "causal_graph_probability": 0.01852418212507404,
+            "causal_graph_result": {
+              "method": "bayesian_causal_graph_logistic_cpd_monte_carlo",
+              "target_probability": 0.01852418212507404,
+              "credible_interval": [
+                0.01,
+                0.049080902535614694
+              ],
+              "p50": 0.01208109262680713,
+              "n_samples": 12000,
+              "graph": {
+                "graph_id": "e306d119b529",
+                "target_node": "Y",
+                "target_label": "在2026年6月2日至2030年12月31日期间，中美是否在第三国发生直接军事对抗或重大代理人战争？",
+                "nodes": [
+                  {
+                    "node_id": "escalation_in_south_china_sea",
+                    "label": "Escalation in South China Sea",
+                    "node_type": "binary_latent",
+                    "prior_probability": 0.15,
+                    "prior_confidence": 0.5,
+                    "evidence_log_odds_update": 0.0,
+                    "adjusted_prior_probability": 0.15,
+                    "target_effect_log_odds": 1.2,
+                    "target_effect_confidence": 0.5,
+                    "direction_if_true": "increase",
+                    "dependencies_raw": [],
+                    "rationale": "The South China Sea is the most likely flashpoint. A collision or accidental exchange of fire could trigger a localized military confrontation that fits the 'direct military confrontation' criteria, especially if interpreted as a blockade or interception."
+                  },
+                  {
+                    "node_id": "conflict_in_middle_east_or_africa_involving_both",
+                    "label": "Conflict in Middle East or Africa involving both powers",
+                    "node_type": "binary_latent",
+                    "prior_probability": 0.08,
+                    "prior_confidence": 0.4,
+                    "evidence_log_odds_update": 0.0,
+                    "adjusted_prior_probability": 0.08000000000000002,
+                    "target_effect_log_odds": 0.8,
+                    "target_effect_confidence": 0.4,
+                    "direction_if_true": "increase",
+                    "dependencies_raw": [],
+                    "rationale": "China has growing security interests in the Middle East and Africa. If a local conflict involves US-aligned and China-aligned factions, and both sides deploy military advisors or special forces, a direct clash becomes possible, though both sides currently prefer diplomatic or economic leverage."
+                  },
+                  {
+                    "node_id": "us_domestic_political_pressure_for_hawkishness",
+                    "label": "US Domestic Political Pressure for Hawkishness",
+                    "node_type": "binary_latent",
+                    "prior_probability": 0.4,
+                    "prior_confidence": 0.6,
+                    "evidence_log_odds_update": 0.0,
+                    "adjusted_prior_probability": 0.4,
+                    "target_effect_log_odds": 0.5,
+                    "target_effect_confidence": 0.6,
+                    "direction_if_true": "increase",
+                    "dependencies_raw": [],
+                    "rationale": "Political polarization in the US may lead to leaders seeking external victories or demonstrating strength, increasing the likelihood of risky military posturing that could result in accidental conflict."
+                  },
+                  {
+                    "node_id": "chinese_economic_vulnerability",
+                    "label": "Chinese Economic Vulnerability",
+                    "node_type": "binary_latent",
+                    "prior_probability": 0.6,
+                    "prior_confidence": 0.5,
+                    "evidence_log_odds_update": 0.0,
+                    "adjusted_prior_probability": 0.6,
+                    "target_effect_log_odds": -0.6,
+                    "target_effect_confidence": 0.5,
+                    "direction_if_true": "decrease",
+                    "dependencies_raw": [],
+                    "rationale": "Economic stability is a primary concern for the CCP. A severe economic downturn would likely prioritize internal stability and economic recovery over external military confrontation, reducing the risk of proxy wars."
+                  },
+                  {
+                    "node_id": "effectiveness_of_crisis_communication_channels",
+                    "label": "Effectiveness of Crisis Communication Channels",
+                    "node_type": "binary_latent",
+                    "prior_probability": 0.7,
+                    "prior_confidence": 0.6,
+                    "evidence_log_odds_update": 0.0,
+                    "adjusted_prior_probability": 0.7,
+                    "target_effect_log_odds": -0.8,
+                    "target_effect_confidence": 0.6,
+                    "direction_if_true": "decrease",
+                    "dependencies_raw": [],
+                    "rationale": "Despite tensions, both sides have a strong interest in avoiding direct war. Established protocols and diplomatic backchannels are likely to remain functional enough to prevent minor incidents from escalating into full-scale proxy wars."
+                  }
+                ],
+                "edges": [],
+                "target_cpd": {
+                  "type": "logistic",
+                  "base_probability": 0.05,
+                  "target_evidence_log_odds_update": -0.4195199999999999,
+                  "parents": [
+                    "escalation_in_south_china_sea",
+                    "conflict_in_middle_east_or_africa_involving_both",
+                    "us_domestic_political_pressure_for_hawkishness",
+                    "chinese_economic_vulnerability",
+                    "effectiveness_of_crisis_communication_channels"
+                  ],
+                  "weights": {
+                    "escalation_in_south_china_sea": 0.6,
+                    "conflict_in_middle_east_or_africa_involving_both": 0.32000000000000006,
+                    "us_domestic_political_pressure_for_hawkishness": 0.3,
+                    "chinese_economic_vulnerability": -0.3,
+                    "effectiveness_of_crisis_communication_channels": -0.48
+                  },
+                  "intercept_logit": -3.36395897916644
+                },
+                "evidence_links": [
+                  {
+                    "claim": "历史上，主要大国（如美苏）在冷战期间的代理人战争中极力避免军队直接交火，以防止冲突升级为核战争。这种‘避免直接对抗’的战略惯性在当前中美关系中依然强烈存在。",
+                    "target_node": "Y",
+                    "match_score": 0.0,
+                    "weighted_impact_log_odds": -0.1512
+                  },
+                  {
+                    "claim": "中美两国在军事层面建立了多条危机沟通渠道（如国防部热线、海上军事安全磋商机制），旨在防止误判和意外升级。这些机制在2020-2026年间虽受政治关系影响，但基本保持运作。",
+                    "target_node": "Y",
+                    "match_score": 0.010869565217391304,
+                    "weighted_impact_log_odds": -0.1344
+                  },
+                  {
+                    "claim": "中国在中东和非洲的安全利益日益增长，包括保护海外公民、投资及能源通道。如果当地局势动荡，中国可能派遣维和部队或安保力量，增加与美军或美军支持方发生摩擦的物理接触面。",
+                    "target_node": "Y",
+                    "match_score": 0.0,
+                    "weighted_impact_log_odds": 0.06720000000000001
+                  },
+                  {
+                    "claim": "美国国内政治极化可能导致对外政策更具冒险性，特别是在2026-2030年期间，政治领导人可能通过展示对华强硬姿态来获取国内支持，从而增加军事对峙的风险。",
+                    "target_node": "Y",
+                    "match_score": 0.012345679012345678,
+                    "weighted_impact_log_odds": 0.0324
+                  },
+                  {
+                    "claim": "中美经济相互依赖程度虽有所下降，但仍处于高位。全面军事冲突将对双方经济造成灾难性打击，这种经济成本构成了强大的威慑力，促使双方克制在第三国的军事行动。",
+                    "target_node": "Y",
+                    "match_score": 0.0,
+                    "weighted_impact_log_odds": -0.11759999999999998
+                  },
+                  {
+                    "claim": "南海地区的军事对峙频率增加，但双方均表现出避免直接开火的意图，更多依赖灰色地带战术（如海警船对峙、电子战）。这种模式可能延续至2030年，而非升级为直接军事冲突。",
+                    "target_node": "Y",
+                    "match_score": 0.0,
+                    "weighted_impact_log_odds": -0.14112
+                  },
+                  {
+                    "claim": "中国军队现代化进程加快，具备更强的远程打击和区域拒止能力，这可能改变局部冲突的力量平衡，增加美军在第三国行动时的风险感知，从而可能促使美军采取更激进的先发制人策略或封锁行动。",
+                    "target_node": "Y",
+                    "match_score": 0.0,
+                    "weighted_impact_log_odds": 0.0504
+                  },
+                  {
+                    "claim": "国际社会（包括联合国、欧盟、东盟等）对大国直接军事冲突的强烈反对和调停意愿，为中美在第三国的冲突提供了外部缓冲和降温机制。",
+                    "target_node": "Y",
+                    "match_score": 0.0,
+                    "weighted_impact_log_odds": -0.025199999999999997
+                  }
+                ],
+                "diagnostics": {
+                  "graph_confidence": 0.52,
+                  "node_count": 5,
+                  "edge_count": 0,
+                  "target_evidence_update": -0.4195199999999999,
+                  "known_bad_assumptions": [
+                    "第一版使用 logistic CPD 近似完整条件概率表。",
+                    "factor.dependencies 仅用于弱依赖边；非严格因果发现。",
+                    "evidence-to-node binding 使用轻量文本匹配，后续应升级为 embedding/LLM binding。"
+                  ]
+                }
+              },
+              "node_marginals": {
+                "escalation_in_south_china_sea": 0.15008333333333335,
+                "conflict_in_middle_east_or_africa_involving_both": 0.08441666666666667,
+                "us_domestic_political_pressure_for_hawkishness": 0.40491666666666665,
+                "chinese_economic_vulnerability": 0.6075,
+                "effectiveness_of_crisis_communication_channels": 0.7010833333333333
+              },
+              "node_sensitivity": [
+                {
+                  "node_id": "escalation_in_south_china_sea",
+                  "label": "Escalation in South China Sea",
+                  "baseline": 0.01852418212507404,
+                  "do_true": 0.04108596425716686,
+                  "do_false": 0.014766990908644084,
+                  "swing": 0.026318973348522776,
+                  "target_weight": 0.6
+                },
+                {
+                  "node_id": "effectiveness_of_crisis_communication_channels",
+                  "label": "Effectiveness of Crisis Communication Channels",
+                  "baseline": 0.01852418212507404,
+                  "do_true": 0.013936043227283937,
+                  "do_false": 0.029659240262602058,
+                  "swing": 0.01572319703531812,
+                  "target_weight": -0.48
+                },
+                {
+                  "node_id": "conflict_in_middle_east_or_africa_involving_both",
+                  "label": "Conflict in Middle East or Africa involving both powers",
+                  "baseline": 0.01852418212507404,
+                  "do_true": 0.029977768383226338,
+                  "do_false": 0.017227425461304197,
+                  "swing": 0.01275034292192214,
+                  "target_weight": 0.32000000000000006
+                },
+                {
+                  "node_id": "us_domestic_political_pressure_for_hawkishness",
+                  "label": "US Domestic Political Pressure for Hawkishness",
+                  "baseline": 0.01852418212507404,
+                  "do_true": 0.023941816066808085,
+                  "do_false": 0.015247846874589938,
+                  "swing": 0.008693969192218147,
+                  "target_weight": 0.3
+                },
+                {
+                  "node_id": "chinese_economic_vulnerability",
+                  "label": "Chinese Economic Vulnerability",
+                  "baseline": 0.01852418212507404,
+                  "do_true": 0.014928888416648797,
+                  "do_false": 0.02308472231627794,
+                  "swing": 0.008155833899629143,
+                  "target_weight": -0.3
+                }
+              ]
+            },
+            "panel_probability": 0.09870023496791328,
+            "raw_probability": 0.04310849648138654,
+            "calibrated_probability": 0.06881624956114427,
+            "confidence_low": 0.011443712328636111,
+            "confidence_high": 0.3205537188085654,
+            "total_evidence_delta_log_odds": -0.4195199999999999,
+            "avg_evidence_quality": 0.20459999999999998,
+            "panel_disagreement_logit_std": 0.7225947392520645,
+            "ensemble_weights": {
+              "base": 0.36082474226804123,
+              "evidence": 0.2268041237113402,
+              "causal": 0.2061855670103093,
+              "panel": 0.2061855670103093
+            },
+            "calibration": {
+              "calibration_mode": "cold_start_conservative_shrinkage",
+              "temperature": 1.19,
+              "domain_history_n": 0,
+              "domain_avg_brier": null
+            },
+            "interval": {
+              "logit_sigma": 1.853788421775619
+            }
+          },
+          "runtime_config_snapshot": {
+            "model": "Qwen3.5-27B",
+            "base_url": "http://192.168.0.102:1234/v1",
+            "engine": {
+              "min_probability": 0.01,
+              "max_probability": 0.99,
+              "min_base_probability": 0.02,
+              "max_base_probability": 0.98,
+              "min_evidence_impact_log_odds": -0.8,
+              "max_evidence_impact_log_odds": 0.8,
+              "min_factor_effect_log_odds": -1.5,
+              "max_factor_effect_log_odds": 1.5,
+              "max_factors": 12,
+              "max_evidence_cards": 12,
+              "max_panel_agents": 8,
+              "independence_penalty_power": 0.5,
+              "ensemble_weights": {
+                "base_const": 0.2,
+                "base_low_forecastability_bonus": 0.25,
+                "evidence_const": 0.1,
+                "evidence_forecastability_bonus": 0.3,
+                "causal_const": 0.1,
+                "causal_forecastability_bonus": 0.25,
+                "panel_const": 0.2
+              },
+              "cold_start_min_history": 10,
+              "cold_start_temperature_base": 1.25,
+              "cold_start_temperature_forecastability_discount": 0.15,
+              "brier_temperature": {
+                "bad_threshold": 0.25,
+                "weak_threshold": 0.22,
+                "strong_threshold": 0.17,
+                "bad_temperature": 1.45,
+                "weak_temperature": 1.25,
+                "normal_temperature": 1.12,
+                "strong_temperature": 1.0
+              },
+              "interval": {
+                "base_sigma": 0.55,
+                "forecastability_penalty": 1.15,
+                "panel_disagreement_weight": 0.3,
+                "evidence_quality_penalty": 0.65,
+                "evidence_count_bonus_per_card": 0.03,
+                "max_evidence_count_bonus": 0.25,
+                "min_sigma": 0.35,
+                "max_sigma": 2.0
+              }
+            },
+            "temperature": {
+              "question_expansion": 0.1,
+              "contract": 0.1,
+              "decomposition": 0.25,
+              "evidence": 0.2,
+              "panel": 0.55,
+              "portfolio_summary": 0.2,
+              "json_repair": 0.0
+            }
+          },
+          "markdown_report": "# Forecast 3cd8e6af02b2\n\n**预测类型**：single_contract\n**预测题**：在2026年6月2日至2030年12月31日期间，中美是否在第三国发生直接军事对抗或重大代理人战争？\n**最终概率**：6.9%\n**粗略区间**：1.1% - 32.1%\n**截止日期**：2030-12-31\n**领域**：geopolitics\n**可预测性评分**：0.40\n\n## 语义覆盖信息\n- 当前维度：Proxy Military Conflict\n- 代理指标：中美军队在第三国的直接交战记录。\n- proxy_risk：medium\n- 原意保留分：0.80\n- 语义覆盖权重：0.18\n- 该子合约未覆盖：隐蔽的特种作战。, 非直接指挥的代理人行动。\n\n## 判定标准\nYES：1) 中美军队在第三国直接交火；2) 一方对另一方直接指挥或武装的部队进行军事打击；3) 实施军事封锁或海上军事拦截。NO：未发生上述事件。排除仅提供武器或情报支持。\n判定来源：联合国安理会记录。, 冲突监测数据库（如UCDP）。, 官方军事行动报告。\n\n## 概率计算拆解\n- Base rate prior：5.0%\n- Evidence update 后：3.3%\n- Bayesian causal graph / Monte Carlo 后：1.9%\n- 多 Agent panel 聚合后：9.9%\n- Raw ensemble：4.3%\n- Calibrated final：6.9%\n\n## Ensemble 权重\n- base: 0.361\n- evidence: 0.227\n- causal: 0.206\n- panel: 0.206\n\n## 参考类 / Base Rate\n参考类：Major power pairs (US/USSR, US/China, etc.) engaging in direct military combat in third-party states during a specific 4.5-year window during a period of strategic competition.\n先验概率：5.0%\n置信度：0.60\n说明：Historically, major powers have avoided direct military confrontation in third-party states to prevent escalation to nuclear war (e.g., US/USSR in Vietnam, Korea, Afghanistan were proxy wars with limited or no direct US-Soviet kinetic engagement). However, the current US-China rivalry is more integrated and tense than the Cold War, slightly increasing the risk compared to the historical average of near-zero direct clashes.\n\n## 关键因子\n- **Escalation in South China Sea**：P=15.0%，effect_log_odds=+1.20，方向=increase。The South China Sea is the most likely flashpoint. A collision or accidental exchange of fire could trigger a localized military confrontation that fits the 'direct military confrontation' criteria, especially if interpreted as a blockade or interception.\n- **Conflict in Middle East or Africa involving both powers**：P=8.0%，effect_log_odds=+0.80，方向=increase。China has growing security interests in the Middle East and Africa. If a local conflict involves US-aligned and China-aligned factions, and both sides deploy military advisors or special forces, a direct clash becomes possible, though both sides currently prefer diplomatic or economic leverage.\n- **US Domestic Political Pressure for Hawkishness**：P=40.0%，effect_log_odds=+0.50，方向=increase。Political polarization in the US may lead to leaders seeking external victories or demonstrating strength, increasing the likelihood of risky military posturing that could result in accidental conflict.\n- **Chinese Economic Vulnerability**：P=60.0%，effect_log_odds=-0.60，方向=decrease。Economic stability is a primary concern for the CCP. A severe economic downturn would likely prioritize internal stability and economic recovery over external military confrontation, reducing the risk of proxy wars.\n- **Effectiveness of Crisis Communication Channels**：P=70.0%，effect_log_odds=-0.80，方向=decrease。Despite tensions, both sides have a strong interest in avoiding direct war. Established protocols and diplomatic backchannels are likely to remain functional enough to prevent minor incidents from escalating into full-scale proxy wars.\n\n## Bayesian Causal Graph\n- method：bayesian_causal_graph_logistic_cpd_monte_carlo\n- Monte Carlo samples：12000\n- causal credible interval：1.0% - 4.9%\n- node_count：5, edge_count：0\n- target_evidence_update：-0.420\n- 关键节点：\n  - Escalation in South China Sea | prior=15.0%, adjusted=15.0%, target_weight=+0.600\n  - Effectiveness of Crisis Communication Channels | prior=70.0%, adjusted=70.0%, target_weight=-0.480\n  - Conflict in Middle East or Africa involving both powers | prior=8.0%, adjusted=8.0%, target_weight=+0.320\n  - US Domestic Political Pressure for Hawkishness | prior=40.0%, adjusted=40.0%, target_weight=+0.300\n  - Chinese Economic Vulnerability | prior=60.0%, adjusted=60.0%, target_weight=-0.300\n- do-intervention sensitivity：\n  - Escalation in South China Sea: do_true=4.1%, do_false=1.5%, swing=0.026\n  - Effectiveness of Crisis Communication Channels: do_true=1.4%, do_false=3.0%, swing=0.016\n  - Conflict in Middle East or Africa involving both powers: do_true=3.0%, do_false=1.7%, swing=0.013\n  - US Domestic Political Pressure for Hawkishness: do_true=2.4%, do_false=1.5%, swing=0.009\n  - Chinese Economic Vulnerability: do_true=1.5%, do_false=2.3%, swing=0.008\n\n## 最有诊断价值的证据\n- [decrease] 历史上，主要大国（如美苏）在冷战期间的代理人战争中极力避免军队直接交火，以防止冲突升级为核战争。这种‘避免直接对抗’的战略惯性在当前中美关系中依然强烈存在。 | weighted_log_odds=-0.151 | quality_weight=0.252 | source=background/background_prior\n  - 历史基率显示，尽管存在激烈的代理人竞争，但直接军事交火极为罕见。这一结构性约束降低了2030年前发生直接冲突的概率。\n- [decrease] 南海地区的军事对峙频率增加，但双方均表现出避免直接开火的意图，更多依赖灰色地带战术（如海警船对峙、电子战）。这种模式可能延续至2030年，而非升级为直接军事冲突。 | weighted_log_odds=-0.141 | quality_weight=0.353 | source=background/background_prior\n  - 虽然南海是热点，但双方目前的策略是‘管控竞争’而非‘寻求决战’。灰色地带战术的使用表明双方有意避免触发‘直接军事对抗’的定义。\n- [decrease] 中美两国在军事层面建立了多条危机沟通渠道（如国防部热线、海上军事安全磋商机制），旨在防止误判和意外升级。这些机制在2020-2026年间虽受政治关系影响，但基本保持运作。 | weighted_log_odds=-0.134 | quality_weight=0.269 | source=background/background_prior\n  - 有效的危机管控机制能够显著降低因意外事件（如南海对峙）演变为直接军事冲突的风险。\n- [decrease] 中美经济相互依赖程度虽有所下降，但仍处于高位。全面军事冲突将对双方经济造成灾难性打击，这种经济成本构成了强大的威慑力，促使双方克制在第三国的军事行动。 | weighted_log_odds=-0.118 | quality_weight=0.235 | source=background/background_prior\n  - 高昂的经济代价使得双方在进行直接军事对抗前会进行极其谨慎的成本收益分析，倾向于选择非动能手段。\n- [increase] 中国在中东和非洲的安全利益日益增长，包括保护海外公民、投资及能源通道。如果当地局势动荡，中国可能派遣维和部队或安保力量，增加与美军或美军支持方发生摩擦的物理接触面。 | weighted_log_odds=+0.067 | quality_weight=0.168 | source=background/background_prior\n  - 物理接触面的增加是发生直接冲突的必要条件之一。中国在第三国军事存在的扩大提高了‘意外交火’或‘直接干预’的可能性。\n- [increase] 中国军队现代化进程加快，具备更强的远程打击和区域拒止能力，这可能改变局部冲突的力量平衡，增加美军在第三国行动时的风险感知，从而可能促使美军采取更激进的先发制人策略或封锁行动。 | weighted_log_odds=+0.050 | quality_weight=0.168 | source=background/background_prior\n  - 军事能力的提升可能引发安全困境，导致一方认为需要采取更果断的军事行动来遏制对方，增加了误判和冲突升级的风险。\n\n## 多 Agent 分歧\n- **outside_view**：6.0%，confidence=0.70。基于历史基率，主要大国在冷战期间极力避免在第三国发生直接军事交火以防止核升级。尽管当前中美关系紧张程度高于美苏冷战平均水平，但‘避免直接动能接触’仍是战略常态。参考类显示此类事件在4.5年窗口内的发生率极低。\n  - 更新触发器：发现过去20年内其他主要大国对在第三国发生直接军事冲突的概率评估显著高于历史平均值。\n- **inside_view**：18.0%，confidence=0.60。当前机制显示风险上升：南海对峙常态化增加了意外交火概率；中国在非洲和中东的军事存在扩大增加了与美军物理接触面；美国国内政治极化可能导致更冒险的军事姿态。虽然危机管控机制存在，但误判风险随接触频率增加而线性上升。\n  - 更新触发器：南海或台海发生导致人员伤亡的海上碰撞事件，且双方未能在24小时内通过外交渠道降温。\n- **skeptic**：4.0%，confidence=0.65。寻找失败路径：双方都有极强的动机避免直接冲突。经济相互依赖（尽管下降）仍构成巨大威慑。‘直接指挥’和‘直接交战’的定义门槛很高，绝大多数摩擦会被归类为灰色地带战术或代理人战争（仅提供武器/情报），不符合合约YES标准。双方均无意愿承担全面战争风险。\n  - 更新触发器：一方公开宣布放弃‘不首先使用核武器’或‘不与中国发生直接冲突’的红线政策。\n- **optimist**：25.0%，confidence=0.50。寻找成功路径：地缘政治碎片化可能导致黑天鹅事件，如某第三国政权突然崩溃，迫使中美同时介入以保护利益。美军在印太地区的激进巡逻策略可能与中国的新军事能力发生不可控的互动。一旦擦枪走火，国内民族主义情绪可能迫使领导人升级而非降级。\n  - 更新触发器：中美在第三国（如菲律宾、越南或中东某国）的军事演习发生直接火力接触并被媒体广泛报道。\n- **base_rate_guardian**：7.0%，confidence=0.75。防止过度偏离基率：inside_view和optimist可能高估了短期政治紧张对长期战略行为的影响。历史数据显示，即使在最紧张的冷战时期，美苏军队在第三国直接交火也是极小概率事件。必须将预测锚定在接近5%的历史基率上，仅因当前技术监控能力增强导致‘被发现’的概率略增而微调。\n  - 更新触发器：权威历史学家或国际关系学者发布研究，证明21世纪大国竞争模式已结构性改变，直接冲突风险显著高于20世纪。\n- **domain_generalist**：12.0%，confidence=0.60。综合判断：平衡了历史基率的低概率和当前地缘政治的高风险。虽然直接冲突不符合双方核心利益，但南海和中东的复杂性增加了意外升级的可能性。考虑到合约对‘直接交战’的严格定义，概率虽高于基率，但仍远低于50%。主要风险来自意外而非蓄意。\n  - 更新触发器：联合国安理会就中美在第三国的军事对峙通过谴责决议，或双方宣布切断军事热线。\n\n## 关键未知项\n- The specific definition of 'direct command' for proxy forces in future conflicts.\n- The potential for a black swan event in a third-party state (e.g., collapse of a key regime) that forces immediate military intervention by both powers.\n- The extent of China's willingness to risk direct confrontation to protect its Belt and Road Initiative investments.\n\n## 模糊点与假设\n- 模糊点：‘直接指挥’的定义。\n- 模糊点：第三国冲突的归属。\n- 假设：假设台湾冲突归入直接冲突，本合约主要指其他第三国。\n- 假设：假设仅提供援助不算冲突。\n\n## 校准信息\n- calibration_mode：cold_start_conservative_shrinkage\n- temperature：1.190\n- domain_history_n：0\n- domain_avg_brier：None\n\n## 结论\n当前给出的概率是 **6.9%**。这个数字由 base rate、证据 log-odds、Bayesian causal graph / Monte Carlo、多 Agent panel 和本地校准共同计算得到。\n"
+        },
+        {
+          "id": "e6f4ec02f93a",
+          "forecast_kind": "single_contract",
+          "created_at": "2026-06-02T16:50:42",
+          "updated_at": "2026-06-02T16:50:42",
+          "status": "open",
+          "outcome": null,
+          "resolved_at": null,
+          "brier_score": null,
+          "original_question": "2030年中美会不会发生军事冲突？",
+          "question_expansion": {
+            "original_question": "2030年中美会不会发生军事冲突？",
+            "question_type": "explicit_binary",
+            "is_cloud_question": false,
+            "cloud_terms": [],
+            "overall_semantic_intent": "用户旨在评估在2030年12月31日之前，中华人民共和国与美利坚合众国之间是否会发生任何形式的、可被国际公认定义的直接军事对抗、武装冲突或重大代理人战争事件。",
+            "time_interpretation": {
+              "current_period": "2026",
+              "target_period": "2030",
+              "comparison": "绝对时间截止点（Deadline），即判断事件是否在2030年12月31日23:59:59之前发生。"
+            },
+            "core_ambiguities": [
+              "军事冲突的定义边界：是否包含网络攻击、太空资产干扰、代理人战争、海上对峙中的擦枪走火，还是仅指国家正规军之间的直接交火？",
+              "主体界定：是否包含各自盟友、准军事组织（如民兵、海警在战时状态下的行动）？",
+              "冲突的规模与性质：是短暂的战术性接触，还是持续的战略级战争？"
+            ],
+            "triage": {
+              "forecastability_zone": "cloudlike",
+              "reason": "虽然问题形式为二元（是/否），但‘军事冲突’的定义具有高度模糊性，且涉及低概率、高影响的复杂地缘政治驱动因素。单一指标无法覆盖所有可能的冲突形态（直接、间接、灰色地带）。",
+              "requires_decomposition": true,
+              "single_contract_allowed_by_type": false
+            },
+            "dimension_map": [
+              {
+                "dimension_id": "dim_1",
+                "dimension_name": "Direct Military Engagement (Kinetic & Paramilitary)",
+                "meaning": "中美双方军事或准军事力量之间的直接武力接触，包括正规军交火、导弹发射、舰机碰撞导致的战斗行为，以及海警/民兵在争议区域的致命武力使用。",
+                "candidate_metrics": [
+                  "官方确认的中美军事人员伤亡。",
+                  "动能武器（导弹、火炮、小武器）的发射记录。",
+                  "军事或准军事资产的严重损毁或沉没。"
+                ],
+                "semantic_coverage_weight": 0.6,
+                "measurability": 0.9,
+                "why_it_matters": "这是最符合大众对‘战争’直觉理解的维度，也是国际法上最明确的冲突定义。",
+                "knowable_parts": [
+                  "当前的军事部署态势。",
+                  "公开的交战规则（ROE）。",
+                  "历史相遇数据。"
+                ],
+                "unknowable_parts": [
+                  "危机时刻领导人的具体决策心理。",
+                  "意外事件升级的临界点。"
+                ],
+                "assumptions": [
+                  "假设‘军事冲突’包含准军事力量在事实上的军事行动。",
+                  "假设直接交火是冲突的核心标志。"
+                ],
+                "outside_view_reference_classes": [
+                  "冷战期间美苏直接军事接触（极少）。",
+                  "印巴边境冲突。",
+                  "南海历史事件（如2001年撞机事件）。"
+                ],
+                "inside_view_mechanisms": [
+                  "危机误判：高强度演习中的误操作。",
+                  "国内政治压力：通过外部冲突转移内部矛盾。",
+                  "联盟义务：美国盟友受袭引发的介入。"
+                ],
+                "update_signals": [
+                  "军事热线中断。",
+                  "交战规则放宽。",
+                  "新式进攻性武器前沿部署。"
+                ]
+              },
+              {
+                "dimension_id": "dim_2",
+                "dimension_name": "Proxy Military Conflict",
+                "meaning": "中美在第三国或地区支持对立双方，并导致双方军事力量（或由其直接指挥/武装的力量）发生直接战斗或重大军事对抗。",
+                "candidate_metrics": [
+                  "中美军队在第三国战场直接交火。",
+                  "一方对另一方支持的武装力量进行直接军事打击。",
+                  "军事封锁或海上拦截行动。"
+                ],
+                "semantic_coverage_weight": 0.25,
+                "measurability": 0.7,
+                "why_it_matters": "大国竞争常通过代理人进行，这是避免直接核战争但保持军事对抗的主要形式。",
+                "knowable_parts": [
+                  "当前的盟友体系和安全承诺。",
+                  "全球热点地区的冲突态势。"
+                ],
+                "unknowable_parts": [
+                  "秘密的军事援助协议。",
+                  "第三方冲突升级的不可控性。"
+                ],
+                "assumptions": [
+                  "假设仅提供武器不算冲突，必须有直接军事介入或指挥。",
+                  "假设台湾若发生冲突，可能被视为直接冲突而非纯代理人战争（取决于具体定义，此处归入直接冲突更合适，故本维度主要指其他第三国）。"
+                ],
+                "outside_view_reference_classes": [
+                  "冷战时期的朝鲜战争、越南战争。",
+                  "现代叙利亚、乌克兰冲突中的大国间接介入。"
+                ],
+                "inside_view_mechanisms": [
+                  "联盟拖拽效应。",
+                  "战略资源争夺（如航道、矿产）。",
+                  "政权更迭干预。"
+                ],
+                "update_signals": [
+                  "第三国冲突中大国军事顾问的出现。",
+                  "对第三国武装力量的直接空袭或炮击。"
+                ]
+              },
+              {
+                "dimension_id": "dim_3",
+                "dimension_name": "Cyber/Space Kinetic Equivalent",
+                "meaning": "网络或太空攻击造成物理破坏、人员伤亡或关键基础设施瘫痪，且被归因于对方，并引发军事层面的回应或被视为战争行为。",
+                "candidate_metrics": [
+                  "导致物理破坏的网络攻击（如电网、水坝）。",
+                  "反卫星武器摧毁对方卫星。",
+                  "官方宣布网络攻击为‘战争行为’。"
+                ],
+                "semantic_coverage_weight": 0.15,
+                "measurability": 0.4,
+                "why_it_matters": "现代战争的新维度，但归因难、阈值模糊。",
+                "knowable_parts": [
+                  "网络攻击的技术能力。",
+                  "关键基础设施的脆弱性。"
+                ],
+                "unknowable_parts": [
+                  "攻击的真实来源（归因）。",
+                  "双方对‘战争行为’的认定标准。"
+                ],
+                "assumptions": [
+                  "假设只有造成物理后果的网络攻击才算军事冲突。",
+                  "假设归因必须具有高度可信度。"
+                ],
+                "outside_view_reference_classes": [
+                  "Stuxnet病毒。",
+                  "乌克兰电网攻击。",
+                  "反卫星试验。"
+                ],
+                "inside_view_mechanisms": [
+                  "隐蔽行动与可否认性。",
+                  "升级阶梯的模糊性。"
+                ],
+                "update_signals": [
+                  "关键基础设施遭受大规模瘫痪。",
+                  "太空资产被摧毁。"
+                ]
+              }
+            ],
+            "contract_candidates": [
+              {
+                "contract_id": "contract_dim1_direct",
+                "dimension_id": "dim_1",
+                "dimension_name": "Direct Military Engagement",
+                "normalized_question": "在2026年6月2日至2030年12月31日期间，中美双方是否会发生直接军事交战（包括正规军及执行军事任务的准军事力量）？",
+                "target_type": "binary",
+                "deadline": "2030-12-31",
+                "resolution_criteria": "YES：1) 中美任何一方军事或准军事人员被对方武力致死或致伤；2) 任何一方对对方军事/准军事目标发射动能武器（导弹、火炮、小武器等）；3) 发生导致重大资产损毁或人员伤亡的故意碰撞或武力拦截。NO：未发生上述事件。排除纯网络攻击、经济制裁、外交驱逐。",
+                "resolution_sources": [
+                  "国防部官方声明。",
+                  "主流国际通讯社报道。",
+                  "卫星图像及目击者证词。"
+                ],
+                "domain": "geopolitics",
+                "forecastability_score": 0.3,
+                "semantic_coverage_weight": 0.78666235027517,
+                "measurability": 0.9,
+                "user_intent_preservation_score": 0.9,
+                "proxy_metric": "官方确认的军事人员伤亡或动能武器发射。",
+                "proxy_risk": "low",
+                "goodhart_risk": "low",
+                "direction_conflict_risk": "low",
+                "lost_dimensions": [
+                  "非致命性武力展示（如激光致盲、水炮）。",
+                  "纯网络/太空攻击。"
+                ],
+                "ambiguity_flags": [
+                  "准军事力量（如海警、民兵）在争议区域的行为是否视为军事行动。",
+                  "意外碰撞是否视为冲突（需有武力使用或重大损毁）。"
+                ],
+                "clarifying_assumptions": [
+                  "假设‘军事冲突’包含事实上的军事对抗，无论是否宣战。",
+                  "假设台湾若发生冲突，视为直接冲突。"
+                ],
+                "outside_view_note": "核大国直接开战概率极低，但局部摩擦风险存在。",
+                "inside_view_note": "台海、南海是主要热点，误判风险随接触频率增加而上升。",
+                "update_signals": [
+                  "军事演习规模扩大。",
+                  "外交关系断绝。"
+                ],
+                "reason": "覆盖最核心的‘战争’定义，包含直接交火和准军事冲突。",
+                "original_semantic_coverage_weight": 0.6,
+                "proxy_risk_factor": 1.0,
+                "lost_dimension_factor": 0.76,
+                "raw_portfolio_weight": 0.36936
+              },
+              {
+                "contract_id": "contract_dim2_proxy",
+                "dimension_id": "dim_2",
+                "dimension_name": "Proxy Military Conflict",
+                "normalized_question": "在2026年6月2日至2030年12月31日期间，中美是否在第三国发生直接军事对抗或重大代理人战争？",
+                "target_type": "binary",
+                "deadline": "2030-12-31",
+                "resolution_criteria": "YES：1) 中美军队在第三国直接交火；2) 一方对另一方直接指挥或武装的部队进行军事打击；3) 实施军事封锁或海上军事拦截。NO：未发生上述事件。排除仅提供武器或情报支持。",
+                "resolution_sources": [
+                  "联合国安理会记录。",
+                  "冲突监测数据库（如UCDP）。",
+                  "官方军事行动报告。"
+                ],
+                "domain": "geopolitics",
+                "forecastability_score": 0.4,
+                "semantic_coverage_weight": 0.18128844286176754,
+                "measurability": 0.7,
+                "user_intent_preservation_score": 0.8,
+                "proxy_metric": "中美军队在第三国的直接交战记录。",
+                "proxy_risk": "medium",
+                "goodhart_risk": "medium",
+                "direction_conflict_risk": "medium",
+                "lost_dimensions": [
+                  "隐蔽的特种作战。",
+                  "非直接指挥的代理人行动。"
+                ],
+                "ambiguity_flags": [
+                  "‘直接指挥’的定义。",
+                  "第三国冲突的归属。"
+                ],
+                "clarifying_assumptions": [
+                  "假设台湾冲突归入直接冲突，本合约主要指其他第三国。",
+                  "假设仅提供援助不算冲突。"
+                ],
+                "outside_view_note": "大国通过代理人竞争是常见模式，但直接军事对抗较少。",
+                "inside_view_note": "全球南方国家的冲突可能成为大国博弈的战场。",
+                "update_signals": [
+                  "大国向冲突方派遣军事顾问。",
+                  "对冲突方进行直接空袭。"
+                ],
+                "reason": "覆盖大国竞争的间接军事对抗形式。",
+                "original_semantic_coverage_weight": 0.25,
+                "proxy_risk_factor": 0.8,
+                "lost_dimension_factor": 0.76,
+                "raw_portfolio_weight": 0.08511999999999999
+              },
+              {
+                "contract_id": "contract_dim3_cyber_space",
+                "dimension_id": "dim_3",
+                "dimension_name": "Cyber/Space Kinetic Equivalent",
+                "normalized_question": "在2026年6月2日至2030年12月31日期间，中美是否发生造成物理破坏或人员伤亡的网络/太空攻击，并被认定为军事冲突？",
+                "target_type": "binary",
+                "deadline": "2030-12-31",
+                "resolution_criteria": "YES：1) 归因于对方的网络攻击导致关键基础设施物理破坏或人员伤亡；2) 使用反卫星武器摧毁对方卫星；3) 官方宣布此类攻击为战争行为并引发军事回应。NO：未发生上述事件。",
+                "resolution_sources": [
+                  "网络安全机构归因报告。",
+                  "太空监视数据。",
+                  "官方声明。"
+                ],
+                "domain": "geopolitics",
+                "forecastability_score": 0.2,
+                "semantic_coverage_weight": 0.03204920686306248,
+                "measurability": 0.4,
+                "user_intent_preservation_score": 0.6,
+                "proxy_metric": "造成物理后果的归因网络/太空攻击。",
+                "proxy_risk": "high",
+                "goodhart_risk": "high",
+                "direction_conflict_risk": "high",
+                "lost_dimensions": [
+                  "无物理后果的网络攻击。",
+                  "电子干扰。"
+                ],
+                "ambiguity_flags": [
+                  "归因的确定性。",
+                  "‘物理破坏’的阈值。"
+                ],
+                "clarifying_assumptions": [
+                  "假设只有造成物理后果的攻击才算军事冲突。",
+                  "假设归因需有高度可信证据。"
+                ],
+                "outside_view_note": "此类事件罕见，但后果严重。",
+                "inside_view_note": "归因困难使得此类冲突难以确认，但一旦发生可能迅速升级。",
+                "update_signals": [
+                  "关键基础设施遭受攻击。",
+                  "太空资产被摧毁。"
+                ],
+                "reason": "覆盖现代战争的新维度，但设定高阈值以避免噪音。",
+                "original_semantic_coverage_weight": 0.15,
+                "proxy_risk_factor": 0.55,
+                "lost_dimension_factor": 0.76,
+                "raw_portfolio_weight": 0.015048
+              }
+            ],
+            "semantic_collapse_audit": {
+              "semantic_collapse_risk": "low",
+              "collapse_reason": "分解避免了将‘军事冲突’简化为单一指标（如GDP或军费），而是涵盖了直接、间接和新维度冲突。",
+              "lost_dimensions_if_single_metric": [
+                "代理人战争。",
+                "准军事力量冲突。",
+                "网络/太空物理攻击。"
+              ],
+              "allowed_single_contract": false,
+              "recommended_mode": "multi_contract_portfolio",
+              "required_warning": "不要仅依据‘正规军交火’来判断，需综合考虑准军事力量和代理人冲突。",
+              "final_guardrails": [
+                "Define 'Military Conflict' to include direct kinetic engagement between regular armed forces.",
+                "Explicitly decide whether to include paramilitary forces (e.g., PLA Maritime Militia, US Coast Guard in wartime status) in the definition of 'Military'.",
+                "Explicitly decide whether to include proxy conflicts (US and China fighting on opposite sides in a third country) as 'Military Conflict between US and China'.",
+                "Exclude purely economic sanctions, diplomatic expulsions, and non-destructive cyber espionage from the definition of 'Military Conflict'.",
+                "Set a clear threshold for 'Cyber/Space' actions: only include if they cause physical destruction or lead to kinetic retaliation."
+              ]
+            },
+            "adversarial_audit": {
+              "verdict": "revise",
+              "substitution_errors": [
+                "将‘军事冲突’偷换为‘宣战’。",
+                "将‘军事冲突’偷换为‘网络攻击’（无物理后果）。"
+              ],
+              "missing_dimensions": [
+                "准军事力量（海警、民兵）的冲突。",
+                "第三国代理人战争中的直接军事介入。"
+              ],
+              "overweighted_metrics": [
+                "直接正规军交火（可能低估灰色地带冲突）。"
+              ],
+              "underweighted_dimensions": [
+                "准军事冲突。",
+                "代理人战争。"
+              ],
+              "repair_suggestions": [
+                "合并直接冲突和准军事冲突为一个合约。",
+                "增加代理人战争合约。",
+                "提高网络/太空冲突的阈值（需物理后果）。"
+              ],
+              "repair_status": "partially_repaired"
+            },
+            "recommended_user_choice_prompt": "您认为‘军事冲突’是否应包含中美在第三国的代理人战争？是否应包含海警/民兵的武力冲突？",
+            "machine_notes": [
+              "根据Adversarial Audit，合并了直接冲突和准军事冲突，以避免定义碎片化。",
+              "根据Proxy Audit，提高了网络/太空冲突的阈值，要求物理后果或官方定性，以降低归因风险。",
+              "增加了代理人战争维度，以覆盖大国竞争的主要形式。",
+              "Adversarial audit verdict 保持为 revise；repair_status=partially_repaired，不再自动改成 pass。"
+            ],
+            "semantic_collapse_risk": "low",
+            "collapse_reason": "分解避免了将‘军事冲突’简化为单一指标（如GDP或军费），而是涵盖了直接、间接和新维度冲突。",
+            "lost_dimensions_if_single_metric": [
+              "代理人战争。",
+              "准军事力量冲突。",
+              "网络/太空物理攻击。"
+            ],
+            "recommended_mode": "multi_contract_portfolio",
+            "allowed_single_contract": false,
+            "decomposition_record_id": "a8395be8ec72",
+            "decomposition_module": "cloud_to_contract_decomposition",
+            "decomposition_validation_errors": []
+          },
+          "contract": {
+            "normalized_question": "在2026年6月2日至2030年12月31日期间，中美是否发生造成物理破坏或人员伤亡的网络/太空攻击，并被认定为军事冲突？",
+            "target_type": "binary",
+            "deadline": "2030-12-31",
+            "resolution_criteria": "YES：1) 归因于对方的网络攻击导致关键基础设施物理破坏或人员伤亡；2) 使用反卫星武器摧毁对方卫星；3) 官方宣布此类攻击为战争行为并引发军事回应。NO：未发生上述事件。",
+            "resolution_sources": [
+              "网络安全机构归因报告。",
+              "太空监视数据。",
+              "官方声明。"
+            ],
+            "domain": "geopolitics",
+            "forecastability_score": 0.2,
+            "ambiguity_flags": [
+              "归因的确定性。",
+              "‘物理破坏’的阈值。"
+            ],
+            "clarifying_assumptions": [
+              "假设只有造成物理后果的攻击才算军事冲突。",
+              "假设归因需有高度可信证据。"
+            ],
+            "reason": "覆盖现代战争的新维度，但设定高阈值以避免噪音。",
+            "contract_id": "contract_dim3_cyber_space",
+            "dimension_id": "dim_3",
+            "dimension_name": "Cyber/Space Kinetic Equivalent",
+            "semantic_coverage_weight": 0.03204920686306248,
+            "measurability": 0.4,
+            "user_intent_preservation_score": 0.6,
+            "proxy_metric": "造成物理后果的归因网络/太空攻击。",
+            "proxy_risk": "high",
+            "lost_dimensions": [
+              "无物理后果的网络攻击。",
+              "电子干扰。"
+            ],
+            "source_question_type": "explicit_binary",
+            "source_semantic_collapse_risk": "low",
+            "source_overall_semantic_intent": "用户旨在评估在2030年12月31日之前，中华人民共和国与美利坚合众国之间是否会发生任何形式的、可被国际公认定义的直接军事对抗、武装冲突或重大代理人战争事件。"
+          },
+          "decomposition": {
+            "base_rate": {
+              "reference_class": "大国间造成物理破坏的归因网络/太空攻击事件（2010-2026）",
+              "base_probability": 0.05,
+              "sample_size_guess": "rough",
+              "confidence": 0.6,
+              "rationale": "尽管中美网络对抗频繁，但造成物理破坏（如电网瘫痪、基础设施损毁）且被明确归因为国家行为并引发军事回应的案例极少。Stuxnet等案例多为隐蔽行动或未公开归因。太空方面，反卫星试验多为针对本国卫星，直接摧毁对方卫星被视为战争行为，门槛极高。基于过去15年无此类明确事件，先验概率极低。"
+            },
+            "factors": [
+              {
+                "factor": "常规军事冲突升级",
+                "sub_question": "在2026-2030年间，中美是否发生直接常规军事冲突（如台海、南海）？",
+                "direction_if_true": "increase",
+                "probability": 0.15,
+                "effect_log_odds": 1.5,
+                "confidence": 0.5,
+                "dependencies": [],
+                "rationale": "如果发生常规战争，网络攻击作为混合战争的一部分，极大概率会针对关键基础设施造成物理破坏，且归因将变得明确。这是该合约最可能的触发场景。"
+              },
+              {
+                "factor": "太空军事化与反卫星武器部署",
+                "sub_question": "中美是否在2030年前部署并实战化使用直接上升式反卫星武器或共轨反卫星系统？",
+                "direction_if_true": "increase",
+                "probability": 0.3,
+                "effect_log_odds": 1.2,
+                "confidence": 0.7,
+                "dependencies": [],
+                "rationale": "太空资产对现代军事至关重要。随着太空军事化加剧，误判或故意摧毁对方卫星的风险增加。若发生此类事件，极易被认定为军事冲突。"
+              },
+              {
+                "factor": "网络攻击归因与升级阈值降低",
+                "sub_question": "中美是否降低了对网络攻击进行公开归因和军事回应的门槛？",
+                "direction_if_true": "increase",
+                "probability": 0.4,
+                "effect_log_odds": 0.8,
+                "confidence": 0.6,
+                "dependencies": [],
+                "rationale": "如果双方政策转向更激进，将网络攻击视为等同于动能攻击，那么即使是中等规模的物理破坏也可能被认定为冲突。目前双方仍倾向于模糊归因。"
+              },
+              {
+                "factor": "危机管控机制的有效性",
+                "sub_question": "中美现有的军事和网络热线及危机管控机制在2026-2030年间是否有效防止了意外升级？",
+                "direction_if_true": "decrease",
+                "probability": 0.6,
+                "effect_log_odds": -1.0,
+                "confidence": 0.5,
+                "dependencies": [],
+                "rationale": "尽管关系紧张，但双方都有强烈的动机避免全面战争。有效的沟通渠道可以防止网络或太空领域的意外事件升级为被认定的军事冲突。"
+              },
+              {
+                "factor": "第三方冲突的卷入",
+                "sub_question": "中美是否在第三国冲突中直接介入，导致网络/太空领域的对抗升级？",
+                "direction_if_true": "increase",
+                "probability": 0.2,
+                "effect_log_odds": 0.6,
+                "confidence": 0.4,
+                "dependencies": [
+                  "常规军事冲突升级"
+                ],
+                "rationale": "代理人战争可能溢出到网络空间，但直接造成物理破坏并归因为中美冲突的情况较少，除非冲突规模极大。"
+              }
+            ],
+            "known_unknowns": [
+              "中美双方对‘网络战争行为’的具体定义和红线。",
+              "未来几年内新型网络武器（如针对工业控制系统的漏洞）的发现与利用情况。",
+              "太空碎片清理技术或反卫星技术的突破速度。",
+              "意外事件（如卫星碰撞、网络误击）发生后，双方政治决策者的具体反应模式。"
+            ],
+            "search_queries": [
+              "US China cyber warfare escalation ladder 2024 2025",
+              "ASAT test history and policy changes US China",
+              "critical infrastructure cyber attacks physical damage attribution",
+              "US China military communication mechanisms effectiveness",
+              "definition of cyber warfare under international law"
+            ]
+          },
+          "evidence": {
+            "evidence_cards": [
+              {
+                "claim": "历史上大国间造成物理破坏的网络攻击（如Stuxnet）通常保持隐蔽或模糊归因，极少被官方公开认定为战争行为并引发直接军事回应。",
+                "source_type": "background",
+                "source": "background_prior",
+                "direction": "decrease",
+                "relevance": 0.9,
+                "reliability": 0.8,
+                "diagnosticity": 0.7,
+                "freshness": 0.6,
+                "independence_group": "historical_precedent",
+                "impact_log_odds": -0.6,
+                "rationale": "该合约要求‘官方宣布为战争行为’，历史先例显示国家倾向于避免将网络攻击升级为公开军事冲突，除非伴随动能打击。这降低了仅因网络攻击而触发YES条件的概率。",
+                "independence_penalty": 1.0,
+                "quality_weight": 0.3024,
+                "weighted_impact_log_odds": -0.18144
+              },
+              {
+                "claim": "中美双方均拥有针对对方关键基础设施（电网、金融、交通）的高级网络攻击能力，且此类攻击在危机时刻具备造成物理破坏的潜力。",
+                "source_type": "background",
+                "source": "background_prior",
+                "direction": "increase",
+                "relevance": 0.8,
+                "reliability": 0.7,
+                "diagnosticity": 0.5,
+                "freshness": 0.8,
+                "independence_group": "capability_assessment",
+                "impact_log_odds": 0.4,
+                "rationale": "能力的存在是事件发生的必要条件。虽然意图不明，但技术门槛已跨越，使得‘造成物理破坏’在技术上可行，增加了意外或故意升级的风险。",
+                "independence_penalty": 1.0,
+                "quality_weight": 0.22399999999999998,
+                "weighted_impact_log_odds": 0.0896
+              },
+              {
+                "claim": "太空资产对现代军事指挥、控制和情报（C4ISR）至关重要，反卫星武器（ASAT）的使用被视为高烈度战争行为，双方对此类攻击的红线认知较为清晰。",
+                "source_type": "background",
+                "source": "background_prior",
+                "direction": "decrease",
+                "relevance": 0.85,
+                "reliability": 0.8,
+                "diagnosticity": 0.8,
+                "freshness": 0.7,
+                "independence_group": "space_deterrence",
+                "impact_log_odds": -0.5,
+                "rationale": "由于后果极其严重且归因容易（太空监视数据），双方有强烈的威慑动机避免主动摧毁对方卫星。这种相互保证毁灭的逻辑抑制了此类事件的发生。",
+                "independence_penalty": 1.0,
+                "quality_weight": 0.3808,
+                "weighted_impact_log_odds": -0.1904
+              },
+              {
+                "claim": "中美之间缺乏针对网络空间和太空冲突的明确、具有法律约束力的危机管控机制和‘红线’定义。",
+                "source_type": "background",
+                "source": "background_prior",
+                "direction": "increase",
+                "relevance": 0.7,
+                "reliability": 0.6,
+                "diagnosticity": 0.6,
+                "freshness": 0.9,
+                "independence_group": "institutional_gaps",
+                "impact_log_odds": 0.3,
+                "rationale": "机制缺失增加了误判风险。一次原本有限的网络攻击或太空干扰可能因缺乏沟通渠道而被错误解读为全面战争的前奏，从而触发升级。",
+                "independence_penalty": 1.0,
+                "quality_weight": 0.2268,
+                "weighted_impact_log_odds": 0.06804
+              },
+              {
+                "claim": "常规军事冲突（如台海或南海危机）是触发网络/太空物理攻击的最主要前置条件，而2026-2030年间发生大规模常规战争的概率虽不为零但相对较低。",
+                "source_type": "background",
+                "source": "background_prior",
+                "direction": "decrease",
+                "relevance": 0.95,
+                "reliability": 0.7,
+                "diagnosticity": 0.9,
+                "freshness": 0.8,
+                "independence_group": "conventional_war_dependency",
+                "impact_log_odds": -0.7,
+                "rationale": "该合约中的网络/太空攻击极大概率是常规战争的伴随现象而非独立事件。如果常规战争不发生，独立的、造成物理破坏且被归因的网络/太空攻击概率极低。",
+                "independence_penalty": 1.0,
+                "quality_weight": 0.47879999999999995,
+                "weighted_impact_log_odds": -0.33515999999999996
+              },
+              {
+                "claim": "网络攻击的归因在技术上和政治上具有高度不确定性，即使发生物理破坏，攻击方也可能使用虚假旗号或保持匿名，导致无法满足‘归因于对方’的合约条件。",
+                "source_type": "background",
+                "source": "background_prior",
+                "direction": "decrease",
+                "relevance": 0.8,
+                "reliability": 0.7,
+                "diagnosticity": 0.7,
+                "freshness": 0.8,
+                "independence_group": "attribution_difficulty",
+                "impact_log_odds": -0.4,
+                "rationale": "合约要求‘归因于对方’。由于网络战的隐蔽性，即使发生破坏，若无法获得高度可信的归因证据，官方可能不会宣布其为战争行为，从而导致合约结果为NO。",
+                "independence_penalty": 1.0,
+                "quality_weight": 0.3136,
+                "weighted_impact_log_odds": -0.12544
+              },
+              {
+                "claim": "随着人工智能和自动化防御系统的发展，网络攻击的规模和速度可能超出人类决策者的控制范围，增加意外升级的风险。",
+                "source_type": "background",
+                "source": "background_prior",
+                "direction": "increase",
+                "relevance": 0.6,
+                "reliability": 0.5,
+                "diagnosticity": 0.4,
+                "freshness": 0.9,
+                "independence_group": "ai_automation_risk",
+                "impact_log_odds": 0.2,
+                "rationale": "自动化系统可能导致‘闪电战’式的网络冲突，使得危机管控机制失效，从而在无意中造成物理破坏并触发军事回应。",
+                "independence_penalty": 1.0,
+                "quality_weight": 0.108,
+                "weighted_impact_log_odds": 0.0216
+              },
+              {
+                "claim": "国际社会对‘网络战争行为’的法律定义仍在演变，但趋势是将造成重大物理后果的网络攻击视为使用武力（Use of Force）。",
+                "source_type": "background",
+                "source": "background_prior",
+                "direction": "increase",
+                "relevance": 0.7,
+                "reliability": 0.6,
+                "diagnosticity": 0.5,
+                "freshness": 0.8,
+                "independence_group": "legal_norms",
+                "impact_log_odds": 0.3,
+                "rationale": "法律规范的演变使得‘官方宣布为战争行为’的门槛降低。如果发生物理破坏，政治压力可能迫使官方将其定性为冲突，从而满足合约条件。",
+                "independence_penalty": 1.0,
+                "quality_weight": 0.168,
+                "weighted_impact_log_odds": 0.0504
+              }
+            ]
+          },
+          "panel": {
+            "agent_forecasts": [
+              {
+                "agent_name": "outside_view",
+                "probability": 0.04,
+                "confidence": 0.6,
+                "rationale": "基于2010-2026年的历史基准，大国间造成物理破坏且被明确归因并引发军事回应的网络/太空攻击事件几乎为零。尽管能力在增长，但实际发生的频率极低，参考类历史数据强烈指向低概率。",
+                "strongest_update_trigger": "发现过去5年内有未公开的、符合合约定义的大国间网络/太空物理攻击先例。"
+              },
+              {
+                "agent_name": "inside_view",
+                "probability": 0.12,
+                "confidence": 0.5,
+                "rationale": "考虑到台海或南海危机升级的路径，网络攻击作为混合战争的一部分，极可能在常规冲突爆发时针对关键基础设施造成物理破坏。虽然独立发生的概率低，但作为常规冲突的伴随事件，其风险因地缘政治紧张而显著增加。",
+                "strongest_update_trigger": "中美在2026-2028年间爆发小规模常规军事冲突或高强度对峙。"
+              },
+              {
+                "agent_name": "skeptic",
+                "probability": 0.02,
+                "confidence": 0.7,
+                "rationale": "合约条件极其苛刻：需要‘物理破坏’+‘明确归因’+‘官方宣布为战争行为’。历史表明，国家更倾向于模糊归因和隐蔽行动以避免升级。即使发生物理破坏，政治意愿将其定性为战争行为的可能性极低，因为这将导致全面战争。",
+                "strongest_update_trigger": "一方官方明确声明将某次造成物理破坏的网络攻击视为战争行为并启动军事回应。"
+              },
+              {
+                "agent_name": "optimist",
+                "probability": 0.18,
+                "confidence": 0.4,
+                "rationale": "太空军事化和AI自动化防御系统的快速发展增加了意外升级的风险。随着反卫星武器实战化，一次误判或自动化系统的失控可能导致卫星被摧毁，进而被认定为军事冲突。技术演进的不可控性推高了尾部风险。",
+                "strongest_update_trigger": "中美宣布部署具有实战能力的共轨反卫星系统或自动化网络攻击武器。"
+              },
+              {
+                "agent_name": "base_rate_guardian",
+                "probability": 0.06,
+                "confidence": 0.65,
+                "rationale": "虽然inside_view指出了升级路径，但必须锚定在极低的base rate上。过去15年无此类事件，且双方都有强烈的动机避免越过红线。任何偏离base rate的预测都需要极强的证据支持，目前证据不足以支撑高概率。",
+                "strongest_update_trigger": "出现确凿证据表明中美已签署或默认了‘网络攻击即战争’的新军事准则。"
+              },
+              {
+                "agent_name": "domain_generalist",
+                "probability": 0.09,
+                "confidence": 0.55,
+                "rationale": "综合来看，独立发生的概率极低（skeptic/outside_view），但作为常规冲突的一部分（inside_view）或意外升级（optimist）的风险存在。考虑到2026-2030年是关键窗口期，地缘政治紧张局势可能压倒危机管控机制，因此概率略高于纯历史基准，但仍属低概率事件。",
+                "strongest_update_trigger": "中美关系急剧恶化至准战争状态，或发生涉及关键基础设施的重大网络/太空安全事件。"
+              }
+            ]
+          },
+          "probability_engine": {
+            "base_probability": 0.05,
+            "evidence_probability": 0.02799761366703844,
+            "causal_probability": 0.030795118726791526,
+            "causal_graph_probability": 0.030795118726791526,
+            "causal_graph_result": {
+              "method": "bayesian_causal_graph_logistic_cpd_monte_carlo",
+              "target_probability": 0.030795118726791526,
+              "credible_interval": [
+                0.01,
+                0.11662367725312081
+              ],
+              "p50": 0.01,
+              "n_samples": 12000,
+              "graph": {
+                "graph_id": "a79126d9d656",
+                "target_node": "Y",
+                "target_label": "在2026年6月2日至2030年12月31日期间，中美是否发生造成物理破坏或人员伤亡的网络/太空攻击，并被认定为军事冲突？",
+                "nodes": [
+                  {
+                    "node_id": "factor_01",
+                    "label": "常规军事冲突升级",
+                    "node_type": "binary_latent",
+                    "prior_probability": 0.15,
+                    "prior_confidence": 0.5,
+                    "evidence_log_odds_update": -0.19515999999999994,
+                    "adjusted_prior_probability": 0.12677703003441382,
+                    "target_effect_log_odds": 1.5,
+                    "target_effect_confidence": 0.5,
+                    "direction_if_true": "increase",
+                    "dependencies_raw": [],
+                    "rationale": "如果发生常规战争，网络攻击作为混合战争的一部分，极大概率会针对关键基础设施造成物理破坏，且归因将变得明确。这是该合约最可能的触发场景。"
+                  },
+                  {
+                    "node_id": "factor_02",
+                    "label": "太空军事化与反卫星武器部署",
+                    "node_type": "binary_latent",
+                    "prior_probability": 0.3,
+                    "prior_confidence": 0.7,
+                    "evidence_log_odds_update": -0.1904,
+                    "adjusted_prior_probability": 0.26159443749519856,
+                    "target_effect_log_odds": 1.2,
+                    "target_effect_confidence": 0.7,
+                    "direction_if_true": "increase",
+                    "dependencies_raw": [],
+                    "rationale": "太空资产对现代军事至关重要。随着太空军事化加剧，误判或故意摧毁对方卫星的风险增加。若发生此类事件，极易被认定为军事冲突。"
+                  },
+                  {
+                    "node_id": "factor_03",
+                    "label": "网络攻击归因与升级阈值降低",
+                    "node_type": "binary_latent",
+                    "prior_probability": 0.4,
+                    "prior_confidence": 0.6,
+                    "evidence_log_odds_update": -0.12544,
+                    "adjusted_prior_probability": 0.37030581068800555,
+                    "target_effect_log_odds": 0.8,
+                    "target_effect_confidence": 0.6,
+                    "direction_if_true": "increase",
+                    "dependencies_raw": [],
+                    "rationale": "如果双方政策转向更激进，将网络攻击视为等同于动能攻击，那么即使是中等规模的物理破坏也可能被认定为冲突。目前双方仍倾向于模糊归因。"
+                  },
+                  {
+                    "node_id": "factor_04",
+                    "label": "危机管控机制的有效性",
+                    "node_type": "binary_latent",
+                    "prior_probability": 0.6,
+                    "prior_confidence": 0.5,
+                    "evidence_log_odds_update": 0.0,
+                    "adjusted_prior_probability": 0.6,
+                    "target_effect_log_odds": -1.0,
+                    "target_effect_confidence": 0.5,
+                    "direction_if_true": "decrease",
+                    "dependencies_raw": [],
+                    "rationale": "尽管关系紧张，但双方都有强烈的动机避免全面战争。有效的沟通渠道可以防止网络或太空领域的意外事件升级为被认定的军事冲突。"
+                  },
+                  {
+                    "node_id": "factor_05",
+                    "label": "第三方冲突的卷入",
+                    "node_type": "binary_latent",
+                    "prior_probability": 0.2,
+                    "prior_confidence": 0.4,
+                    "evidence_log_odds_update": -0.18144,
+                    "adjusted_prior_probability": 0.17253961636977347,
+                    "target_effect_log_odds": 0.6,
+                    "target_effect_confidence": 0.4,
+                    "direction_if_true": "increase",
+                    "dependencies_raw": [
+                      "常规军事冲突升级"
+                    ],
+                    "rationale": "代理人战争可能溢出到网络空间，但直接造成物理破坏并归因为中美冲突的情况较少，除非冲突规模极大。"
+                  }
+                ],
+                "edges": [
+                  {
+                    "from": "factor_01",
+                    "to": "factor_05",
+                    "effect_log_odds": 0.35,
+                    "confidence": 0.55,
+                    "edge_type": "dependency",
+                    "rationale": "由 factor.dependencies 推断：常规军事冲突升级"
+                  }
+                ],
+                "target_cpd": {
+                  "type": "logistic",
+                  "base_probability": 0.05,
+                  "target_evidence_log_odds_update": 0.08964,
+                  "parents": [
+                    "factor_01",
+                    "factor_02",
+                    "factor_03",
+                    "factor_04",
+                    "factor_05"
+                  ],
+                  "weights": {
+                    "factor_01": 0.75,
+                    "factor_02": 0.84,
+                    "factor_03": 0.48,
+                    "factor_04": -0.5,
+                    "factor_05": 0.24
+                  },
+                  "intercept_logit": -2.85479897916644
+                },
+                "evidence_links": [
+                  {
+                    "claim": "历史上大国间造成物理破坏的网络攻击（如Stuxnet）通常保持隐蔽或模糊归因，极少被官方公开认定为战争行为并引发直接军事回应。",
+                    "target_node": "factor_05",
+                    "match_score": 0.3,
+                    "weighted_impact_log_odds": -0.18144
+                  },
+                  {
+                    "claim": "中美双方均拥有针对对方关键基础设施（电网、金融、交通）的高级网络攻击能力，且此类攻击在危机时刻具备造成物理破坏的潜力。",
+                    "target_node": "factor_01",
+                    "match_score": 0.26436781609195403,
+                    "weighted_impact_log_odds": 0.0896
+                  },
+                  {
+                    "claim": "太空资产对现代军事指挥、控制和情报（C4ISR）至关重要，反卫星武器（ASAT）的使用被视为高烈度战争行为，双方对此类攻击的红线认知较为清晰。",
+                    "target_node": "factor_02",
+                    "match_score": 0.27906976744186046,
+                    "weighted_impact_log_odds": -0.1904
+                  },
+                  {
+                    "claim": "中美之间缺乏针对网络空间和太空冲突的明确、具有法律约束力的危机管控机制和‘红线’定义。",
+                    "target_node": "Y",
+                    "match_score": 0.175,
+                    "weighted_impact_log_odds": 0.06804
+                  },
+                  {
+                    "claim": "常规军事冲突（如台海或南海危机）是触发网络/太空物理攻击的最主要前置条件，而2026-2030年间发生大规模常规战争的概率虽不为零但相对较低。",
+                    "target_node": "factor_01",
+                    "match_score": 0.25,
+                    "weighted_impact_log_odds": -0.33515999999999996
+                  },
+                  {
+                    "claim": "网络攻击的归因在技术上和政治上具有高度不确定性，即使发生物理破坏，攻击方也可能使用虚假旗号或保持匿名，导致无法满足‘归因于对方’的合约条件。",
+                    "target_node": "factor_03",
+                    "match_score": 0.24444444444444444,
+                    "weighted_impact_log_odds": -0.12544
+                  },
+                  {
+                    "claim": "随着人工智能和自动化防御系统的发展，网络攻击的规模和速度可能超出人类决策者的控制范围，增加意外升级的风险。",
+                    "target_node": "Y",
+                    "match_score": 0.16049382716049382,
+                    "weighted_impact_log_odds": 0.0216
+                  },
+                  {
+                    "claim": "国际社会对‘网络战争行为’的法律定义仍在演变，但趋势是将造成重大物理后果的网络攻击视为使用武力（Use of Force）。",
+                    "target_node": "factor_01",
+                    "match_score": 0.23076923076923078,
+                    "weighted_impact_log_odds": 0.0504
+                  }
+                ],
+                "diagnostics": {
+                  "graph_confidence": 0.54,
+                  "node_count": 5,
+                  "edge_count": 1,
+                  "target_evidence_update": 0.08964,
+                  "known_bad_assumptions": [
+                    "第一版使用 logistic CPD 近似完整条件概率表。",
+                    "factor.dependencies 仅用于弱依赖边；非严格因果发现。",
+                    "evidence-to-node binding 使用轻量文本匹配，后续应升级为 embedding/LLM binding。"
+                  ]
+                }
+              },
+              "node_marginals": {
+                "factor_01": 0.12991666666666668,
+                "factor_02": 0.2605,
+                "factor_03": 0.37516666666666665,
+                "factor_04": 0.6010833333333333,
+                "factor_05": 0.15708333333333332
+              },
+              "node_sensitivity": [
+                {
+                  "node_id": "factor_01",
+                  "label": "常规军事冲突升级",
+                  "baseline": 0.030795118726791526,
+                  "do_true": 0.08216146003809838,
+                  "do_false": 0.022526046747985227,
+                  "swing": 0.059635413290113154,
+                  "target_weight": 0.75
+                },
+                {
+                  "node_id": "factor_02",
+                  "label": "太空军事化与反卫星武器部署",
+                  "baseline": 0.030795118726791526,
+                  "do_true": 0.06581274793817216,
+                  "do_false": 0.016686824896886856,
+                  "swing": 0.049125923041285297,
+                  "target_weight": 0.84
+                },
+                {
+                  "node_id": "factor_04",
+                  "label": "危机管控机制的有效性",
+                  "baseline": 0.030795118726791526,
+                  "do_true": 0.021162535423299895,
+                  "do_false": 0.0445434816615872,
+                  "swing": 0.023380946238287303,
+                  "target_weight": -0.5
+                },
+                {
+                  "node_id": "factor_03",
+                  "label": "网络攻击归因与升级阈值降低",
+                  "baseline": 0.030795118726791526,
+                  "do_true": 0.04398643457489874,
+                  "do_false": 0.02169059013843988,
+                  "swing": 0.022295844436458857,
+                  "target_weight": 0.48
+                },
+                {
+                  "node_id": "factor_05",
+                  "label": "第三方冲突的卷入",
+                  "baseline": 0.030795118726791526,
+                  "do_true": 0.040424388482972834,
+                  "do_false": 0.027874922991962096,
+                  "swing": 0.012549465491010738,
+                  "target_weight": 0.24
+                }
+              ]
+            },
+            "panel_probability": 0.07182994201421708,
+            "raw_probability": 0.04526567529580338,
+            "calibrated_probability": 0.07592232784109443,
+            "confidence_low": 0.010996886273526778,
+            "confidence_high": 0.3777556476353309,
+            "total_evidence_delta_log_odds": -0.6028,
+            "avg_evidence_quality": 0.2753,
+            "panel_disagreement_logit_std": 0.780068119376959,
+            "ensemble_weights": {
+              "base": 0.43956043956043955,
+              "evidence": 0.1758241758241758,
+              "causal": 0.16483516483516486,
+              "panel": 0.21978021978021978
+            },
+            "calibration": {
+              "calibration_mode": "cold_start_conservative_shrinkage",
+              "temperature": 1.22,
+              "domain_history_n": 0,
+              "domain_avg_brier": null
+            },
+            "interval": {
+              "logit_sigma": 2.0
+            }
+          },
+          "runtime_config_snapshot": {
+            "model": "Qwen3.5-27B",
+            "base_url": "http://192.168.0.102:1234/v1",
+            "engine": {
+              "min_probability": 0.01,
+              "max_probability": 0.99,
+              "min_base_probability": 0.02,
+              "max_base_probability": 0.98,
+              "min_evidence_impact_log_odds": -0.8,
+              "max_evidence_impact_log_odds": 0.8,
+              "min_factor_effect_log_odds": -1.5,
+              "max_factor_effect_log_odds": 1.5,
+              "max_factors": 12,
+              "max_evidence_cards": 12,
+              "max_panel_agents": 8,
+              "independence_penalty_power": 0.5,
+              "ensemble_weights": {
+                "base_const": 0.2,
+                "base_low_forecastability_bonus": 0.25,
+                "evidence_const": 0.1,
+                "evidence_forecastability_bonus": 0.3,
+                "causal_const": 0.1,
+                "causal_forecastability_bonus": 0.25,
+                "panel_const": 0.2
+              },
+              "cold_start_min_history": 10,
+              "cold_start_temperature_base": 1.25,
+              "cold_start_temperature_forecastability_discount": 0.15,
+              "brier_temperature": {
+                "bad_threshold": 0.25,
+                "weak_threshold": 0.22,
+                "strong_threshold": 0.17,
+                "bad_temperature": 1.45,
+                "weak_temperature": 1.25,
+                "normal_temperature": 1.12,
+                "strong_temperature": 1.0
+              },
+              "interval": {
+                "base_sigma": 0.55,
+                "forecastability_penalty": 1.15,
+                "panel_disagreement_weight": 0.3,
+                "evidence_quality_penalty": 0.65,
+                "evidence_count_bonus_per_card": 0.03,
+                "max_evidence_count_bonus": 0.25,
+                "min_sigma": 0.35,
+                "max_sigma": 2.0
+              }
+            },
+            "temperature": {
+              "question_expansion": 0.1,
+              "contract": 0.1,
+              "decomposition": 0.25,
+              "evidence": 0.2,
+              "panel": 0.55,
+              "portfolio_summary": 0.2,
+              "json_repair": 0.0
+            }
+          },
+          "markdown_report": "# Forecast e6f4ec02f93a\n\n**预测类型**：single_contract\n**预测题**：在2026年6月2日至2030年12月31日期间，中美是否发生造成物理破坏或人员伤亡的网络/太空攻击，并被认定为军事冲突？\n**最终概率**：7.6%\n**粗略区间**：1.1% - 37.8%\n**截止日期**：2030-12-31\n**领域**：geopolitics\n**可预测性评分**：0.20\n\n## 语义覆盖信息\n- 当前维度：Cyber/Space Kinetic Equivalent\n- 代理指标：造成物理后果的归因网络/太空攻击。\n- proxy_risk：high\n- 原意保留分：0.60\n- 语义覆盖权重：0.03\n- 该子合约未覆盖：无物理后果的网络攻击。, 电子干扰。\n\n## 判定标准\nYES：1) 归因于对方的网络攻击导致关键基础设施物理破坏或人员伤亡；2) 使用反卫星武器摧毁对方卫星；3) 官方宣布此类攻击为战争行为并引发军事回应。NO：未发生上述事件。\n判定来源：网络安全机构归因报告。, 太空监视数据。, 官方声明。\n\n## 概率计算拆解\n- Base rate prior：5.0%\n- Evidence update 后：2.8%\n- Bayesian causal graph / Monte Carlo 后：3.1%\n- 多 Agent panel 聚合后：7.2%\n- Raw ensemble：4.5%\n- Calibrated final：7.6%\n\n## Ensemble 权重\n- base: 0.440\n- evidence: 0.176\n- causal: 0.165\n- panel: 0.220\n\n## 参考类 / Base Rate\n参考类：大国间造成物理破坏的归因网络/太空攻击事件（2010-2026）\n先验概率：5.0%\n置信度：0.60\n说明：尽管中美网络对抗频繁，但造成物理破坏（如电网瘫痪、基础设施损毁）且被明确归因为国家行为并引发军事回应的案例极少。Stuxnet等案例多为隐蔽行动或未公开归因。太空方面，反卫星试验多为针对本国卫星，直接摧毁对方卫星被视为战争行为，门槛极高。基于过去15年无此类明确事件，先验概率极低。\n\n## 关键因子\n- **常规军事冲突升级**：P=15.0%，effect_log_odds=+1.50，方向=increase。如果发生常规战争，网络攻击作为混合战争的一部分，极大概率会针对关键基础设施造成物理破坏，且归因将变得明确。这是该合约最可能的触发场景。\n- **太空军事化与反卫星武器部署**：P=30.0%，effect_log_odds=+1.20，方向=increase。太空资产对现代军事至关重要。随着太空军事化加剧，误判或故意摧毁对方卫星的风险增加。若发生此类事件，极易被认定为军事冲突。\n- **网络攻击归因与升级阈值降低**：P=40.0%，effect_log_odds=+0.80，方向=increase。如果双方政策转向更激进，将网络攻击视为等同于动能攻击，那么即使是中等规模的物理破坏也可能被认定为冲突。目前双方仍倾向于模糊归因。\n- **危机管控机制的有效性**：P=60.0%，effect_log_odds=-1.00，方向=decrease。尽管关系紧张，但双方都有强烈的动机避免全面战争。有效的沟通渠道可以防止网络或太空领域的意外事件升级为被认定的军事冲突。\n- **第三方冲突的卷入**：P=20.0%，effect_log_odds=+0.60，方向=increase。代理人战争可能溢出到网络空间，但直接造成物理破坏并归因为中美冲突的情况较少，除非冲突规模极大。\n\n## Bayesian Causal Graph\n- method：bayesian_causal_graph_logistic_cpd_monte_carlo\n- Monte Carlo samples：12000\n- causal credible interval：1.0% - 11.7%\n- node_count：5, edge_count：1\n- target_evidence_update：+0.090\n- 关键节点：\n  - 太空军事化与反卫星武器部署 | prior=30.0%, adjusted=26.2%, target_weight=+0.840\n  - 常规军事冲突升级 | prior=15.0%, adjusted=12.7%, target_weight=+0.750\n  - 危机管控机制的有效性 | prior=60.0%, adjusted=60.0%, target_weight=-0.500\n  - 网络攻击归因与升级阈值降低 | prior=40.0%, adjusted=37.0%, target_weight=+0.480\n  - 第三方冲突的卷入 | prior=20.0%, adjusted=17.3%, target_weight=+0.240\n- do-intervention sensitivity：\n  - 常规军事冲突升级: do_true=8.2%, do_false=2.3%, swing=0.060\n  - 太空军事化与反卫星武器部署: do_true=6.6%, do_false=1.7%, swing=0.049\n  - 危机管控机制的有效性: do_true=2.1%, do_false=4.5%, swing=0.023\n  - 网络攻击归因与升级阈值降低: do_true=4.4%, do_false=2.2%, swing=0.022\n  - 第三方冲突的卷入: do_true=4.0%, do_false=2.8%, swing=0.013\n\n## 最有诊断价值的证据\n- [decrease] 常规军事冲突（如台海或南海危机）是触发网络/太空物理攻击的最主要前置条件，而2026-2030年间发生大规模常规战争的概率虽不为零但相对较低。 | weighted_log_odds=-0.335 | quality_weight=0.479 | source=background/background_prior\n  - 该合约中的网络/太空攻击极大概率是常规战争的伴随现象而非独立事件。如果常规战争不发生，独立的、造成物理破坏且被归因的网络/太空攻击概率极低。\n- [decrease] 太空资产对现代军事指挥、控制和情报（C4ISR）至关重要，反卫星武器（ASAT）的使用被视为高烈度战争行为，双方对此类攻击的红线认知较为清晰。 | weighted_log_odds=-0.190 | quality_weight=0.381 | source=background/background_prior\n  - 由于后果极其严重且归因容易（太空监视数据），双方有强烈的威慑动机避免主动摧毁对方卫星。这种相互保证毁灭的逻辑抑制了此类事件的发生。\n- [decrease] 历史上大国间造成物理破坏的网络攻击（如Stuxnet）通常保持隐蔽或模糊归因，极少被官方公开认定为战争行为并引发直接军事回应。 | weighted_log_odds=-0.181 | quality_weight=0.302 | source=background/background_prior\n  - 该合约要求‘官方宣布为战争行为’，历史先例显示国家倾向于避免将网络攻击升级为公开军事冲突，除非伴随动能打击。这降低了仅因网络攻击而触发YES条件的概率。\n- [decrease] 网络攻击的归因在技术上和政治上具有高度不确定性，即使发生物理破坏，攻击方也可能使用虚假旗号或保持匿名，导致无法满足‘归因于对方’的合约条件。 | weighted_log_odds=-0.125 | quality_weight=0.314 | source=background/background_prior\n  - 合约要求‘归因于对方’。由于网络战的隐蔽性，即使发生破坏，若无法获得高度可信的归因证据，官方可能不会宣布其为战争行为，从而导致合约结果为NO。\n- [increase] 中美双方均拥有针对对方关键基础设施（电网、金融、交通）的高级网络攻击能力，且此类攻击在危机时刻具备造成物理破坏的潜力。 | weighted_log_odds=+0.090 | quality_weight=0.224 | source=background/background_prior\n  - 能力的存在是事件发生的必要条件。虽然意图不明，但技术门槛已跨越，使得‘造成物理破坏’在技术上可行，增加了意外或故意升级的风险。\n- [increase] 中美之间缺乏针对网络空间和太空冲突的明确、具有法律约束力的危机管控机制和‘红线’定义。 | weighted_log_odds=+0.068 | quality_weight=0.227 | source=background/background_prior\n  - 机制缺失增加了误判风险。一次原本有限的网络攻击或太空干扰可能因缺乏沟通渠道而被错误解读为全面战争的前奏，从而触发升级。\n\n## 多 Agent 分歧\n- **outside_view**：4.0%，confidence=0.60。基于2010-2026年的历史基准，大国间造成物理破坏且被明确归因并引发军事回应的网络/太空攻击事件几乎为零。尽管能力在增长，但实际发生的频率极低，参考类历史数据强烈指向低概率。\n  - 更新触发器：发现过去5年内有未公开的、符合合约定义的大国间网络/太空物理攻击先例。\n- **inside_view**：12.0%，confidence=0.50。考虑到台海或南海危机升级的路径，网络攻击作为混合战争的一部分，极可能在常规冲突爆发时针对关键基础设施造成物理破坏。虽然独立发生的概率低，但作为常规冲突的伴随事件，其风险因地缘政治紧张而显著增加。\n  - 更新触发器：中美在2026-2028年间爆发小规模常规军事冲突或高强度对峙。\n- **skeptic**：2.0%，confidence=0.70。合约条件极其苛刻：需要‘物理破坏’+‘明确归因’+‘官方宣布为战争行为’。历史表明，国家更倾向于模糊归因和隐蔽行动以避免升级。即使发生物理破坏，政治意愿将其定性为战争行为的可能性极低，因为这将导致全面战争。\n  - 更新触发器：一方官方明确声明将某次造成物理破坏的网络攻击视为战争行为并启动军事回应。\n- **optimist**：18.0%，confidence=0.40。太空军事化和AI自动化防御系统的快速发展增加了意外升级的风险。随着反卫星武器实战化，一次误判或自动化系统的失控可能导致卫星被摧毁，进而被认定为军事冲突。技术演进的不可控性推高了尾部风险。\n  - 更新触发器：中美宣布部署具有实战能力的共轨反卫星系统或自动化网络攻击武器。\n- **base_rate_guardian**：6.0%，confidence=0.65。虽然inside_view指出了升级路径，但必须锚定在极低的base rate上。过去15年无此类事件，且双方都有强烈的动机避免越过红线。任何偏离base rate的预测都需要极强的证据支持，目前证据不足以支撑高概率。\n  - 更新触发器：出现确凿证据表明中美已签署或默认了‘网络攻击即战争’的新军事准则。\n- **domain_generalist**：9.0%，confidence=0.55。综合来看，独立发生的概率极低（skeptic/outside_view），但作为常规冲突的一部分（inside_view）或意外升级（optimist）的风险存在。考虑到2026-2030年是关键窗口期，地缘政治紧张局势可能压倒危机管控机制，因此概率略高于纯历史基准，但仍属低概率事件。\n  - 更新触发器：中美关系急剧恶化至准战争状态，或发生涉及关键基础设施的重大网络/太空安全事件。\n\n## 关键未知项\n- 中美双方对‘网络战争行为’的具体定义和红线。\n- 未来几年内新型网络武器（如针对工业控制系统的漏洞）的发现与利用情况。\n- 太空碎片清理技术或反卫星技术的突破速度。\n- 意外事件（如卫星碰撞、网络误击）发生后，双方政治决策者的具体反应模式。\n\n## 模糊点与假设\n- 模糊点：归因的确定性。\n- 模糊点：‘物理破坏’的阈值。\n- 假设：假设只有造成物理后果的攻击才算军事冲突。\n- 假设：假设归因需有高度可信证据。\n\n## 校准信息\n- calibration_mode：cold_start_conservative_shrinkage\n- temperature：1.220\n- domain_history_n：0\n- domain_avg_brier：None\n\n## 结论\n当前给出的概率是 **7.6%**。这个数字由 base rate、证据 log-odds、Bayesian causal graph / Monte Carlo、多 Agent panel 和本地校准共同计算得到。\n"
+        }
+      ],
+      "portfolio_probability_engine": {
+        "calibrated_probability": 0.09092513370611928,
+        "confidence_low": 0.058993293818485434,
+        "confidence_high": 0.13761338448397167,
+        "portfolio_items": [
+          {
+            "forecast_id": "e2f69a4bd59a",
+            "contract_id": "contract_dim1_direct",
+            "dimension_id": "dim_1",
+            "dimension_name": "Direct Military Engagement",
+            "normalized_question": "在2026年6月2日至2030年12月31日期间，中美双方是否会发生直接军事交战（包括正规军及执行军事任务的准军事力量）？",
+            "proxy_metric": "官方确认的军事人员伤亡或动能武器发射。",
+            "proxy_risk": "low",
+            "semantic_coverage_weight": 0.78666235027517,
+            "measurability": 0.9,
+            "user_intent_preservation_score": 0.9,
+            "risk_factor": 1.0,
+            "raw_portfolio_weight": 0.7099627711233408,
+            "probability": 0.09542200209259759,
+            "confidence_low": 0.015025731413804677,
+            "confidence_high": 0.4217807856636647,
+            "portfolio_weight": 0.8465905340286487
+          },
+          {
+            "forecast_id": "3cd8e6af02b2",
+            "contract_id": "contract_dim2_proxy",
+            "dimension_id": "dim_2",
+            "dimension_name": "Proxy Military Conflict",
+            "normalized_question": "在2026年6月2日至2030年12月31日期间，中美是否在第三国发生直接军事对抗或重大代理人战争？",
+            "proxy_metric": "中美军队在第三国的直接交战记录。",
+            "proxy_risk": "medium",
+            "semantic_coverage_weight": 0.18128844286176754,
+            "measurability": 0.7,
+            "user_intent_preservation_score": 0.8,
+            "risk_factor": 0.85,
+            "raw_portfolio_weight": 0.11788280997086432,
+            "probability": 0.06881624956114427,
+            "confidence_low": 0.011443712328636111,
+            "confidence_high": 0.3205537188085654,
+            "portfolio_weight": 0.1405685975450872
+          },
+          {
+            "forecast_id": "e6f4ec02f93a",
+            "contract_id": "contract_dim3_cyber_space",
+            "dimension_id": "dim_3",
+            "dimension_name": "Cyber/Space Kinetic Equivalent",
+            "normalized_question": "在2026年6月2日至2030年12月31日期间，中美是否发生造成物理破坏或人员伤亡的网络/太空攻击，并被认定为军事冲突？",
+            "proxy_metric": "造成物理后果的归因网络/太空攻击。",
+            "proxy_risk": "high",
+            "semantic_coverage_weight": 0.03204920686306248,
+            "measurability": 0.4,
+            "user_intent_preservation_score": 0.6,
+            "risk_factor": 0.6,
+            "raw_portfolio_weight": 0.010768533505988992,
+            "probability": 0.07592232784109443,
+            "confidence_low": 0.010996886273526778,
+            "confidence_high": 0.3777556476353309,
+            "portfolio_weight": 0.012840868426264022
+          }
+        ],
+        "method": "weighted_logit_portfolio",
+        "subforecast_logit_disagreement": 0.1491900051081497,
+        "portfolio_logit_sigma": 0.46713550229866735,
+        "semantic_collapse_risk": "low"
+      },
+      "portfolio_meta": {
+        "dominant_domain": "geopolitics",
+        "subforecast_count": 3
+      },
+      "runtime_config_snapshot": {
+        "model": "Qwen3.5-27B",
+        "base_url": "http://192.168.0.102:1234/v1",
+        "portfolio": {
+          "max_contract_candidates": 7,
+          "min_contract_candidates": 3,
+          "default_cloud_dimension_weights": {
+            "output_or_gdp": 0.25,
+            "income_and_employment": 0.2,
+            "consumption_and_confidence": 0.15,
+            "industry_and_business_vitality": 0.15,
+            "housing_and_balance_sheet": 0.1,
+            "fiscal_and_public_services": 0.05,
+            "external_environment": 0.05,
+            "subjective_wellbeing": 0.05
+          },
+          "proxy_risk_weight_factor": {
+            "low": 1.0,
+            "medium": 0.85,
+            "high": 0.6,
+            "unknown": 0.75
+          },
+          "portfolio_interval": {
+            "base_sigma": 0.35,
+            "semantic_risk_penalty": {
+              "low": 0.05,
+              "medium": 0.25,
+              "high": 0.55,
+              "unknown": 0.35
+            },
+            "subforecast_disagreement_weight": 0.45,
+            "min_sigma": 0.35,
+            "max_sigma": 2.2
+          }
+        },
+        "engine": {
+          "min_probability": 0.01,
+          "max_probability": 0.99,
+          "min_base_probability": 0.02,
+          "max_base_probability": 0.98,
+          "min_evidence_impact_log_odds": -0.8,
+          "max_evidence_impact_log_odds": 0.8,
+          "min_factor_effect_log_odds": -1.5,
+          "max_factor_effect_log_odds": 1.5,
+          "max_factors": 12,
+          "max_evidence_cards": 12,
+          "max_panel_agents": 8,
+          "independence_penalty_power": 0.5,
+          "ensemble_weights": {
+            "base_const": 0.2,
+            "base_low_forecastability_bonus": 0.25,
+            "evidence_const": 0.1,
+            "evidence_forecastability_bonus": 0.3,
+            "causal_const": 0.1,
+            "causal_forecastability_bonus": 0.25,
+            "panel_const": 0.2
+          },
+          "cold_start_min_history": 10,
+          "cold_start_temperature_base": 1.25,
+          "cold_start_temperature_forecastability_discount": 0.15,
+          "brier_temperature": {
+            "bad_threshold": 0.25,
+            "weak_threshold": 0.22,
+            "strong_threshold": 0.17,
+            "bad_temperature": 1.45,
+            "weak_temperature": 1.25,
+            "normal_temperature": 1.12,
+            "strong_temperature": 1.0
+          },
+          "interval": {
+            "base_sigma": 0.55,
+            "forecastability_penalty": 1.15,
+            "panel_disagreement_weight": 0.3,
+            "evidence_quality_penalty": 0.65,
+            "evidence_count_bonus_per_card": 0.03,
+            "max_evidence_count_bonus": 0.25,
+            "min_sigma": 0.35,
+            "max_sigma": 2.0
+          }
+        },
+        "temperature": {
+          "question_expansion": 0.1,
+          "contract": 0.1,
+          "decomposition": 0.25,
+          "evidence": 0.2,
+          "panel": 0.55,
+          "portfolio_summary": 0.2,
+          "json_repair": 0.0
+        }
+      },
+      "markdown_report": "# Forecast 6cb67fa11d91\n\n**预测类型**：multi_contract_portfolio\n**原始问题**：2030年中美会不会发生军事冲突？\n**综合概率**：9.1%\n**粗略区间**：5.9% - 13.8%\n**问题类型**：explicit_binary\n**语义坍缩风险**：low\n**推荐模式**：multi_contract_portfolio\n\n## 原始语义\n用户旨在评估在2030年12月31日之前，中华人民共和国与美利坚合众国之间是否会发生任何形式的、可被国际公认定义的直接军事对抗、武装冲突或重大代理人战争事件。\n\n语义坍缩说明：分解避免了将‘军事冲突’简化为单一指标（如GDP或军费），而是涵盖了直接、间接和新维度冲突。\n\n如果强行单指标化，会丢失这些维度：\n- 代理人战争。\n- 准军事力量冲突。\n- 网络/太空物理攻击。\n\n## 维度展开\n- **Direct Military Engagement (Kinetic & Paramilitary)** | weight=0.60 | measurability=0.90 | 中美双方军事或准军事力量之间的直接武力接触，包括正规军交火、导弹发射、舰机碰撞导致的战斗行为，以及海警/民兵在争议区域的致命武力使用。\n- **Proxy Military Conflict** | weight=0.25 | measurability=0.70 | 中美在第三国或地区支持对立双方，并导致双方军事力量（或由其直接指挥/武装的力量）发生直接战斗或重大军事对抗。\n- **Cyber/Space Kinetic Equivalent** | weight=0.15 | measurability=0.40 | 网络或太空攻击造成物理破坏、人员伤亡或关键基础设施瘫痪，且被归因于对方，并引发军事层面的回应或被视为战争行为。\n\n## Contract Portfolio 结果\n- **Direct Military Engagement** | P=9.5% | weight=0.847 | proxy=官方确认的军事人员伤亡或动能武器发射。 | proxy_risk=low\n  - 预测题：在2026年6月2日至2030年12月31日期间，中美双方是否会发生直接军事交战（包括正规军及执行军事任务的准军事力量）？\n- **Proxy Military Conflict** | P=6.9% | weight=0.141 | proxy=中美军队在第三国的直接交战记录。 | proxy_risk=medium\n  - 预测题：在2026年6月2日至2030年12月31日期间，中美是否在第三国发生直接军事对抗或重大代理人战争？\n- **Cyber/Space Kinetic Equivalent** | P=7.6% | weight=0.013 | proxy=造成物理后果的归因网络/太空攻击。 | proxy_risk=high\n  - 预测题：在2026年6月2日至2030年12月31日期间，中美是否发生造成物理破坏或人员伤亡的网络/太空攻击，并被认定为军事冲突？\n\n## 子预测摘要\n- **Direct Military Engagement**：9.5% 区间 1.5% - 42.2%\n  - contract：在2026年6月2日至2030年12月31日期间，中美双方是否会发生直接军事交战（包括正规军及执行军事任务的准军事力量）？\n  - base=5.0%, evidence=7.0%, causal=5.5%, panel=9.3%\n  - causal_graph：method=bayesian_causal_graph_logistic_cpd_monte_carlo, samples=12000, nodes=6, edges=0, causal_interval=1.6%-15.8%\n  - top causal sensitivity：\n    - Taiwan Crisis Escalation: do_true=11.9%, do_false=3.4%, swing=0.085\n    - Accidental Skirmish in South China Sea: do_true=10.4%, do_false=4.5%, swing=0.059\n    - Crisis Communication Mechanisms: do_true=4.5%, do_false=7.1%, swing=0.027\n- **Proxy Military Conflict**：6.9% 区间 1.1% - 32.1%\n  - contract：在2026年6月2日至2030年12月31日期间，中美是否在第三国发生直接军事对抗或重大代理人战争？\n  - base=5.0%, evidence=3.3%, causal=1.9%, panel=9.9%\n  - causal_graph：method=bayesian_causal_graph_logistic_cpd_monte_carlo, samples=12000, nodes=5, edges=0, causal_interval=1.0%-4.9%\n  - top causal sensitivity：\n    - Escalation in South China Sea: do_true=4.1%, do_false=1.5%, swing=0.026\n    - Effectiveness of Crisis Communication Channels: do_true=1.4%, do_false=3.0%, swing=0.016\n    - Conflict in Middle East or Africa involving both powers: do_true=3.0%, do_false=1.7%, swing=0.013\n- **Cyber/Space Kinetic Equivalent**：7.6% 区间 1.1% - 37.8%\n  - contract：在2026年6月2日至2030年12月31日期间，中美是否发生造成物理破坏或人员伤亡的网络/太空攻击，并被认定为军事冲突？\n  - base=5.0%, evidence=2.8%, causal=3.1%, panel=7.2%\n  - causal_graph：method=bayesian_causal_graph_logistic_cpd_monte_carlo, samples=12000, nodes=5, edges=1, causal_interval=1.0%-11.7%\n  - top causal sensitivity：\n    - 常规军事冲突升级: do_true=8.2%, do_false=2.3%, swing=0.060\n    - 太空军事化与反卫星武器部署: do_true=6.6%, do_false=1.7%, swing=0.049\n    - 危机管控机制的有效性: do_true=2.1%, do_false=4.5%, swing=0.023\n\n## 聚合方法\n- 使用 weighted logit portfolio，不是简单平均概率。\n- 权重由 semantic_coverage_weight、measurability、user_intent_preservation_score、proxy_risk 共同决定。\n- 子预测 logit 分歧：0.149\n- portfolio logit sigma：0.467\n\n## 结论\n对原始云状问题，当前综合概率是 **9.1%**。\n"
     }
   ]
 }

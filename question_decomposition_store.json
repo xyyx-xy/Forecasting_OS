@@ -3,7 +3,7 @@
     "name": "question_decomposition_store",
     "version": "0.1-multi-agent",
     "created_at": "2026-05-29T22:11:02",
-    "updated_at": "2026-06-02T15:37:43"
+    "updated_at": "2026-06-02T16:39:46"
   },
   "records": [
     {
@@ -24366,6 +24366,1393 @@
           "The term 'slight' is operationalized as 0-5% for nominal and 0-3% for real growth based on historical volatility of Beijing's housing market in neutral policy periods.",
           "Adversarial audit verdict 保持为 revise；repair_status=partially_repaired，不再自动改成 pass。",
           "BJ_HOUSE_PRICE_2029_NOMINAL_SLIGHT_RISE lost_dimensions 较多，lost_dimension_factor=0.640，已进入 raw_portfolio_weight。"
+        ]
+      },
+      "validation_errors": []
+    },
+    {
+      "id": "a8395be8ec72",
+      "created_at": "2026-06-02T16:39:46",
+      "module": "cloud_to_contract_decomposition",
+      "version": "0.1-multi-agent",
+      "original_question": "2030年中美会不会发生军事冲突？",
+      "agent_outputs": {
+        "classifier": {
+          "question_type": "explicit_binary",
+          "is_cloud_question": false,
+          "cloud_terms": [],
+          "triage": {
+            "forecastability_zone": "cloudlike",
+            "reason": "The question asks for a binary outcome (conflict or no conflict) within a specific timeframe (by 2030). While the event definition is binary, the underlying drivers are complex, low-probability, and high-impact, making it a 'cloudlike' problem in terms of forecastability, but structurally an explicit binary question.",
+            "requires_decomposition": true,
+            "single_contract_allowed_by_type": true
+          },
+          "reason": "The user specifies a clear event ('military conflict'), specific actors ('China and US'), and a clear deadline ('2030'). This fits the definition of explicit_binary. It is not a cloud judgment because 'conflict' is a discrete event, not a multidimensional quality like 'success' or 'better'. However, it requires decomposition to define what constitutes 'military conflict' (e.g., direct engagement vs. proxy war) for resolution."
+        },
+        "intent": {
+          "overall_semantic_intent": "用户旨在评估在2030年12月31日之前，中华人民共和国与美利坚合众国之间是否会发生任何形式的、可被国际公认定义的直接军事对抗或武装冲突事件。",
+          "time_interpretation": {
+            "current_period": "2026",
+            "target_period": "2030",
+            "comparison": "绝对时间截止点（Deadline），即判断事件是否在2030年12月31日23:59:59之前发生，而非与2026年进行对比。"
+          },
+          "core_ambiguities": [
+            "军事冲突的定义边界：是否包含网络攻击、太空资产干扰、代理人战争、海上对峙中的擦枪走火，还是仅指国家正规军之间的直接交火？",
+            "冲突的规模与持续时间：是短暂的战术性接触，还是持续的战略级战争？",
+            "主体界定：是否包含各自盟友或准军事组织（如民兵、警察部队在特定情境下的行动）？"
+          ],
+          "likely_substitution_traps": [
+            "将‘军事冲突’偷换为‘外交关系恶化’或‘贸易制裁升级’，后者是政治经济行为，不等于军事冲突。",
+            "将‘军事冲突’偷换为‘军费增长’或‘武器部署增加’，这些是准备状态，不等于实际冲突发生。",
+            "将‘军事冲突’偷换为‘局部代理人战争’，若用户意指中美直接交战，则代理人战争不应计入。",
+            "将‘军事冲突’偷换为‘网络战’，除非明确定义网络攻击达到物理破坏或等同于传统攻击的程度，否则通常不被视为传统意义上的军事冲突。"
+          ],
+          "semantic_guardrails": [
+            "必须明确定义‘军事冲突’的最小可结算单位（例如：造成人员伤亡的交火、导弹发射、舰机碰撞导致的战斗行为等）。",
+            "必须排除非动能的、未造成物理后果的网络或信息战行为，除非有明确的国际法或双方声明将其定性为战争行为。",
+            "必须区分‘直接冲突’与‘间接冲突’，若问题隐含直接对抗，则需排除通过第三国进行的冲突。",
+            "时间窗口严格限定为2026年6月2日至2030年12月31日之间。"
+          ]
+        },
+        "dimensions": {
+          "dimension_map": [
+            {
+              "dimension_id": "dim_1",
+              "dimension_name": "Direct Kinetic Engagement",
+              "meaning": "The most core definition of military conflict: direct use of lethal force between regular armed forces of the US and China, resulting in casualties or significant material damage.",
+              "candidate_metrics": [
+                "Official declarations of war or state of emergency by either government.",
+                "Confirmed reports of US/Chinese military personnel killed or wounded by the other side's direct action.",
+                "Launch of missiles or artillery by one side targeting the other's military assets or territory.",
+                "Naval or aerial dogfights involving direct fire between US and Chinese assets."
+              ],
+              "semantic_coverage_weight": 0.6,
+              "measurability": 0.95,
+              "why_it_matters": "This is the unambiguous 'yes' condition for most laypeople and international law definitions of war. It carries the highest semantic weight for 'military conflict'.",
+              "non_quantifiable_warning": "None, this is highly observable."
+            },
+            {
+              "dimension_id": "dim_2",
+              "dimension_name": "Accidental Escalation / Grey Zone Incidents",
+              "meaning": "Unintended or low-intensity kinetic events that cross the threshold of 'conflict' but may not be declared as war, such as collisions leading to fire, boarding actions, or shoot-to-kill orders in disputed zones.",
+              "candidate_metrics": [
+                "Incidents where US/Chinese military vessels or aircraft exchange fire or use weapons against each other, even if accidental.",
+                "Boarding and detention of military personnel leading to armed resistance.",
+                "Destruction of military assets (e.g., drones, ships) by the other side in contested waters (South China Sea, Taiwan Strait)."
+              ],
+              "semantic_coverage_weight": 0.2,
+              "measurability": 0.85,
+              "why_it_matters": "In modern geopolitics, 'conflict' often begins with these grey zone incidents. Defining whether a 'shoot-down' or 'collision with casualties' counts is critical for resolution.",
+              "non_quantifiable_warning": "Attribution can be disputed; both sides may claim self-defense or accident."
+            },
+            {
+              "dimension_id": "dim_3",
+              "dimension_name": "Proxy and Indirect Conflict",
+              "meaning": "Conflict where the US and China do not fight directly but support opposing sides in a third-party conflict, potentially involving direct US/Chinese military intervention or supply.",
+              "candidate_metrics": [
+                "Direct US military intervention against Chinese-backed forces or vice versa.",
+                "Supply of lethal weapons to opposing sides in a hot war zone (e.g., Taiwan, South China Sea islands) leading to direct engagement.",
+                "Joint military operations where US and Chinese forces are on opposing sides of a battlefield."
+              ],
+              "semantic_coverage_weight": 0.1,
+              "measurability": 0.7,
+              "why_it_matters": "The user's question implies 'US vs China'. Proxy wars are often excluded from 'direct conflict' but may be included in broader definitions. This dimension captures the ambiguity of 'indirect' conflict.",
+              "non_quantifiable_warning": "Defining the threshold of 'support' vs 'conflict' is difficult. Does supplying missiles count as conflict?"
+            },
+            {
+              "dimension_id": "dim_4",
+              "dimension_name": "Cyber and Space Warfare (Kinetic Equivalent)",
+              "meaning": "Non-kinetic attacks that cause physical damage or equivalent strategic effect, such as disabling power grids, destroying satellites, or causing mass casualties via infrastructure failure.",
+              "candidate_metrics": [
+                "Cyberattacks causing physical destruction of critical infrastructure (power, water, finance) attributed to the other state.",
+                "Anti-satellite weapons used to destroy the other side's military or critical civilian satellites.",
+                "Electronic warfare causing significant loss of military capability or civilian harm."
+              ],
+              "semantic_coverage_weight": 0.05,
+              "measurability": 0.5,
+              "why_it_matters": "Modern warfare includes cyber/space. However, these are often excluded from 'military conflict' unless they cause physical harm. This dimension captures the edge case.",
+              "non_quantifiable_warning": "Attribution is notoriously difficult; 'kinetic equivalent' is subjective."
+            },
+            {
+              "dimension_id": "dim_5",
+              "dimension_name": "Political and Diplomatic Pre-conflict State",
+              "meaning": "The level of hostility and mobilization that precedes conflict. While not conflict itself, it defines the 'risk' and context. Included to ensure the 'no conflict' resolution isn't just 'no shots fired' but also 'no war-like state'.",
+              "candidate_metrics": [
+                "Mobilization of reserves or general mobilization declarations.",
+                "Closure of embassies or severance of diplomatic ties due to military threats.",
+                "Official statements declaring the other side as an 'enemy' in a state of war."
+              ],
+              "semantic_coverage_weight": 0.05,
+              "measurability": 0.9,
+              "why_it_matters": "This dimension helps distinguish between 'tense relations' and 'active conflict'. It serves as a guardrail against counting mere hostility as conflict.",
+              "non_quantifiable_warning": "Highly subjective interpretation of 'hostility'."
+            }
+          ],
+          "non_quantifiable_but_important_dimensions": [
+            "Intent and Perception: Whether either side *intends* to start a war or *perceives* the other's actions as an act of war. This is internal and often hidden.",
+            "Legal Classification: How international bodies (UN, ICJ) classify the event. A 'conflict' might be legally defined differently than militarily.",
+            "Public Opinion: Whether the domestic populations of both countries view the event as a 'war' or 'conflict'. This affects political sustainability but not the binary fact of engagement."
+          ],
+          "warning_against_single_metric": "Do not rely solely on 'Casualties' or 'Official Declaration of War'. Many modern conflicts (e.g., cyber, grey zone naval incidents) may not have immediate casualties or formal declarations but still constitute military conflict. Conversely, do not count 'Trade Sanctions' or 'Diplomatic Expulsions' as military conflict. The definition must be strictly bounded by the use of force or threat of force by military entities."
+        },
+        "fermi": {
+          "fermi_dimensions": [
+            {
+              "dimension_id": "dim_1",
+              "knowable_parts": [
+                "Historical data on US-China military encounters (e.g., South China Sea, Taiwan Strait) from 2020-2026.",
+                "Current force posture and deployment levels of both nations as of 2026.",
+                "Official rules of engagement (ROE) and de-escalation protocols publicly known.",
+                "Economic interdependence metrics that act as deterrents."
+              ],
+              "unknowable_parts": [
+                "Specific decision-making processes of leaders during a crisis in 2027-2030.",
+                "Exact threshold for 'casualty' or 'material damage' that triggers escalation vs. de-escalation.",
+                "Unannounced technological breakthroughs in missile defense or offensive capabilities.",
+                "Internal political stability of either nation during the target period."
+              ],
+              "assumptions": [
+                "Both nations maintain rational actor models prioritizing regime survival.",
+                "No third-party actor successfully provokes a direct kinetic exchange between US and China.",
+                "The definition of 'Direct Kinetic Engagement' requires intent or clear attribution, not just accidental collision without fire.",
+                "Nuclear deterrence remains stable and prevents total war, but does not prevent limited conventional conflict."
+              ],
+              "approximation_metrics": [
+                "Number of close-quarters encounters (within visual range) between US and Chinese naval/air assets per year.",
+                "Frequency of military exercises simulating conflict scenarios involving the other party.",
+                "Budget allocation for offensive vs. defensive systems in contested regions.",
+                "Diplomatic demarches regarding military incidents."
+              ],
+              "update_signals": [
+                "A significant accidental collision resulting in loss of life or major asset destruction.",
+                "Official change in ROE allowing lethal force in specific zones (e.g., Taiwan Strait).",
+                "Deployment of new offensive weapon systems to forward bases with reduced warning times.",
+                "Breakdown of existing military-to-military communication channels."
+              ],
+              "needs_further_split": false,
+              "fermi_note": "This dimension is the core 'Yes' condition. The Fermi estimate relies on the probability of a 'Black Swan' event overriding structural deterrence. Splitting further into specific theaters (Taiwan, South China Sea, Indian Ocean) might be useful for granular risk assessment but is not strictly necessary for the binary outcome."
+            },
+            {
+              "dimension_id": "dim_2",
+              "knowable_parts": [
+                "Historical frequency of 'grey zone' incidents (boarding, water cannon, electronic harassment).",
+                "Legal frameworks governing maritime and aerial encounters (UNCLOS, Chicago Convention).",
+                "Current technology for attribution (radar, AIS, satellite imagery) which reduces ambiguity."
+              ],
+              "unknowable_parts": [
+                "The specific 'red line' perception of commanders on the ground in a high-stress moment.",
+                "Whether a specific incident will be framed as 'accidental' or 'aggressive' by domestic propaganda machines.",
+                "The reaction of allied forces if they are present during an incident."
+              ],
+              "assumptions": [
+                "An 'Accidental Escalation' is defined as an incident where weapons are fired or used with lethal intent, even if unintended.",
+                "Both sides have mechanisms to de-escalate after an initial incident unless political pressure prevents it.",
+                "The 'Grey Zone' does not include non-kinetic actions like cyberattacks or economic coercion."
+              ],
+              "approximation_metrics": [
+                "Number of incidents involving use of non-lethal force (water cannons, lasers) escalating to lethal force.",
+                "Time taken to resolve incidents after initial contact.",
+                "Public statements blaming the other side for 'provocation' after an incident.",
+                "Insurance claims for military assets damaged in non-combat zones."
+              ],
+              "update_signals": [
+                "An incident where a drone or ship is shot down/destroyed without prior declaration of hostile intent.",
+                "A change in narrative where minor incidents are consistently labeled as 'acts of war' by official media.",
+                "Introduction of AI-driven autonomous weapons in contested zones, reducing human decision time."
+              ],
+              "needs_further_split": true,
+              "fermi_note": "This dimension is highly ambiguous. It needs to be split into 'Naval Incidents' and 'Aerial Incidents' because the risk profiles and escalation ladders differ significantly. Also, 'Accidental' vs. 'Calculated Provocation' is a critical distinction that may require separate tracking."
+            },
+            {
+              "dimension_id": "dim_3",
+              "knowable_parts": [
+                "Current alliances and security partnerships (NATO, AUKUS, SCO, BRICS).",
+                "Historical patterns of proxy conflicts involving major powers (e.g., Cold War precedents).",
+                "Trade flows of dual-use technology and military equipment to third parties."
+              ],
+              "unknowable_parts": [
+                "Secret agreements or covert operations between US/China and third-party actors.",
+                "The extent to which third-party actors will act independently vs. as directed proxies.",
+                "Whether a proxy conflict will draw in direct US/Chinese military intervention."
+              ],
+              "assumptions": [
+                "Proxy conflict is only counted if it involves direct US/Chinese military assets or personnel engaging the other side's assets/personnel.",
+                "Supplying weapons alone does not constitute 'military conflict' for this question.",
+                "The user's intent excludes pure proxy wars where US and China never directly engage."
+              ],
+              "approximation_metrics": [
+                "Volume of lethal aid provided to opposing sides in active conflict zones.",
+                "Presence of US/Chinese military advisors in third-party conflict zones.",
+                "Incidents where US/Chinese forces are targeted by proxy forces.",
+                "Diplomatic support levels for warring factions in international forums."
+              ],
+              "update_signals": [
+                "Direct strike by US forces on Chinese-backed militia or vice versa.",
+                "Deployment of US/Chinese special forces in the same theater of operations against each other.",
+                "Official acknowledgment of direct involvement in a third-party conflict."
+              ],
+              "needs_further_split": false,
+              "fermi_note": "Given the semantic guardrails excluding pure proxy wars, this dimension has low weight. The key is the 'Direct Engagement' threshold. If the definition is strict, this dimension might be merged into Dim_1. If loose, it needs strict criteria for 'Direct Intervention'."
+            },
+            {
+              "dimension_id": "dim_4",
+              "knowable_parts": [
+                "Current state of cyber capabilities and infrastructure vulnerabilities.",
+                "Historical precedents of cyberattacks causing physical damage (e.g., Stuxnet, Ukraine power grid).",
+                "International norms and treaties regarding cyber warfare (though largely unenforced)."
+              ],
+              "unknowable_parts": [
+                "Attribution certainty for future cyberattacks.",
+                "The threshold of damage that would be considered 'kinetic equivalent' by both sides.",
+                "The effectiveness of defensive cyber measures in 2030."
+              ],
+              "assumptions": [
+                "Cyberattacks are only counted if they cause physical destruction or mass casualties equivalent to kinetic strikes.",
+                "Attribution must be publicly acknowledged or overwhelmingly evidenced to count.",
+                "Space warfare (ASAT) is included if it destroys critical military assets."
+              ],
+              "approximation_metrics": [
+                "Number of critical infrastructure outages attributed to state actors.",
+                "Loss of satellite functionality due to anti-satellite tests or cyber interference.",
+                "Cost of damages from cyber incidents in billions of USD.",
+                "Official declarations of 'cyber war' or 'act of war' status."
+              ],
+              "update_signals": [
+                "A cyberattack causing significant loss of life (e.g., hospital systems, air traffic control).",
+                "Successful destruction of a military satellite by kinetic or directed-energy means.",
+                "Mutual agreement on a 'Cyber Geneva Convention' that defines thresholds for conflict."
+              ],
+              "needs_further_split": true,
+              "fermi_note": "This dimension is too broad. It should be split into 'Cyber-Physical Attacks' (causing physical harm) and 'Space Warfare' (ASAT). The attribution problem makes 'Cyber' a poor proxy for 'Conflict' unless the damage is undeniable and massive."
+            },
+            {
+              "dimension_id": "dim_5",
+              "knowable_parts": [
+                "Current diplomatic relations and trade volumes.",
+                "Historical correlation between diplomatic breakdown and military conflict.",
+                "Public opinion polls on US-China relations in both countries."
+              ],
+              "unknowable_parts": [
+                "The specific trigger that would turn diplomatic hostility into military action.",
+                "The internal political calculations of leaders facing domestic pressure.",
+                "The role of non-state actors in influencing diplomatic/military decisions."
+              ],
+              "assumptions": [
+                "This dimension is a 'guardrail' and does not directly contribute to the 'Yes' count unless it leads to Dim_1 or Dim_2.",
+                "High hostility does not equal conflict; it is a necessary but not sufficient condition.",
+                "The absence of this dimension (i.e., good relations) makes conflict highly unlikely."
+              ],
+              "approximation_metrics": [
+                "Number of diplomatic expulsions or embassy closures.",
+                "Trade sanctions value and scope.",
+                "Rhetoric intensity in official state media (sentiment analysis).",
+                "Military mobilization levels (reserves called up, etc.)."
+              ],
+              "update_signals": [
+                "Severance of diplomatic ties.",
+                "General mobilization of reserves.",
+                "Official declaration of 'Enemy State' status.",
+                "Closure of military communication hotlines."
+              ],
+              "needs_further_split": false,
+              "fermi_note": "This dimension is primarily for context and risk assessment. It should not be used as a direct proxy for conflict. It serves to validate the 'Outside View' that conflict is unlikely without severe diplomatic breakdown. It is a prerequisite, not a component."
+            }
+          ]
+        },
+        "outside_view": {
+          "outside_view_dimensions": [
+            {
+              "dimension_id": "dim_1",
+              "reference_classes": [
+                {
+                  "name": "Major Power Direct Conventional Conflicts (Post-1945)",
+                  "why_relevant": "Establishes the baseline rarity of direct kinetic engagement between nuclear-armed great powers. Historical data suggests that once nuclear deterrence is established, direct war between major powers is extremely rare due to mutual assured destruction (MAD) or fear of escalation to nuclear exchange.",
+                  "limitations": "The US-China relationship lacks the formal alliance structures of NATO/Warsaw Pact or the direct ideological confrontation of the Cold War US-USSR dynamic. The economic interdependence is also significantly higher than in previous eras, which may alter the cost-benefit analysis of conflict.",
+                  "possible_resolution_sources": [
+                    "Historical records of US-Soviet direct military engagements (e.g., Korean War, Vietnam War interventions).",
+                    "Analysis of 'Limited War' theories in nuclear age.",
+                    "Case studies of India-Pakistan or China-India border skirmishes as proxies for regional great power friction."
+                  ]
+                },
+                {
+                  "name": "Naval Standoffs and Incidents in Contested Waters",
+                  "why_relevant": "Most potential US-China conflicts would originate in maritime domains (South China Sea, Taiwan Strait). Historical precedents of naval incidents (e.g., 2001 Hainan incident, 2016 EP-3 incident) provide data on how close encounters are managed and de-escalated.",
+                  "limitations": "Past incidents involved asymmetric technology and lower stakes. Future encounters may involve hypersonic missiles and AI-driven systems, changing the reaction time and escalation dynamics significantly.",
+                  "possible_resolution_sources": [
+                    "Records of US-China naval encounters 2010-2026.",
+                    "Analysis of rules of engagement (ROE) evolution in the Indo-Pacific.",
+                    "Case studies of other maritime disputes (e.g., Greece-Turkey, India-Pakistan in Arabian Sea)."
+                  ]
+                }
+              ],
+              "outside_view_note": "The base rate for direct war between nuclear powers is near zero. The reference class suggests that 'conflict' is more likely to be limited, accidental, or indirect rather than a declared total war. The key variable is whether the 'nuclear umbrella' successfully prevents even limited conventional exchanges."
+            },
+            {
+              "dimension_id": "dim_2",
+              "reference_classes": [
+                {
+                  "name": "Accidental Escalation in High-Tension Zones",
+                  "why_relevant": "Historical examples of unintended escalation (e.g., Cuban Missile Crisis, 1983 Soviet false alarm incident) show how miscommunication or technical failure can trigger conflict. This is relevant for 'grey zone' incidents where rules are ambiguous.",
+                  "limitations": "Modern communication channels (military hotlines) are more robust than in the 1960s, but the speed of autonomous weapons may outpace human decision-making, creating a new type of 'accident' risk not present in historical reference classes.",
+                  "possible_resolution_sources": [
+                    "Studies on crisis stability and escalation ladders.",
+                    "Analysis of near-miss incidents in the Taiwan Strait.",
+                    "Data on collision avoidance protocols in international waters."
+                  ]
+                },
+                {
+                  "name": "Grey Zone Tactics and Coercion",
+                  "why_relevant": "Reference classes include the use of coast guards, maritime militia, and electronic warfare to assert control without firing lethal weapons (e.g., China's actions in South China Sea, Russia's actions in Crimea). This helps define the threshold where 'coercion' becomes 'conflict'.",
+                  "limitations": "These actions are often designed to stay below the threshold of 'armed conflict' under international law. Determining when a grey zone tactic crosses into 'military conflict' is subjective and politically charged.",
+                  "possible_resolution_sources": [
+                    "Legal definitions of 'use of force' vs 'threat of force' in UNCLOS.",
+                    "Historical precedents of 'salami slicing' tactics in territorial disputes.",
+                    "Analysis of US responses to grey zone aggression in other regions."
+                  ]
+                }
+              ],
+              "outside_view_note": "The reference class for 'accidental' conflict is sparse but high-impact. The limitation is that most historical accidents were resolved. The risk lies in the 'first strike' advantage of new technologies, which may incentivize pre-emptive action in a crisis, breaking the historical pattern of de-escalation."
+            },
+            {
+              "dimension_id": "dim_3",
+              "reference_classes": [
+                {
+                  "name": "Proxy Wars and Third-Party Interventions",
+                  "why_relevant": "Cold War proxy wars (Korea, Vietnam, Afghanistan) and modern conflicts (Syria, Ukraine) provide a reference for how major powers engage indirectly. This helps assess the likelihood of US/China supporting opposing sides in a third-party conflict (e.g., Taiwan, if considered a third party, or other regional hotspots).",
+                  "limitations": "The US-China economic integration makes a pure proxy war model less applicable than the US-USSR model. Direct intervention is more likely if core interests (like Taiwan) are at stake, blurring the line between proxy and direct conflict.",
+                  "possible_resolution_sources": [
+                    "Analysis of US aid to Ukraine vs Russian support for proxies.",
+                    "Historical data on Chinese support for allies in conflicts (e.g., North Korea, Pakistan).",
+                    "Treaty obligations (e.g., US-Japan, US-Philippines) that could draw the US into a conflict involving China."
+                  ]
+                },
+                {
+                  "name": "Alliance Entanglement Risks",
+                  "why_relevant": "Reference classes include how alliances (NATO, SEATO) dragged major powers into conflicts. The US has multiple security treaties in the Indo-Pacific. This helps assess the risk of a local conflict escalating to a US-China direct confrontation via alliance commitments.",
+                  "limitations": "Alliance credibility and willingness to fight vary. The US may not automatically intervene in all treaty disputes, and China may not view all US allies as equal threats.",
+                  "possible_resolution_sources": [
+                    "Text of US bilateral security treaties in Asia.",
+                    "Historical analysis of alliance activation rates.",
+                    "Public opinion and political will in allied nations to engage China."
+                  ]
+                }
+              ],
+              "outside_view_note": "The reference class suggests that proxy conflicts are common, but direct major power war via proxy is rare unless the proxy is a core strategic asset (like Taiwan). The limitation is that the 'proxy' definition is fluid; if the US intervenes directly in a proxy war, it becomes Dim_1."
+            },
+            {
+              "dimension_id": "dim_4",
+              "reference_classes": [
+                {
+                  "name": "Cyber-Physical Attacks and Infrastructure Sabotage",
+                  "why_relevant": "Precedents like Stuxnet (Iran), Ukraine power grid attacks, and Colonial Pipeline ransomware show that cyber attacks can have physical consequences. This helps define the threshold for 'kinetic equivalent' cyber conflict.",
+                  "limitations": "Attribution is difficult, and states often deny responsibility. There is no clear historical precedent for a state accepting responsibility for a cyber attack that caused mass casualties, which is needed to define it as 'war'.",
+                  "possible_resolution_sources": [
+                    "International law interpretations of cyber warfare (Tallinn Manual).",
+                    "Case studies of critical infrastructure vulnerabilities in US and China.",
+                    "Historical responses to cyber espionage vs cyber sabotage."
+                  ]
+                },
+                {
+                  "name": "Space Warfare and ASAT Tests",
+                  "why_relevant": "Historical ASAT tests (US, USSR, China, India) and the destruction of satellites by anti-satellite weapons provide a reference for space conflict. This is relevant if space assets are targeted in a way that degrades military capability.",
+                  "limitations": "Space debris from ASAT tests is a global hazard, creating a strong norm against kinetic ASAT use. The reference class is small because such tests are rare and often conducted in peacetime.",
+                  "possible_resolution_sources": [
+                    "Records of ASAT tests and their geopolitical fallout.",
+                    "Analysis of space traffic management and collision risks.",
+                    "Military doctrine on space domain awareness and defense."
+                  ]
+                }
+              ],
+              "outside_view_note": "The reference class for cyber/space conflict is evolving. The limitation is the lack of clear 'rules of war' for these domains. The outside view suggests that while cyber/space attacks are frequent, they are unlikely to be classified as 'military conflict' unless they cause significant physical damage or are explicitly declared as acts of war."
+            },
+            {
+              "dimension_id": "dim_5",
+              "reference_classes": [
+                {
+                  "name": "Diplomatic Breakdowns Preceding War",
+                  "why_relevant": "Historical examples of diplomatic ruptures (e.g., severance of ties, expulsion of diplomats) that preceded or accompanied military conflict. This helps assess the 'pre-conflict' state and whether current tensions are approaching a historical threshold for war.",
+                  "limitations": "Diplomatic breakdowns can occur without war (e.g., US-Iran, US-Cuba). The correlation is not causal. High hostility does not guarantee conflict.",
+                  "possible_resolution_sources": [
+                    "Historical data on diplomatic relations between major powers before wars.",
+                    "Analysis of current US-China diplomatic channels and their functionality.",
+                    "Public rhetoric and official statements from both governments."
+                  ]
+                },
+                {
+                  "name": "Economic Decoupling and Sanctions",
+                  "why_relevant": "Reference classes include the economic warfare between US and USSR, or current US sanctions on Russia/Iran. This helps assess the economic cost of conflict and the likelihood of economic measures being used as a substitute for military action.",
+                  "limitations": "Economic sanctions are not military conflict. However, they can be a precursor or a parallel track. The reference class helps distinguish between 'economic war' and 'military conflict'.",
+                  "possible_resolution_sources": [
+                    "Trade data and sanction regimes between US and China.",
+                    "Historical impact of economic sanctions on state behavior.",
+                    "Analysis of supply chain resilience and decoupling trends."
+                  ]
+                }
+              ],
+              "outside_view_note": "The reference class suggests that diplomatic and economic hostility is a necessary but not sufficient condition for military conflict. The limitation is that these indicators are noisy and can remain high for decades without leading to war (e.g., US-USSR for 40 years). The outside view is that without a specific trigger, the 'pre-conflict' state may persist without crossing into 'conflict'."
+            }
+          ]
+        },
+        "inside_view": {
+          "inside_view_dimensions": [
+            {
+              "dimension_id": "dim_1",
+              "positive_mechanisms": [
+                "Crisis Miscalculation in High-Intensity Exercises: During large-scale joint exercises (e.g., around Taiwan Strait), the compression of decision-making time and high stress levels increase the probability that a defensive maneuver is misinterpreted as an offensive first strike, triggering an automatic kinetic response.",
+                "Domestic Political Legitimacy Pressure: If either leadership faces significant internal instability or economic stagnation by 2028-2030, a limited military confrontation may be initiated or allowed to escalate to rally domestic support and divert attention from internal failures.",
+                "Alliance Commitment Enforcement: If a US treaty ally (e.g., Japan, Philippines) is attacked by Chinese forces, the US may be compelled by treaty obligations to intervene militarily, transforming a bilateral dispute into a direct US-China kinetic engagement.",
+                "Technological Surprise and Preemptive Strike Logic: If one side perceives a critical window where the other's emerging technology (e.g., hypersonic missiles, AI-driven command systems) creates an insurmountable advantage, it may trigger a preemptive limited strike to degrade that capability before it matures."
+              ],
+              "negative_mechanisms": [
+                "Nuclear Deterrence Stability: The mutual assured destruction (MAD) framework remains the ultimate brake on direct conflict. Both sides maintain robust second-strike capabilities, making any escalation beyond limited conventional skirmishes existentially risky and thus highly discouraged.",
+                "Economic Interdependence Costs: Despite decoupling trends, the sheer scale of remaining supply chain integration and financial exposure means that full-scale war would cause catastrophic immediate economic collapse for both nations, serving as a powerful deterrent.",
+                "Institutionalized De-escalation Channels: The maintenance of military-to-military hotlines and diplomatic backchannels allows for rapid clarification of intent during crises, reducing the likelihood that a minor incident spirals into full kinetic conflict.",
+                "Risk Aversion of Military Commanders: Professional military leadership on both sides generally prioritizes force preservation and mission success over political adventurism, often acting as a stabilizing force against political impulsivity."
+              ],
+              "dependencies": [
+                "Positive mechanism 'Crisis Miscalculation' depends on the failure of 'Institutionalized De-escalation Channels'.",
+                "Positive mechanism 'Alliance Commitment Enforcement' depends on the occurrence of a third-party conflict involving a US ally.",
+                "Negative mechanism 'Economic Interdependence Costs' is weakened if 'Domestic Political Legitimacy Pressure' becomes the dominant driver for leadership survival."
+              ],
+              "candidate_contract_angles": [
+                "Did any US or Chinese regular military personnel die as a direct result of hostile fire from the other side's military assets between 2026-06-02 and 2030-12-31?",
+                "Did either government officially declare a state of war or issue a formal notice of military engagement against the other during the period?",
+                "Were any missiles or artillery shells fired by one side's military forces at targets controlled by the other side's military forces?"
+              ],
+              "inside_view_note": "This dimension is the core 'Yes' condition. The causal path is narrow but high-consequence. It relies heavily on the failure of crisis management protocols during high-tension moments. The 'preemptive strike' logic is the most dangerous positive mechanism as it bypasses traditional escalation ladders."
+            },
+            {
+              "dimension_id": "dim_2",
+              "positive_mechanisms": [
+                "Accidental Collision with Lethal Response: In crowded airspaces or waters (e.g., South China Sea), a collision between military assets could lead to immediate defensive fire if one side perceives the other's maneuver as an intentional ramming or attack, especially if communication fails.",
+                "Grey Zone Escalation via 'Self-Defense' Narratives: Incidents involving boarding, water cannons, or electronic harassment may escalate if one side uses lethal force in 'self-defense' against what it perceives as an imminent threat, crossing the threshold into kinetic conflict.",
+                "Autonomous System Misidentification: The deployment of AI-driven drones or unmanned vessels in contested zones increases the risk of algorithmic misidentification of friendly/hostile status, leading to unauthorized or accidental kinetic engagement.",
+                "Commander Discretion in Isolated Incidents: Local commanders facing immediate threats may exercise discretion to use lethal force without waiting for central authorization, potentially triggering a broader conflict if the incident is not contained."
+              ],
+              "negative_mechanisms": [
+                "Strict Rules of Engagement (ROE): Both militaries maintain strict ROE that prohibit the use of lethal force except in cases of clear and imminent threat, requiring multiple layers of verification before firing.",
+                "Post-Incident De-escalation Protocols: Established procedures for investigating and resolving incidents after the fact allow both sides to save face and avoid escalation, treating accidents as technical failures rather than acts of war.",
+                "Technological Separation Measures: Use of transponders, AIS, and other identification technologies helps maintain separation and reduces the likelihood of accidental collisions or misidentification.",
+                "Political Cost of Unprovoked Escalation: Both governments have a strong incentive to blame the other side for any incident to avoid domestic backlash, but also to quickly de-escalate to avoid the costs of war, leading to a 'blame but don't fight' dynamic."
+              ],
+              "dependencies": [
+                "Positive mechanism 'Autonomous System Misidentification' depends on the deployment of autonomous weapons in contested zones.",
+                "Negative mechanism 'Strict ROE' is undermined if 'Commander Discretion' is expanded due to perceived threats.",
+                "Positive mechanism 'Accidental Collision' depends on the frequency of close-quarters encounters, which is influenced by political tensions."
+              ],
+              "candidate_contract_angles": [
+                "Did any incident involving US and Chinese military assets result in the use of lethal weapons (guns, missiles, etc.) against each other, regardless of intent?",
+                "Was any military asset (ship, aircraft, drone) of one side destroyed or significantly damaged by the direct action of the other side's military personnel or systems?",
+                "Did any incident lead to the detention or injury of military personnel from one side by the other side's forces?"
+              ],
+              "inside_view_note": "This dimension captures the 'accidental' or 'low-intensity' path to conflict. The key risk is the speed of escalation and the ambiguity of intent. The presence of autonomous systems is a growing positive risk factor. The resolution often depends on whether the incident is framed as an 'accident' or an 'act of war'."
+            },
+            {
+              "dimension_id": "dim_3",
+              "positive_mechanisms": [
+                "Direct Intervention in Proxy Conflicts: If a proxy conflict (e.g., in Taiwan or the South China Sea) escalates to a point where one side's proxy forces are facing defeat, the patron state may intervene directly with military assets to prevent collapse, leading to direct engagement.",
+                "Supply Chain Interdiction: If one side attempts to blockade or seize strategic resources (e.g., oil, rare earths) controlled by the other side's proxies or allies, it may lead to direct military confrontation to secure or disrupt the supply.",
+                "Special Operations Clashes: Covert special operations forces from both sides may encounter each other in third-party conflict zones, leading to direct firefights if identification fails or if one side is perceived as violating sovereignty.",
+                "Alliance Drag in Proxy Wars: If a US ally is fighting a Chinese-backed force, the US may provide direct military support (e.g., air defense, intelligence) that brings US forces into direct contact with Chinese forces."
+              ],
+              "negative_mechanisms": [
+                "Plausible Deniability Strategies: Both sides prefer to maintain plausible deniability in proxy conflicts, avoiding direct attribution of military actions to prevent escalation to direct war.",
+                "Limited Scope of Proxy Conflicts: Proxy conflicts are often contained within specific geographic and political boundaries, reducing the likelihood of direct superpower engagement.",
+                "Diplomatic Off-Ramps: International pressure and diplomatic negotiations often provide off-ramps for proxy conflicts before they escalate to direct superpower involvement.",
+                "Cost-Benefit Analysis of Direct Intervention: Both sides carefully weigh the costs of direct intervention against the benefits, often choosing to limit support to non-lethal aid or intelligence sharing."
+              ],
+              "dependencies": [
+                "Positive mechanism 'Direct Intervention' depends on the severity of the proxy conflict and the strategic importance of the outcome.",
+                "Negative mechanism 'Plausible Deniability' is undermined if 'Special Operations Clashes' occur in highly visible areas.",
+                "Positive mechanism 'Alliance Drag' depends on the depth of US alliance commitments and the nature of the proxy conflict."
+              ],
+              "candidate_contract_angles": [
+                "Did US and Chinese military forces engage in direct combat with each other in a third-party conflict zone?",
+                "Did either side directly strike military assets of the other side in a proxy conflict theater?",
+                "Were any US or Chinese military personnel killed by the other side's forces in a third-party conflict?"
+              ],
+              "inside_view_note": "This dimension is low weight but high ambiguity. The key is the threshold of 'direct engagement'. Supplying weapons is not conflict; shooting at each other is. The risk is highest in scenarios where proxy forces are ineffective and patron states feel compelled to step in."
+            },
+            {
+              "dimension_id": "dim_4",
+              "positive_mechanisms": [
+                "Cyber-Physical Attacks on Critical Infrastructure: A cyberattack that causes significant physical damage (e.g., power grid failure, water contamination) or loss of life may be interpreted as an act of war, triggering a kinetic military response.",
+                "Anti-Satellite (ASAT) Warfare: The destruction of military or critical civilian satellites by kinetic or directed-energy means is a clear act of military aggression that could escalate to broader conflict.",
+                "Electronic Warfare Causing Casualties: If electronic warfare (e.g., jamming, spoofing) leads to friendly fire incidents or civilian casualties, it may be attributed to the other side and trigger retaliation.",
+                "Data Theft Leading to Military Vulnerability: Large-scale theft of military secrets that compromises operational security may lead to preemptive kinetic strikes to neutralize the threat."
+              ],
+              "negative_mechanisms": [
+                "Attribution Ambiguity: Cyberattacks are often difficult to attribute definitively, allowing both sides to deny responsibility and avoid escalation.",
+                "Norms Against Cyber-Kinetic Escalation: International norms and mutual interests discourage responding to cyberattacks with kinetic force, favoring cyber-retaliation or diplomatic measures instead.",
+                "Resilience of Critical Infrastructure: Improvements in cybersecurity and infrastructure resilience reduce the impact of cyberattacks, making them less likely to trigger a military response.",
+                "Separation of Cyber and Kinetic Domains: Both militaries maintain separate command structures for cyber and kinetic operations, reducing the likelihood of automatic escalation from cyber to kinetic."
+              ],
+              "dependencies": [
+                "Positive mechanism 'Cyber-Physical Attacks' depends on the success of the attack and the attribution certainty.",
+                "Negative mechanism 'Attribution Ambiguity' is weakened if 'Cyber-Physical Attacks' cause massive, undeniable damage.",
+                "Positive mechanism 'ASAT Warfare' depends on the strategic value of the targeted satellites and the availability of ASAT capabilities."
+              ],
+              "candidate_contract_angles": [
+                "Did a cyberattack attributed to one side cause physical destruction or loss of life that led to a military response by the other side?",
+                "Did either side destroy a satellite of the other side using kinetic or directed-energy weapons?",
+                "Was there a formal declaration that a cyberattack constituted an 'act of war' requiring military retaliation?"
+              ],
+              "inside_view_note": "This dimension is the most ambiguous. The key is the 'kinetic equivalent' threshold. Cyberattacks alone are rarely considered 'military conflict' unless they cause physical harm. ASAT is a clearer trigger. The attribution problem is the main negative mechanism."
+            },
+            {
+              "dimension_id": "dim_5",
+              "positive_mechanisms": [
+                "Diplomatic Breakdown Leading to Military Mobilization: The severance of diplomatic ties or closure of embassies may signal an imminent military conflict, leading to mobilization and increased readiness that increases the risk of accidental engagement.",
+                "Rhetorical Escalation and Dehumanization: Intense state media propaganda that dehumanizes the other side may reduce the political cost of military action and increase public support for conflict.",
+                "Economic Decoupling and Sanctions: Severe economic sanctions and decoupling may reduce the economic deterrent to conflict, making military options more attractive.",
+                "Alliance Realignment: The formation of opposing military alliances (e.g., NATO vs. SCO) may create a bipolar structure that increases the likelihood of conflict through alliance dynamics."
+              ],
+              "negative_mechanisms": [
+                "Diplomatic Engagement and Dialogue: Continued diplomatic dialogue and engagement, even amidst tensions, provide channels for de-escalation and crisis management.",
+                "Economic Interdependence as a Stabilizer: Despite decoupling, remaining economic ties serve as a stabilizer, encouraging both sides to avoid actions that would disrupt trade and investment.",
+                "Public Opinion Aversion to War: Domestic public opinion in both countries generally opposes war with the other, creating political constraints on leadership.",
+                "International Pressure for Stability: Other nations and international organizations exert pressure on both sides to maintain stability and avoid conflict, providing diplomatic off-ramps."
+              ],
+              "dependencies": [
+                "Positive mechanism 'Diplomatic Breakdown' is a prerequisite for 'Military Mobilization'.",
+                "Negative mechanism 'Economic Interdependence' is weakened by 'Economic Decoupling'.",
+                "Positive mechanism 'Rhetorical Escalation' depends on the effectiveness of state media in shaping public opinion."
+              ],
+              "candidate_contract_angles": [
+                "Did either government declare a state of emergency or general mobilization due to military threats from the other side?",
+                "Were diplomatic ties severed or embassies closed due to military tensions?",
+                "Did official state media consistently frame the other side as an 'enemy' in a state of war?"
+              ],
+              "inside_view_note": "This dimension is a guardrail. It does not directly cause conflict but sets the context. High hostility increases the risk of accidental escalation (Dim_2) and reduces the effectiveness of de-escalation mechanisms. It is a necessary but not sufficient condition for conflict."
+            }
+          ]
+        },
+        "proxy_metrics": {
+          "proxy_metrics_by_dimension": [
+            {
+              "dimension_id": "dim_1",
+              "dimension_name": "Direct Kinetic Engagement",
+              "proxy_metrics": [
+                {
+                  "proxy_metric": "Official confirmation of US or Chinese military personnel killed or wounded by hostile fire from the other side's regular armed forces.",
+                  "coverage_score": 0.9,
+                  "measurability": 0.95,
+                  "proxy_risk": "low",
+                  "goodhart_risk": "low",
+                  "direction_conflict_risk": "low",
+                  "lost_meanings": [
+                    "Does not capture conflicts where no personnel are killed (e.g., ship-to-ship missile exchange with no casualties).",
+                    "Does not capture non-lethal kinetic engagements (e.g., disabling fire)."
+                  ],
+                  "resolution_sources": [
+                    "Pentagon press briefings.",
+                    "Ministry of National Defense (China) statements.",
+                    "Major international news agency reports (Reuters, AP, Xinhua) with official attribution."
+                  ],
+                  "note": "This is the strongest indicator of 'war' in the traditional sense. High measurability due to the need for official acknowledgment or undeniable evidence."
+                },
+                {
+                  "proxy_metric": "Launch of kinetic weapons (missiles, artillery, torpedoes) by one side targeting military assets or territory of the other side.",
+                  "coverage_score": 0.85,
+                  "measurability": 0.9,
+                  "proxy_risk": "low",
+                  "goodhart_risk": "low",
+                  "direction_conflict_risk": "low",
+                  "lost_meanings": [
+                    "Does not capture small arms fire in close-quarters combat.",
+                    "Does not capture cyber or space attacks."
+                  ],
+                  "resolution_sources": [
+                    "Satellite imagery of launch sites and impact zones.",
+                    "Radar and acoustic detection data from third parties.",
+                    "Official military logs or declassified intelligence reports."
+                  ],
+                  "note": "Captures the act of aggression even if casualties are not immediately confirmed. Crucial for defining 'conflict' beyond just casualties."
+                }
+              ]
+            },
+            {
+              "dimension_id": "dim_2",
+              "dimension_name": "Accidental Escalation / Grey Zone Incidents",
+              "proxy_metrics": [
+                {
+                  "proxy_metric": "Incident where US or Chinese military assets (ships, aircraft, drones) are destroyed or significantly damaged by the other side's military forces in a contested zone, regardless of declared intent.",
+                  "coverage_score": 0.7,
+                  "measurability": 0.85,
+                  "proxy_risk": "medium",
+                  "goodhart_risk": "medium",
+                  "direction_conflict_risk": "medium",
+                  "lost_meanings": [
+                    "Does not capture incidents where assets are damaged but not destroyed.",
+                    "Does not capture non-kinetic interference (e.g., jamming)."
+                  ],
+                  "resolution_sources": [
+                    "Visual evidence (video/photos) of destruction.",
+                    "Official reports of asset loss.",
+                    "Insurance claims for military assets (if available)."
+                  ],
+                  "note": "Captures 'grey zone' escalation where lethal force is used but may be framed as 'self-defense' or 'accident'. Attribution can be disputed."
+                },
+                {
+                  "proxy_metric": "Use of lethal weapons (guns, missiles) by one side against the other side's military personnel or assets in a non-declared conflict zone.",
+                  "coverage_score": 0.6,
+                  "measurability": 0.8,
+                  "proxy_risk": "medium",
+                  "goodhart_risk": "medium",
+                  "direction_conflict_risk": "medium",
+                  "lost_meanings": [
+                    "Does not capture non-lethal force (e.g., water cannons, lasers).",
+                    "Does not capture cyber attacks."
+                  ],
+                  "resolution_sources": [
+                    "Eyewitness accounts from military personnel.",
+                    "Ballistic analysis of weapon systems used.",
+                    "Official statements acknowledging the use of force."
+                  ],
+                  "note": "Focuses on the *use* of lethal force, which is a key threshold for 'conflict'. May be harder to verify if both sides deny it."
+                }
+              ]
+            },
+            {
+              "dimension_id": "dim_3",
+              "dimension_name": "Proxy and Indirect Conflict",
+              "proxy_metrics": [
+                {
+                  "proxy_metric": "Direct engagement between US and Chinese military forces in a third-party conflict zone (e.g., shooting at each other, boarding actions).",
+                  "coverage_score": 0.5,
+                  "measurability": 0.7,
+                  "proxy_risk": "high",
+                  "goodhart_risk": "high",
+                  "direction_conflict_risk": "high",
+                  "lost_meanings": [
+                    "Does not capture indirect support (weapons sales, intelligence sharing).",
+                    "Does not capture cyber operations in third-party zones."
+                  ],
+                  "resolution_sources": [
+                    "Combat reports from third-party actors.",
+                    "Satellite imagery of troop movements and engagements.",
+                    "Official denials or acknowledgments of involvement."
+                  ],
+                  "note": "High risk of misinterpretation. 'Direct engagement' must be clearly defined to avoid counting mere presence or support as conflict."
+                },
+                {
+                  "proxy_metric": "Official declaration by either government that they are providing direct military intervention (troops, air support) in a conflict involving the other side's allies or proxies.",
+                  "coverage_score": 0.4,
+                  "measurability": 0.9,
+                  "proxy_risk": "high",
+                  "goodhart_risk": "high",
+                  "direction_conflict_risk": "high",
+                  "lost_meanings": [
+                    "Does not capture covert interventions.",
+                    "Does not capture non-lethal support."
+                  ],
+                  "resolution_sources": [
+                    "Presidential or Premier statements.",
+                    "Parliamentary or National People's Congress resolutions.",
+                    "Military deployment orders."
+                  ],
+                  "note": "Relies on official declarations, which may be delayed or denied. Covert interventions are a major blind spot."
+                }
+              ]
+            },
+            {
+              "dimension_id": "dim_4",
+              "dimension_name": "Cyber and Space Warfare (Kinetic Equivalent)",
+              "proxy_metrics": [
+                {
+                  "proxy_metric": "Cyberattack attributed to one side causing physical destruction of critical infrastructure (power, water, finance) or loss of life in the other side's territory.",
+                  "coverage_score": 0.3,
+                  "measurability": 0.5,
+                  "proxy_risk": "high",
+                  "goodhart_risk": "high",
+                  "direction_conflict_risk": "high",
+                  "lost_meanings": [
+                    "Does not capture cyberattacks without physical damage.",
+                    "Does not capture space warfare."
+                  ],
+                  "resolution_sources": [
+                    "Forensic analysis of cyberattacks.",
+                    "Official attribution statements.",
+                    "Reports of physical damage and casualties."
+                  ],
+                  "note": "Attribution is the biggest challenge. 'Physical destruction' is a high bar, but necessary to equate to 'kinetic conflict'."
+                },
+                {
+                  "proxy_metric": "Destruction of military or critical civilian satellites by kinetic or directed-energy weapons attributed to the other side.",
+                  "coverage_score": 0.2,
+                  "measurability": 0.8,
+                  "proxy_risk": "medium",
+                  "goodhart_risk": "medium",
+                  "direction_conflict_risk": "medium",
+                  "lost_meanings": [
+                    "Does not capture cyber interference with satellites.",
+                    "Does not capture ground-based cyber attacks."
+                  ],
+                  "resolution_sources": [
+                    "Space surveillance data.",
+                    "Official statements on satellite loss.",
+                    "Analysis of debris fields."
+                  ],
+                  "note": "ASAT tests are rare but highly visible. Destruction of operational satellites is a clearer indicator of conflict than tests."
+                }
+              ]
+            },
+            {
+              "dimension_id": "dim_5",
+              "dimension_name": "Political and Diplomatic Pre-conflict State",
+              "proxy_metrics": [
+                {
+                  "proxy_metric": "Official declaration of a state of war or general mobilization by either government against the other.",
+                  "coverage_score": 0.1,
+                  "measurability": 0.95,
+                  "proxy_risk": "low",
+                  "goodhart_risk": "low",
+                  "direction_conflict_risk": "low",
+                  "lost_meanings": [
+                    "Does not capture undeclared conflicts.",
+                    "Does not capture limited military engagements without formal declaration."
+                  ],
+                  "resolution_sources": [
+                    "Official government decrees.",
+                    "Broadcasts on state media.",
+                    "International diplomatic cables."
+                  ],
+                  "note": "This is a 'guardrail' metric. It confirms the political intent for conflict but may not reflect the actual kinetic reality if the conflict is undeclared."
+                },
+                {
+                  "proxy_metric": "Severance of diplomatic ties or closure of embassies due to military threats or hostilities.",
+                  "coverage_score": 0.05,
+                  "measurability": 0.95,
+                  "proxy_risk": "low",
+                  "goodhart_risk": "low",
+                  "direction_conflict_risk": "low",
+                  "lost_meanings": [
+                    "Does not capture military conflict if ties are maintained.",
+                    "Does not capture economic or cyber conflict."
+                  ],
+                  "resolution_sources": [
+                    "Foreign Ministry statements.",
+                    "News reports of embassy closures.",
+                    "Diplomatic correspondence."
+                  ],
+                  "note": "This is a strong indicator of extreme hostility but not necessarily kinetic conflict. It serves as a context metric."
+                }
+              ]
+            }
+          ]
+        },
+        "contracts": {
+          "contract_candidates": [
+            {
+              "contract_id": "contract_dim1_kinetic",
+              "dimension_id": "dim_1",
+              "dimension_name": "Direct Kinetic Engagement",
+              "normalized_question": "Will there be any direct kinetic military engagement (exchange of fire, missile launches, or use of lethal force) between regular armed forces of the United States and China between 2026-06-02 and 2030-12-31?",
+              "target_type": "binary",
+              "deadline": "2030-12-31",
+              "resolution_criteria": "Resolves to YES if: 1) Any US or Chinese regular military personnel are killed or wounded by hostile fire from the other side's military assets; OR 2) Any kinetic weapon (missile, artillery, torpedo, small arms) is fired by one side's military forces at targets controlled by the other side's military forces, regardless of whether it hits or causes casualties. Resolves to NO if no such events occur. Excludes cyberattacks, economic sanctions, diplomatic expulsions, and non-kinetic electronic warfare.",
+              "resolution_sources": [
+                "Official statements from the US Department of Defense or Chinese Ministry of National Defense.",
+                "Reports from major international news agencies (Reuters, AP, Xinhua) corroborated by satellite imagery or eyewitness accounts.",
+                "UN Security Council records or independent conflict monitoring databases (e.g., UCDP)."
+              ],
+              "domain": "geopolitics",
+              "forecastability_score": 0.3,
+              "semantic_coverage_weight": 0.6,
+              "measurability": 0.95,
+              "user_intent_preservation_score": 0.9,
+              "proxy_metric": "Official confirmation of US or Chinese military personnel killed or wounded by hostile fire from the other side's regular armed forces.",
+              "proxy_risk": "low",
+              "goodhart_risk": "low",
+              "direction_conflict_risk": "low",
+              "lost_dimensions": [
+                "Non-lethal kinetic engagements (e.g., disabling fire without casualties).",
+                "Cyber or space warfare that does not involve kinetic weapons.",
+                "Proxy conflicts where US and China do not directly engage."
+              ],
+              "ambiguity_flags": [
+                "Definition of 'regular armed forces' excludes paramilitary or police forces unless acting in a military capacity.",
+                "Accidental collisions without intent to fire do not count unless fire is exchanged."
+              ],
+              "clarifying_assumptions": [
+                "Assumes 'military conflict' implies the use of force, not just the threat of force.",
+                "Assumes direct engagement between US and China, not via third parties."
+              ],
+              "outside_view_note": "Historical base rate for direct kinetic conflict between nuclear-armed great powers is near zero. Most tensions are managed through deterrence and diplomacy.",
+              "inside_view_note": "Risk increases with frequency of close-quarters encounters in the South China Sea and Taiwan Strait. Miscalculation during high-stress exercises is a key trigger.",
+              "update_signals": [
+                "Escalation in rhetoric declaring the other side an 'enemy'.",
+                "Deployment of new offensive weapon systems to forward bases.",
+                "Breakdown of military-to-military communication channels."
+              ],
+              "reason": "This contract captures the core semantic intent of 'military conflict' as direct kinetic engagement. It is the most unambiguous and high-impact dimension."
+            },
+            {
+              "contract_id": "contract_dim2_accidental",
+              "dimension_id": "dim_2",
+              "dimension_name": "Accidental Escalation / Grey Zone Incidents",
+              "normalized_question": "Will any incident involving US and Chinese military assets in contested zones (e.g., South China Sea, Taiwan Strait) result in the use of lethal weapons or destruction of military assets by the other side between 2026-06-02 and 2030-12-31?",
+              "target_type": "binary",
+              "deadline": "2030-12-31",
+              "resolution_criteria": "Resolves to YES if: 1) Any US or Chinese military asset (ship, aircraft, drone) is destroyed or significantly damaged by the direct action (fire, collision with lethal intent, boarding with armed resistance) of the other side's military forces; OR 2) Lethal weapons are used by one side against the other's military personnel or assets in a contested zone, even if framed as 'accidental' or 'self-defense'. Resolves to NO if no such incidents occur. Excludes non-lethal force (water cannons, lasers) and cyberattacks.",
+              "resolution_sources": [
+                "Visual evidence (video/photos) of destruction or fire.",
+                "Official reports of asset loss or personnel injury.",
+                "Independent analysis of incident reports from maritime or aviation safety organizations."
+              ],
+              "domain": "geopolitics",
+              "forecastability_score": 0.4,
+              "semantic_coverage_weight": 0.2,
+              "measurability": 0.85,
+              "user_intent_preservation_score": 0.7,
+              "proxy_metric": "Incident where US or Chinese military assets are destroyed or significantly damaged by the other side's military forces in a contested zone.",
+              "proxy_risk": "medium",
+              "goodhart_risk": "medium",
+              "direction_conflict_risk": "medium",
+              "lost_dimensions": [
+                "Incidents where assets are damaged but not destroyed.",
+                "Non-kinetic interference (e.g., jamming, spoofing).",
+                "Proxy conflicts."
+              ],
+              "ambiguity_flags": [
+                "Attribution of intent (accidental vs. deliberate) may be disputed.",
+                "Definition of 'significant damage' may vary."
+              ],
+              "clarifying_assumptions": [
+                "Assumes 'conflict' includes unintended escalations that cross the threshold of lethal force.",
+                "Assumes contested zones include areas of territorial dispute."
+              ],
+              "outside_view_note": "Historical precedents (e.g., 2001 Hainan incident) show that close encounters are common but rarely escalate to lethal force. However, increased use of autonomous systems may increase risk.",
+              "inside_view_note": "Risk is driven by proximity of forces and ambiguity of rules of engagement. Autonomous systems may reduce human decision time, increasing accident risk.",
+              "update_signals": [
+                "Increase in frequency of close-quarters encounters.",
+                "Deployment of AI-driven autonomous weapons in contested zones.",
+                "Changes in rules of engagement allowing lethal force in specific scenarios."
+              ],
+              "reason": "This contract captures the 'grey zone' dimension of conflict, where accidental or low-intensity incidents may escalate. It is important for a comprehensive view of 'military conflict'."
+            },
+            {
+              "contract_id": "contract_dim4_cyber_space",
+              "dimension_id": "dim_4",
+              "dimension_name": "Cyber and Space Warfare (Kinetic Equivalent)",
+              "normalized_question": "Will there be any cyberattack or space warfare action attributed to the US or China that causes physical destruction of critical infrastructure or military assets of the other side between 2026-06-02 and 2030-12-31?",
+              "target_type": "binary",
+              "deadline": "2030-12-31",
+              "resolution_criteria": "Resolves to YES if: 1) A cyberattack attributed to one side causes physical destruction of critical infrastructure (power, water, finance) or loss of life in the other side's territory; OR 2) One side destroys a military or critical civilian satellite of the other side using kinetic or directed-energy weapons. Resolves to NO if no such events occur. Excludes cyberattacks without physical damage, espionage, and non-kinetic electronic warfare.",
+              "resolution_sources": [
+                "Forensic analysis of cyberattacks attributed by official government statements.",
+                "Space surveillance data confirming destruction of satellites.",
+                "Reports of physical damage and casualties from critical infrastructure failures."
+              ],
+              "domain": "geopolitics",
+              "forecastability_score": 0.2,
+              "semantic_coverage_weight": 0.05,
+              "measurability": 0.5,
+              "user_intent_preservation_score": 0.5,
+              "proxy_metric": "Cyberattack attributed to one side causing physical destruction of critical infrastructure or loss of life in the other side's territory.",
+              "proxy_risk": "high",
+              "goodhart_risk": "high",
+              "direction_conflict_risk": "high",
+              "lost_dimensions": [
+                "Cyberattacks without physical damage.",
+                "Space warfare that does not involve destruction of assets.",
+                "Direct kinetic engagement."
+              ],
+              "ambiguity_flags": [
+                "Attribution of cyberattacks is often difficult and disputed.",
+                "Definition of 'physical destruction' and 'critical infrastructure' may vary."
+              ],
+              "clarifying_assumptions": [
+                "Assumes 'military conflict' includes cyber/space actions that have kinetic equivalents.",
+                "Assumes attribution must be officially acknowledged or overwhelmingly evidenced."
+              ],
+              "outside_view_note": "Historical precedents for cyber-physical attacks are rare (e.g., Stuxnet). Space warfare is also rare due to debris concerns. However, capabilities are growing.",
+              "inside_view_note": "Risk is driven by the strategic value of critical infrastructure and satellites. Attribution ambiguity may prevent escalation, but physical damage could force a response.",
+              "update_signals": [
+                "Increase in cyberattacks on critical infrastructure.",
+                "Development of new anti-satellite weapons.",
+                "Official statements defining cyberattacks as 'acts of war'."
+              ],
+              "reason": "This contract captures the emerging dimension of cyber and space warfare. It is included to ensure the definition of 'military conflict' is not limited to traditional kinetic engagement."
+            }
+          ]
+        },
+        "proxy_audit": {
+          "proxy_audits": [
+            {
+              "contract_id": "contract_dim1_kinetic",
+              "audit_verdict": "accept",
+              "coverage_score": 0.6,
+              "user_intent_preservation_score": 0.9,
+              "proxy_risk": "low",
+              "goodhart_risk": "low",
+              "direction_conflict_risk": "low",
+              "missing_lost_dimensions": [
+                "Non-state actor attacks (e.g., terrorist groups using US/Chinese weapons) are excluded, which is correct for 'state military conflict' but worth noting.",
+                "Coast Guard or Maritime Militia actions are excluded unless defined as 'regular armed forces', which aligns with strict definitions but may miss 'grey zone' military equivalents."
+              ],
+              "risk_correction": "The definition of 'regular armed forces' is strict. Ensure that if the user considers PLA Navy auxiliaries or US Coast Guard in wartime status as 'military', this contract might undercount. However, for a standard 'military conflict' question, this is the most robust proxy.",
+              "reason": "This contract accurately captures the core semantic intent of 'military conflict' as direct kinetic engagement between state militaries. It avoids substituting political tension for actual conflict. The resolution criteria are clear and observable."
+            },
+            {
+              "contract_id": "contract_dim2_accidental",
+              "audit_verdict": "accept_with_warning",
+              "coverage_score": 0.2,
+              "user_intent_preservation_score": 0.7,
+              "proxy_risk": "medium",
+              "goodhart_risk": "medium",
+              "direction_conflict_risk": "medium",
+              "missing_lost_dimensions": [
+                "Incidents involving non-lethal force that escalate to lethal force later are not captured if the initial incident is non-lethal.",
+                "Destruction of assets by non-kinetic means (e.g., cyber-induced crash) is excluded, which may be a gap if 'conflict' includes modern warfare domains."
+              ],
+              "risk_correction": "The term 'significant damage' is subjective. A collision that sinks a ship is clear, but one that damages a hull may be disputed. The contract should ideally reference specific thresholds (e.g., 'total loss' or 'mission kill') to reduce ambiguity. Also, 'accidental' vs 'deliberate' is hard to prove; the contract resolves on the *event* (use of lethal weapons/destruction), which is good, but attribution of *intent* might still cause resolution disputes if sources conflict.",
+              "reason": "This contract captures the 'grey zone' escalation risk. It is a valid proxy for 'conflict' in a modern context where direct war is rare but incidents are common. The warning is due to the ambiguity of 'significant damage' and the potential for disputed attribution of intent, though the resolution criteria focus on the physical outcome, which mitigates this."
+            },
+            {
+              "contract_id": "contract_dim4_cyber_space",
+              "audit_verdict": "revise",
+              "coverage_score": 0.05,
+              "user_intent_preservation_score": 0.5,
+              "proxy_risk": "high",
+              "goodhart_risk": "high",
+              "direction_conflict_risk": "high",
+              "missing_lost_dimensions": [
+                "Cyberattacks that cause economic damage but no physical destruction are excluded, which is correct for 'kinetic equivalent' but may be seen as 'conflict' by some users.",
+                "Space debris generation without direct destruction (e.g., blinding sensors) is excluded.",
+                "Attribution is the biggest missing dimension; without official attribution, this contract is nearly impossible to resolve YES."
+              ],
+              "risk_correction": "The proxy risk is high because 'physical destruction' from cyberattacks is extremely rare and hard to attribute. The contract currently requires 'attributed to the US or China'. In reality, states rarely officially attribute destructive cyberattacks to avoid escalation. This makes the contract likely to resolve NO even if a destructive attack occurred, thus failing to capture the 'conflict' event. The resolution criteria should be revised to include 'credible attribution by multiple independent intelligence agencies' or 'official acknowledgment by the victim state', not just the attacker. Also, the semantic weight is low, so this contract might be better merged or removed to avoid noise.",
+              "reason": "This contract suffers from high proxy risk due to attribution difficulties and the rarity of kinetic-equivalent cyber/space events. It risks resolving NO despite a significant conflict event occurring, because the 'attribution' hurdle is too high. The user's intent is 'military conflict', and while cyber/space is part of modern warfare, the 'kinetic equivalent' threshold is so high that it barely overlaps with common understandings of 'conflict' unless it leads to kinetic retaliation. It is a weak proxy for the general question."
+            }
+          ]
+        },
+        "adversarial": {
+          "adversarial_audit": {
+            "verdict": "revise",
+            "attack_summary": "The current decomposition suffers from 'Definition Fragmentation' and 'Attribution Bias'. By splitting 'Military Conflict' into Kinetic, Accidental, and Cyber/Space, it creates resolution ambiguity: if a cyberattack causes physical damage but no kinetic fire occurs, does the main question resolve YES? The current portfolio implies a weighted sum, but the user asked a binary question. Furthermore, the 'Cyber/Space' contract is practically unresolvable due to attribution difficulties, acting as a noise generator. The 'Accidental' contract overlaps significantly with 'Kinetic', creating double-counting risks. The decomposition fails to address the 'Proxy War' dimension adequately, which is a major vector for US-China conflict (e.g., in Africa or Latin America) that doesn't fit 'Direct Kinetic' but is clearly 'Military Conflict' between the two powers.",
+            "substitution_errors": [
+              "Substituting 'Direct State-on-State War' for 'Military Conflict'. The user's question likely includes proxy wars or significant indirect military engagements, which are excluded by the strict 'Direct Kinetic' focus.",
+              "Substituting 'Attributed Cyberattack' for 'Cyber Warfare'. The requirement for official attribution makes the cyber contract nearly impossible to resolve YES, effectively removing this dimension from the forecast despite its strategic importance.",
+              "Substituting 'Casualties/Destruction' for 'Conflict'. A military conflict can exist with zero casualties (e.g., a failed missile launch intercepted, or a standoff that involves firing warning shots). The current metrics are too outcome-dependent rather than action-dependent."
+            ],
+            "missing_dimensions": [
+              "Proxy Conflict / Third-Party Engagement: Explicitly missing a dimension for US and China fighting on opposite sides of a conflict in a third country (e.g., providing troops, direct air support, or naval blockade in a third nation's waters). This is a high-probability path to 'conflict' that is not 'Direct Kinetic' between US and China assets.",
+              "Maritime Militia / Paramilitary Engagement: The definition of 'Regular Armed Forces' excludes PLA Maritime Militia or US Coast Guard in wartime roles. In the South China Sea, these actors are the primary friction points. Excluding them ignores the most likely 'grey zone' conflict scenarios.",
+              "Economic Warfare with Military Enforcement: Blockades or sanctions enforcement that involve military vessels intercepting civilian ships. This is a military act but may not involve 'fire' or 'casualties' initially."
+            ],
+            "overweighted_metrics": [
+              "Direct Kinetic Engagement (dim_1): Overweighted at 0.6. While semantically core, it is the least likely to occur. Overweighting it biases the forecast towards 'No' even if significant proxy or grey zone conflicts occur.",
+              "Official Attribution (in Cyber Contract): Over-reliance on official statements for resolution. In modern hybrid warfare, attribution is often denied. Relying on this makes the metric fragile."
+            ],
+            "underweighted_dimensions": [
+              "Proxy Conflict: Currently underweighted or merged into 'Indirect' with low weight. Given the global nature of US-China competition, proxy conflicts are a critical dimension of 'Military Conflict'.",
+              "Paramilitary/Grey Zone Actors: Underweighted. The distinction between 'Military' and 'Paramilitary' is blurring in modern conflict (e.g., Chinese Coast Guard acting as naval forces)."
+            ],
+            "contracts_to_revise": [
+              {
+                "contract_id": "contract_dim1_kinetic",
+                "reason": "Too narrow. Should be broadened to 'Direct Military Engagement' to include non-lethal kinetic actions (e.g., boarding, disabling fire) and explicitly include Paramilitary forces acting in a military capacity (e.g., PLA Navy auxiliaries, US Coast Guard in wartime status).",
+                "suggestion": "Rename to 'Direct Military Engagement (Kinetic & Paramilitary)'. Expand resolution criteria to include 'Use of force by military or paramilitary assets' not just 'lethal force'."
+              },
+              {
+                "contract_id": "contract_dim2_accidental",
+                "reason": "Redundant with dim_1. 'Accidental' is a subset of 'Kinetic'. If fire is exchanged, it's kinetic. If a ship is destroyed, it's kinetic. This contract adds no new semantic value, only confusion about intent.",
+                "suggestion": "Merge into contract_dim1_kinetic. Remove as a separate contract."
+              },
+              {
+                "contract_id": "contract_dim4_cyber_space",
+                "reason": "Unresolvable due to attribution. High risk of false negatives.",
+                "suggestion": "Remove or radically revise to 'Kinetic Retaliation for Cyber/Space Attack'. Only count if a cyber/space attack leads to a kinetic response. This links it back to observable military action."
+              }
+            ],
+            "contracts_to_remove": [
+              {
+                "contract_id": "contract_dim2_accidental",
+                "reason": "Redundant. Accidental kinetic events are covered by the broader 'Direct Military Engagement' contract. Separating them creates double-counting or resolution disputes."
+              },
+              {
+                "contract_id": "contract_dim4_cyber_space",
+                "reason": "Too speculative and unresolvable. Attribution of cyberattacks is rarely definitive enough for a binary resolution contract. It introduces noise without clear signal."
+              }
+            ],
+            "contracts_to_add": [
+              {
+                "contract_id": "contract_dim3_proxy",
+                "dimension_name": "Proxy Military Conflict",
+                "normalized_question": "Will the US and China engage in military operations on opposite sides of a conflict in a third-party country or territory between 2026-06-02 and 2030-12-31?",
+                "resolution_criteria": "Resolves to YES if: 1) US military forces and Chinese military forces (or forces directly supplied and directed by them) engage in combat against each other or opposing forces in a third country; OR 2) One side imposes a military blockade or conducts strikes against the other side's military assets in a third country's territory. Excludes purely economic sanctions or diplomatic support.",
+                "reason": "Captures the high-probability 'Indirect Conflict' scenario which is a major form of modern great power competition."
+              },
+              {
+                "contract_id": "contract_dim5_paramilitary",
+                "dimension_name": "Paramilitary / Grey Zone Conflict",
+                "normalized_question": "Will there be a violent confrontation involving lethal force or significant destruction between US military/paramilitary assets and Chinese military/paramilitary assets (including Coast Guard, Maritime Militia) between 2026-06-02 and 2030-12-31?",
+                "resolution_criteria": "Resolves to YES if: 1) Any US or Chinese paramilitary vessel/aircraft uses lethal force against the other side; OR 2) A collision or confrontation results in significant destruction of assets or casualties involving paramilitary forces acting in a military capacity. Includes PLA Maritime Militia and US Coast Guard if acting in a law-enforcement or military support role in disputed zones.",
+                "reason": "Addresses the 'Paramilitary' gap. The South China Sea is the most likely flashpoint, and it involves paramilitary actors."
+              }
+            ],
+            "repair_suggestions": [
+              "Consolidate the 'Conflict' definition into a single, comprehensive 'Military Engagement' contract that covers Direct, Proxy, and Paramilitary dimensions, rather than splitting them into weighted sub-contracts that require a meta-resolution rule.",
+              "Define 'Military Conflict' as 'Any use of force by state-controlled military or paramilitary entities against another state's military or paramilitary entities, resulting in casualties, destruction of assets, or direct combat engagement.'",
+              "Remove the 'Cyber/Space' contract unless it is tied to kinetic retaliation. Pure cyber events are too ambiguous for a binary 'Military Conflict' question.",
+              "Clarify the 'Proxy' dimension: Does supplying weapons count? No. Only direct military involvement (troops, air support, naval blockade) should count to maintain the 'Military' threshold."
+            ]
+          }
+        },
+        "collapse_audit": {
+          "semantic_collapse_audit": {
+            "semantic_collapse_risk": "low",
+            "collapse_reason": "The decomposition successfully avoids collapsing 'military conflict' into a single proxy like 'GDP' or 'Stock Price'. It correctly identifies that 'military conflict' is a discrete event but requires precise definition of scope (direct vs. proxy, kinetic vs. cyber). The proposed portfolio covers the core kinetic dimension while acknowledging grey zones and proxy wars, preventing the substitution of 'tension' for 'conflict'.",
+            "lost_dimensions_if_single_metric": [
+              "Proxy wars and indirect military engagements in third-party territories.",
+              "Grey zone conflicts involving paramilitary forces (e.g., Coast Guard, Maritime Militia) which are often the first point of friction.",
+              "Non-kinetic military actions with strategic equivalence (e.g., disabling cyberattacks on critical infrastructure) if strictly limited to 'fire exchanged'.",
+              "The distinction between accidental escalation and deliberate war, which affects the nature of the conflict but not necessarily the binary fact of engagement."
+            ],
+            "allowed_single_contract": false,
+            "recommended_mode": "multi_contract_portfolio",
+            "required_warning": "Do not resolve the question based solely on 'Direct Kinetic Engagement' between regular armed forces. This would ignore high-probability scenarios involving paramilitary forces or proxy conflicts, leading to a false negative. The definition of 'Military Conflict' must be explicitly bounded to include or exclude these dimensions before resolution.",
+            "final_guardrails": [
+              "Define 'Military Conflict' to include direct kinetic engagement between regular armed forces.",
+              "Explicitly decide whether to include paramilitary forces (e.g., PLA Maritime Militia, US Coast Guard in wartime status) in the definition of 'Military'.",
+              "Explicitly decide whether to include proxy conflicts (US and China fighting on opposite sides in a third country) as 'Military Conflict between US and China'.",
+              "Exclude purely economic sanctions, diplomatic expulsions, and non-destructive cyber espionage from the definition of 'Military Conflict'.",
+              "Set a clear threshold for 'Cyber/Space' actions: only include if they cause physical destruction or lead to kinetic retaliation."
+            ]
+          }
+        }
+      },
+      "final": {
+        "original_question": "2030年中美会不会发生军事冲突？",
+        "question_type": "explicit_binary",
+        "is_cloud_question": false,
+        "cloud_terms": [],
+        "overall_semantic_intent": "用户旨在评估在2030年12月31日之前，中华人民共和国与美利坚合众国之间是否会发生任何形式的、可被国际公认定义的直接军事对抗、武装冲突或重大代理人战争事件。",
+        "time_interpretation": {
+          "current_period": "2026",
+          "target_period": "2030",
+          "comparison": "绝对时间截止点（Deadline），即判断事件是否在2030年12月31日23:59:59之前发生。"
+        },
+        "core_ambiguities": [
+          "军事冲突的定义边界：是否包含网络攻击、太空资产干扰、代理人战争、海上对峙中的擦枪走火，还是仅指国家正规军之间的直接交火？",
+          "主体界定：是否包含各自盟友、准军事组织（如民兵、海警在战时状态下的行动）？",
+          "冲突的规模与性质：是短暂的战术性接触，还是持续的战略级战争？"
+        ],
+        "triage": {
+          "forecastability_zone": "cloudlike",
+          "reason": "虽然问题形式为二元（是/否），但‘军事冲突’的定义具有高度模糊性，且涉及低概率、高影响的复杂地缘政治驱动因素。单一指标无法覆盖所有可能的冲突形态（直接、间接、灰色地带）。",
+          "requires_decomposition": true,
+          "single_contract_allowed_by_type": false
+        },
+        "dimension_map": [
+          {
+            "dimension_id": "dim_1",
+            "dimension_name": "Direct Military Engagement (Kinetic & Paramilitary)",
+            "meaning": "中美双方军事或准军事力量之间的直接武力接触，包括正规军交火、导弹发射、舰机碰撞导致的战斗行为，以及海警/民兵在争议区域的致命武力使用。",
+            "candidate_metrics": [
+              "官方确认的中美军事人员伤亡。",
+              "动能武器（导弹、火炮、小武器）的发射记录。",
+              "军事或准军事资产的严重损毁或沉没。"
+            ],
+            "semantic_coverage_weight": 0.6,
+            "measurability": 0.9,
+            "why_it_matters": "这是最符合大众对‘战争’直觉理解的维度，也是国际法上最明确的冲突定义。",
+            "knowable_parts": [
+              "当前的军事部署态势。",
+              "公开的交战规则（ROE）。",
+              "历史相遇数据。"
+            ],
+            "unknowable_parts": [
+              "危机时刻领导人的具体决策心理。",
+              "意外事件升级的临界点。"
+            ],
+            "assumptions": [
+              "假设‘军事冲突’包含准军事力量在事实上的军事行动。",
+              "假设直接交火是冲突的核心标志。"
+            ],
+            "outside_view_reference_classes": [
+              "冷战期间美苏直接军事接触（极少）。",
+              "印巴边境冲突。",
+              "南海历史事件（如2001年撞机事件）。"
+            ],
+            "inside_view_mechanisms": [
+              "危机误判：高强度演习中的误操作。",
+              "国内政治压力：通过外部冲突转移内部矛盾。",
+              "联盟义务：美国盟友受袭引发的介入。"
+            ],
+            "update_signals": [
+              "军事热线中断。",
+              "交战规则放宽。",
+              "新式进攻性武器前沿部署。"
+            ]
+          },
+          {
+            "dimension_id": "dim_2",
+            "dimension_name": "Proxy Military Conflict",
+            "meaning": "中美在第三国或地区支持对立双方，并导致双方军事力量（或由其直接指挥/武装的力量）发生直接战斗或重大军事对抗。",
+            "candidate_metrics": [
+              "中美军队在第三国战场直接交火。",
+              "一方对另一方支持的武装力量进行直接军事打击。",
+              "军事封锁或海上拦截行动。"
+            ],
+            "semantic_coverage_weight": 0.25,
+            "measurability": 0.7,
+            "why_it_matters": "大国竞争常通过代理人进行，这是避免直接核战争但保持军事对抗的主要形式。",
+            "knowable_parts": [
+              "当前的盟友体系和安全承诺。",
+              "全球热点地区的冲突态势。"
+            ],
+            "unknowable_parts": [
+              "秘密的军事援助协议。",
+              "第三方冲突升级的不可控性。"
+            ],
+            "assumptions": [
+              "假设仅提供武器不算冲突，必须有直接军事介入或指挥。",
+              "假设台湾若发生冲突，可能被视为直接冲突而非纯代理人战争（取决于具体定义，此处归入直接冲突更合适，故本维度主要指其他第三国）。"
+            ],
+            "outside_view_reference_classes": [
+              "冷战时期的朝鲜战争、越南战争。",
+              "现代叙利亚、乌克兰冲突中的大国间接介入。"
+            ],
+            "inside_view_mechanisms": [
+              "联盟拖拽效应。",
+              "战略资源争夺（如航道、矿产）。",
+              "政权更迭干预。"
+            ],
+            "update_signals": [
+              "第三国冲突中大国军事顾问的出现。",
+              "对第三国武装力量的直接空袭或炮击。"
+            ]
+          },
+          {
+            "dimension_id": "dim_3",
+            "dimension_name": "Cyber/Space Kinetic Equivalent",
+            "meaning": "网络或太空攻击造成物理破坏、人员伤亡或关键基础设施瘫痪，且被归因于对方，并引发军事层面的回应或被视为战争行为。",
+            "candidate_metrics": [
+              "导致物理破坏的网络攻击（如电网、水坝）。",
+              "反卫星武器摧毁对方卫星。",
+              "官方宣布网络攻击为‘战争行为’。"
+            ],
+            "semantic_coverage_weight": 0.15,
+            "measurability": 0.4,
+            "why_it_matters": "现代战争的新维度，但归因难、阈值模糊。",
+            "knowable_parts": [
+              "网络攻击的技术能力。",
+              "关键基础设施的脆弱性。"
+            ],
+            "unknowable_parts": [
+              "攻击的真实来源（归因）。",
+              "双方对‘战争行为’的认定标准。"
+            ],
+            "assumptions": [
+              "假设只有造成物理后果的网络攻击才算军事冲突。",
+              "假设归因必须具有高度可信度。"
+            ],
+            "outside_view_reference_classes": [
+              "Stuxnet病毒。",
+              "乌克兰电网攻击。",
+              "反卫星试验。"
+            ],
+            "inside_view_mechanisms": [
+              "隐蔽行动与可否认性。",
+              "升级阶梯的模糊性。"
+            ],
+            "update_signals": [
+              "关键基础设施遭受大规模瘫痪。",
+              "太空资产被摧毁。"
+            ]
+          }
+        ],
+        "contract_candidates": [
+          {
+            "contract_id": "contract_dim1_direct",
+            "dimension_id": "dim_1",
+            "dimension_name": "Direct Military Engagement",
+            "normalized_question": "在2026年6月2日至2030年12月31日期间，中美双方是否会发生直接军事交战（包括正规军及执行军事任务的准军事力量）？",
+            "target_type": "binary",
+            "deadline": "2030-12-31",
+            "resolution_criteria": "YES：1) 中美任何一方军事或准军事人员被对方武力致死或致伤；2) 任何一方对对方军事/准军事目标发射动能武器（导弹、火炮、小武器等）；3) 发生导致重大资产损毁或人员伤亡的故意碰撞或武力拦截。NO：未发生上述事件。排除纯网络攻击、经济制裁、外交驱逐。",
+            "resolution_sources": [
+              "国防部官方声明。",
+              "主流国际通讯社报道。",
+              "卫星图像及目击者证词。"
+            ],
+            "domain": "geopolitics",
+            "forecastability_score": 0.3,
+            "semantic_coverage_weight": 0.78666235027517,
+            "measurability": 0.9,
+            "user_intent_preservation_score": 0.9,
+            "proxy_metric": "官方确认的军事人员伤亡或动能武器发射。",
+            "proxy_risk": "low",
+            "goodhart_risk": "low",
+            "direction_conflict_risk": "low",
+            "lost_dimensions": [
+              "非致命性武力展示（如激光致盲、水炮）。",
+              "纯网络/太空攻击。"
+            ],
+            "ambiguity_flags": [
+              "准军事力量（如海警、民兵）在争议区域的行为是否视为军事行动。",
+              "意外碰撞是否视为冲突（需有武力使用或重大损毁）。"
+            ],
+            "clarifying_assumptions": [
+              "假设‘军事冲突’包含事实上的军事对抗，无论是否宣战。",
+              "假设台湾若发生冲突，视为直接冲突。"
+            ],
+            "outside_view_note": "核大国直接开战概率极低，但局部摩擦风险存在。",
+            "inside_view_note": "台海、南海是主要热点，误判风险随接触频率增加而上升。",
+            "update_signals": [
+              "军事演习规模扩大。",
+              "外交关系断绝。"
+            ],
+            "reason": "覆盖最核心的‘战争’定义，包含直接交火和准军事冲突。",
+            "original_semantic_coverage_weight": 0.6,
+            "proxy_risk_factor": 1.0,
+            "lost_dimension_factor": 0.76,
+            "raw_portfolio_weight": 0.36936
+          },
+          {
+            "contract_id": "contract_dim2_proxy",
+            "dimension_id": "dim_2",
+            "dimension_name": "Proxy Military Conflict",
+            "normalized_question": "在2026年6月2日至2030年12月31日期间，中美是否在第三国发生直接军事对抗或重大代理人战争？",
+            "target_type": "binary",
+            "deadline": "2030-12-31",
+            "resolution_criteria": "YES：1) 中美军队在第三国直接交火；2) 一方对另一方直接指挥或武装的部队进行军事打击；3) 实施军事封锁或海上军事拦截。NO：未发生上述事件。排除仅提供武器或情报支持。",
+            "resolution_sources": [
+              "联合国安理会记录。",
+              "冲突监测数据库（如UCDP）。",
+              "官方军事行动报告。"
+            ],
+            "domain": "geopolitics",
+            "forecastability_score": 0.4,
+            "semantic_coverage_weight": 0.18128844286176754,
+            "measurability": 0.7,
+            "user_intent_preservation_score": 0.8,
+            "proxy_metric": "中美军队在第三国的直接交战记录。",
+            "proxy_risk": "medium",
+            "goodhart_risk": "medium",
+            "direction_conflict_risk": "medium",
+            "lost_dimensions": [
+              "隐蔽的特种作战。",
+              "非直接指挥的代理人行动。"
+            ],
+            "ambiguity_flags": [
+              "‘直接指挥’的定义。",
+              "第三国冲突的归属。"
+            ],
+            "clarifying_assumptions": [
+              "假设台湾冲突归入直接冲突，本合约主要指其他第三国。",
+              "假设仅提供援助不算冲突。"
+            ],
+            "outside_view_note": "大国通过代理人竞争是常见模式，但直接军事对抗较少。",
+            "inside_view_note": "全球南方国家的冲突可能成为大国博弈的战场。",
+            "update_signals": [
+              "大国向冲突方派遣军事顾问。",
+              "对冲突方进行直接空袭。"
+            ],
+            "reason": "覆盖大国竞争的间接军事对抗形式。",
+            "original_semantic_coverage_weight": 0.25,
+            "proxy_risk_factor": 0.8,
+            "lost_dimension_factor": 0.76,
+            "raw_portfolio_weight": 0.08511999999999999
+          },
+          {
+            "contract_id": "contract_dim3_cyber_space",
+            "dimension_id": "dim_3",
+            "dimension_name": "Cyber/Space Kinetic Equivalent",
+            "normalized_question": "在2026年6月2日至2030年12月31日期间，中美是否发生造成物理破坏或人员伤亡的网络/太空攻击，并被认定为军事冲突？",
+            "target_type": "binary",
+            "deadline": "2030-12-31",
+            "resolution_criteria": "YES：1) 归因于对方的网络攻击导致关键基础设施物理破坏或人员伤亡；2) 使用反卫星武器摧毁对方卫星；3) 官方宣布此类攻击为战争行为并引发军事回应。NO：未发生上述事件。",
+            "resolution_sources": [
+              "网络安全机构归因报告。",
+              "太空监视数据。",
+              "官方声明。"
+            ],
+            "domain": "geopolitics",
+            "forecastability_score": 0.2,
+            "semantic_coverage_weight": 0.03204920686306248,
+            "measurability": 0.4,
+            "user_intent_preservation_score": 0.6,
+            "proxy_metric": "造成物理后果的归因网络/太空攻击。",
+            "proxy_risk": "high",
+            "goodhart_risk": "high",
+            "direction_conflict_risk": "high",
+            "lost_dimensions": [
+              "无物理后果的网络攻击。",
+              "电子干扰。"
+            ],
+            "ambiguity_flags": [
+              "归因的确定性。",
+              "‘物理破坏’的阈值。"
+            ],
+            "clarifying_assumptions": [
+              "假设只有造成物理后果的攻击才算军事冲突。",
+              "假设归因需有高度可信证据。"
+            ],
+            "outside_view_note": "此类事件罕见，但后果严重。",
+            "inside_view_note": "归因困难使得此类冲突难以确认，但一旦发生可能迅速升级。",
+            "update_signals": [
+              "关键基础设施遭受攻击。",
+              "太空资产被摧毁。"
+            ],
+            "reason": "覆盖现代战争的新维度，但设定高阈值以避免噪音。",
+            "original_semantic_coverage_weight": 0.15,
+            "proxy_risk_factor": 0.55,
+            "lost_dimension_factor": 0.76,
+            "raw_portfolio_weight": 0.015048
+          }
+        ],
+        "semantic_collapse_audit": {
+          "semantic_collapse_risk": "low",
+          "collapse_reason": "分解避免了将‘军事冲突’简化为单一指标（如GDP或军费），而是涵盖了直接、间接和新维度冲突。",
+          "lost_dimensions_if_single_metric": [
+            "代理人战争。",
+            "准军事力量冲突。",
+            "网络/太空物理攻击。"
+          ],
+          "allowed_single_contract": false,
+          "recommended_mode": "multi_contract_portfolio",
+          "required_warning": "不要仅依据‘正规军交火’来判断，需综合考虑准军事力量和代理人冲突。",
+          "final_guardrails": [
+            "Define 'Military Conflict' to include direct kinetic engagement between regular armed forces.",
+            "Explicitly decide whether to include paramilitary forces (e.g., PLA Maritime Militia, US Coast Guard in wartime status) in the definition of 'Military'.",
+            "Explicitly decide whether to include proxy conflicts (US and China fighting on opposite sides in a third country) as 'Military Conflict between US and China'.",
+            "Exclude purely economic sanctions, diplomatic expulsions, and non-destructive cyber espionage from the definition of 'Military Conflict'.",
+            "Set a clear threshold for 'Cyber/Space' actions: only include if they cause physical destruction or lead to kinetic retaliation."
+          ]
+        },
+        "adversarial_audit": {
+          "verdict": "revise",
+          "substitution_errors": [
+            "将‘军事冲突’偷换为‘宣战’。",
+            "将‘军事冲突’偷换为‘网络攻击’（无物理后果）。"
+          ],
+          "missing_dimensions": [
+            "准军事力量（海警、民兵）的冲突。",
+            "第三国代理人战争中的直接军事介入。"
+          ],
+          "overweighted_metrics": [
+            "直接正规军交火（可能低估灰色地带冲突）。"
+          ],
+          "underweighted_dimensions": [
+            "准军事冲突。",
+            "代理人战争。"
+          ],
+          "repair_suggestions": [
+            "合并直接冲突和准军事冲突为一个合约。",
+            "增加代理人战争合约。",
+            "提高网络/太空冲突的阈值（需物理后果）。"
+          ],
+          "repair_status": "partially_repaired"
+        },
+        "recommended_user_choice_prompt": "您认为‘军事冲突’是否应包含中美在第三国的代理人战争？是否应包含海警/民兵的武力冲突？",
+        "machine_notes": [
+          "根据Adversarial Audit，合并了直接冲突和准军事冲突，以避免定义碎片化。",
+          "根据Proxy Audit，提高了网络/太空冲突的阈值，要求物理后果或官方定性，以降低归因风险。",
+          "增加了代理人战争维度，以覆盖大国竞争的主要形式。",
+          "Adversarial audit verdict 保持为 revise；repair_status=partially_repaired，不再自动改成 pass。"
         ]
       },
       "validation_errors": []
