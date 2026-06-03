@@ -4,6 +4,222 @@ conda activate forecasting_os
 =================================================
 版本：LLM 结构化先验 + bayesian_causal_graph_logistic_cpd_monte_carlo
 模型：qwen/qwen3.6-27b
+问题：2027年中国ai创业公司的融资环境会不会比2026年更好？
+结果：
+**预测类型**：multi_contract_portfolio
+**原始问题**：2027年中国ai创业公司的融资环境会不会比2026年更好？
+**综合概率**：51.1%
+**粗略区间**：26.6% - 75.1%
+**问题类型**：cloud_judgment
+**语义坍缩风险**：high
+**推荐模式**：multi_contract_portfolio
+
+## 原始语义
+用户希望评估2027年中国AI创业公司在获取外部资本时的综合难易程度、成本及市场情绪，是否相对于2026年有实质性改善。这包括资金可得性、估值合理性、融资效率、退出预期及政策确定性等多个维度。
+
+语义坍缩说明：The original question 'financing environment better' is a multidimensional construct involving liquidity, cost, sentiment, and exit prospects. Reducing it to a single metric (e.g., total funding amount or deal count) creates a high risk of accidental substitution. For instance, total funding could rise due to a few mega-deals while the environment for the majority of startups deteriorates (higher dilution, longer cycles, stricter terms).
+
+如果强行单指标化，会丢失这些维度：
+- Valuation multiples and founder dilution rates (Cost of Capital)
+- Time-to-close and success rates (Efficiency)
+- Prevalence of harsh terms like buybacks or liquidation preferences (Risk Allocation)
+- Exit liquidity via M&A or Secondary markets (Confidence)
+- Structural divergence between Infrastructure vs. Application layers (Sector Health)
+
+## 维度展开
+- **资本供给总量与活跃度（应用层侧重）** | weight=0.28 | measurability=0.85 | 衡量市场上可用于AI创业公司（特别是应用层）的资金池大小及投资机构的出手频率。这是‘融资环境’最基础的流动性指标。
+- **融资条款严苛程度（隐性成本）** | weight=0.22 | measurability=0.50 | 衡量创业者在融资过程中承担的非货币风险，如回购条款、对赌协议、清算优先权等。‘更好’意味着条款更宽松，创始人控制权风险更低。
+- **融资效率与周期** | weight=0.17 | measurability=0.60 | 衡量从启动融资到资金到账的难易程度和时间成本。‘更好’意味着更容易拿到Term Sheet，且打款速度更快。
+- **退出预期与二级市场联动** | weight=0.22 | measurability=0.80 | 衡量一级市场资金退出的通畅程度。‘更好’意味着IPO、并购或老股转让的预期更明确、周期更短。
+- **投资者风险偏好与赛道聚焦** | weight=0.11 | measurability=0.60 | 衡量资本对AI不同细分领域及早期项目的态度变化。‘更好’意味着资本不再只追逐热点，而是对更多元、更早期的创新持开放态度。
+
+## Contract Portfolio 结果
+- **资本供给总量与活跃度（应用层侧重）** | P=46.5% | weight=0.379 | proxy=2027年中国AI应用层创业公司年度融资总额 | proxy_risk=medium
+  - 预测题：2027年中国AI应用层（非大模型基础层）创业公司的年度融资总额是否高于2026年？
+- **退出预期与二级市场联动** | P=53.8% | weight=0.278 | proxy=2027年中国AI领域并购交易总金额 | proxy_risk=medium
+  - 预测题：2027年中国AI领域并购交易（M&A）总金额是否高于2026年？
+- **融资条款严苛程度（隐性成本）** | P=50.4% | weight=0.175 | proxy=2027年中国AI早期项目融资中包含‘回购条款’或‘对赌协议’的交易占比 | proxy_risk=medium
+  - 预测题：2027年中国AI早期项目（Seed/A轮）融资中，包含‘回购条款’或‘对赌协议’的交易占比是否低于2026年？
+- **融资效率与周期** | P=47.6% | weight=0.093 | proxy=2027年中国AI应用层初创公司获得首轮融资的平均周期 | proxy_risk=medium
+  - 预测题：2027年中国AI应用层初创公司获得首轮融资的平均周期是否短于2026年？
+- **老股转让市场流动性** | P=69.6% | weight=0.075 | proxy=2027年中国AI领域老股转让交易金额 | proxy_risk=medium
+  - 预测题：2027年中国AI领域老股转让（Secondary）的交易金额是否高于2026年？
+
+## 子预测摘要
+- **资本供给总量与活跃度（应用层侧重）**：46.5% 区间 16.6% - 79.2%
+  - contract：2027年中国AI应用层（非大模型基础层）创业公司的年度融资总额是否高于2026年？
+  - base=45.0%, evidence=44.6%, causal=46.4%, panel=49.2%
+  - causal_graph：method=bayesian_causal_graph_logistic_cpd_monte_carlo, samples=12000, nodes=5, edges=0, causal_interval=13.0%-76.5%
+  - top causal sensitivity：
+    - 宏观流动性与LP资金释放节奏: do_true=56.6%, do_false=32.9%, swing=0.237
+    - AI应用层商业化落地速度: do_true=59.9%, do_false=38.3%, swing=0.217
+    - 算力成本与API价格下降: do_true=53.4%, do_false=33.9%, swing=0.195
+- **融资条款严苛程度（隐性成本）**：50.4% 区间 17.2% - 83.3%
+  - contract：2027年中国AI早期项目（Seed/A轮）融资中，包含‘回购条款’或‘对赌协议’的交易占比是否低于2026年？
+  - base=45.0%, evidence=51.9%, causal=56.4%, panel=49.2%
+  - causal_graph：method=bayesian_causal_graph_logistic_cpd_monte_carlo, samples=12000, nodes=5, edges=0, causal_interval=26.7%-84.4%
+  - top causal sensitivity：
+    - 美元基金撤退与人民币基金的风险偏好: do_true=62.6%, do_false=38.2%, swing=0.244
+    - LP回报压力与‘耐心资本’的实际落地效果: do_true=49.8%, do_false=67.1%, swing=0.174
+    - 监管政策对‘对赌协议’的合规性审查: do_true=45.6%, do_false=61.2%, swing=0.156
+- **退出预期与二级市场联动**：53.8% 区间 22.1% - 82.7%
+  - contract：2027年中国AI领域并购交易（M&A）总金额是否高于2026年？
+  - base=45.0%, evidence=54.2%, causal=60.2%, panel=58.2%
+  - causal_graph：method=bayesian_causal_graph_logistic_cpd_monte_carlo, samples=12000, nodes=6, edges=0, causal_interval=25.5%-88.8%
+  - top causal sensitivity：
+    - IPO退出渠道持续受阻: do_true=66.3%, do_false=41.1%, swing=0.252
+    - 大厂产业资本（CVC）整合意愿增强: do_true=67.3%, do_false=48.1%, swing=0.191
+    - AI创业公司估值回归理性: do_true=65.7%, do_false=51.1%, swing=0.146
+- **老股转让市场流动性**：69.6% 区间 34.2% - 90.9%
+  - contract：2027年中国AI领域老股转让（Secondary）的交易金额是否高于2026年？
+  - base=65.0%, evidence=76.6%, causal=78.6%, panel=65.2%
+  - causal_graph：method=bayesian_causal_graph_logistic_cpd_monte_carlo, samples=12000, nodes=5, edges=1, causal_interval=53.0%-90.4%
+  - top causal sensitivity：
+    - 存量AI基金到期清算压力: do_true=81.7%, do_false=60.3%, swing=0.214
+    - IPO审核政策对二级市场的挤出效应: do_true=81.7%, do_false=69.7%, swing=0.119
+    - S基金买方活跃度与资金供给: do_true=81.3%, do_false=69.6%, swing=0.117
+- **融资效率与周期**：47.6% 区间 15.4% - 81.9%
+  - contract：2027年中国AI应用层初创公司获得首轮融资的平均周期是否短于2026年？
+  - base=45.0%, evidence=44.9%, causal=51.1%, panel=48.7%
+  - causal_graph：method=bayesian_causal_graph_logistic_cpd_monte_carlo, samples=12000, nodes=5, edges=0, causal_interval=17.9%-79.9%
+  - top causal sensitivity：
+    - LP资金供给与Dry Powder充裕度: do_true=59.8%, do_false=36.2%, swing=0.237
+    - 监管合规与数据安全审查强度: do_true=38.6%, do_false=62.0%, swing=0.234
+    - AI应用层技术成熟度与标准化: do_true=56.0%, do_false=37.0%, swing=0.190
+
+## 聚合方法
+- 使用 weighted logit portfolio，不是简单平均概率。
+- 权重由 semantic_coverage_weight、measurability、user_intent_preservation_score、proxy_risk 共同决定。
+- 子预测 logit 分歧：0.352
+- portfolio logit sigma：1.058
+
+## 结论
+对原始云状问题，当前综合概率是 **51.1%**。
+
+
+版本：LLM 结构化先验 + bayesian_causal_graph_logistic_cpd_monte_carlo
+模型：qwen/qwen3.6-27b
+问题：明年中国鸡肉价格会不会上涨？
+结果：
+**预测类型**：single_contract
+**预测题**：2027年中国鸡肉批发均价是否高于2026年平均水平？
+**最终概率**：48.0%
+**粗略区间**：17.0% - 80.6%
+**截止日期**：2028-02-28
+**领域**：business
+**可预测性评分**：0.60
+
+## 语义覆盖信息
+- 当前维度：终端价格直接锚定
+- 代理指标：全国鸡肉批发均价
+- proxy_risk：low
+- 原意保留分：0.95
+- 语义覆盖权重：0.53
+- 该子合约未覆盖：未区分白羽和黄羽的具体价格差异，若两者走势背离，综合均价可能掩盖结构性变化
+
+## 判定标准
+若2027年1-12月全国鸡肉批发均价（元/公斤，涵盖白羽和黄羽肉鸡的综合加权平均或主要代表性品种）高于2026年1-12月全国鸡肉批发均价，则结果为‘是’；否则为‘否’。数据以农业农村部全国农产品批发市场价格信息系统或国家统计局发布的年度平均数据为准。
+判定来源：农业农村部全国农产品批发市场价格信息系统, 国家统计局CPI分项数据, 行业咨询机构（如卓创资讯、新牧网）年度价格回顾
+
+## 概率计算拆解
+- Base rate prior：45.0%
+- Evidence update 后：53.0%
+- Bayesian causal graph / Monte Carlo 后：41.0%
+- 多 Agent panel 聚合后：52.8%
+- Raw ensemble：47.7%
+- Calibrated final：48.0%
+
+## Ensemble 权重
+- base: 0.291
+- evidence: 0.272
+- causal: 0.243
+- panel: 0.194
+
+## 参考类 / Base Rate
+参考类：中国农产品价格年度同比变动历史（2015-2025）
+先验概率：45.0%
+置信度：0.60
+说明：回顾过去十年中国主要农产品（猪、鸡、蛋、菜）的价格走势，由于周期性波动和均值回归特性，价格上涨与下跌的概率大致相当，略偏向于在经历低谷后反弹或高位回落的对称分布。考虑到鸡肉周期比猪周期短且波动相对平缓，若无极端外部冲击，价格大幅单边上涨的先验概率略低于50%。
+
+## 关键因子
+- **2026年供给过剩导致的产能去化**：P=60.0%，effect_log_odds=+0.80，方向=increase。鸡肉价格具有明显的滞后周期。如果2026年（基准年）价格低迷导致养殖户大规模去产能，2027年的供给将收缩，从而推高价格。这是最核心的周期驱动逻辑。
+- **饲料成本（玉米/豆粕）上涨**：P=40.0%，effect_log_odds=+0.50，方向=increase。饲料成本占养殖成本的60%-70%。如果全球粮食供应紧张或地缘政治导致原料价格上涨，养殖成本抬升将支撑终端批发价，甚至迫使养殖户挺价。
+- **猪肉价格高位带来的替代效应**：P=50.0%，effect_log_odds=+0.60，方向=increase。鸡肉是猪肉的主要替代品。如果2027年猪周期处于上行阶段，猪肉价格高企，消费者和餐饮B端将增加鸡肉消费，拉动鸡价上涨。
+- **宏观经济与消费需求疲软**：P=30.0%，effect_log_odds=-0.70，方向=decrease。如果宏观经济承压，居民消费降级，可能减少对高价蛋白或整体肉类消费，导致需求端疲软，压制价格上涨空间。
+- **突发禽流感疫情**：P=10.0%，effect_log_odds=+1.20，方向=increase。虽然概率低，但一旦发生大规模疫情，供给瞬间收缩，价格将暴涨。这是一个典型的尾部风险因子。
+- **头部企业产能扩张计划执行**：P=70.0%，effect_log_odds=-0.60，方向=decrease。如果2026年并未出现严重去产能，且头部企业按计划扩产，2027年供给可能过剩，导致价格下跌。这与第一个因素存在负相关依赖。
+
+## Bayesian Causal Graph
+- method：bayesian_causal_graph_logistic_cpd_monte_carlo
+- Monte Carlo samples：12000
+- causal credible interval：12.1% - 74.6%
+- node_count：6, edge_count：1
+- target_evidence_update：+0.000
+- 关键节点：
+  - 2026年供给过剩导致的产能去化 | prior=60.0%, adjusted=66.8%, target_weight=+0.560
+  - 突发禽流感疫情 | prior=10.0%, adjusted=10.5%, target_weight=+0.480
+  - 头部企业产能扩张计划执行 | prior=70.0%, adjusted=66.1%, target_weight=-0.480
+  - 猪肉价格高位带来的替代效应 | prior=50.0%, adjusted=52.6%, target_weight=+0.360
+  - 宏观经济与消费需求疲软 | prior=30.0%, adjusted=29.0%, target_weight=-0.350
+  - 饲料成本（玉米/豆粕）上涨 | prior=40.0%, adjusted=42.3%, target_weight=+0.250
+- do-intervention sensitivity：
+  - 2026年供给过剩导致的产能去化: do_true=48.4%, do_false=26.9%, swing=0.216
+  - 头部企业产能扩张计划执行: do_true=34.2%, do_false=55.0%, swing=0.208
+  - 突发禽流感疫情: do_true=59.3%, do_false=38.6%, swing=0.207
+  - 猪肉价格高位带来的替代效应: do_true=48.2%, do_false=32.9%, swing=0.152
+  - 宏观经济与消费需求疲软: do_true=30.9%, do_false=44.3%, swing=0.134
+
+## 最有诊断价值的证据
+- [increase] 鸡肉价格具有明显的周期性波动特征，通常滞后于产能变化。若2026年行业处于亏损或低利润状态，将触发父母代种鸡的淘汰和产能去化，从而在2027年导致供给收缩并推高价格。 | weighted_log_odds=+0.242 | quality_weight=0.403 | source=background/background_prior
+  - 这是农产品价格预测的核心逻辑。虽然无法确认2026年具体亏损程度，但基于周期性规律，产能去化是价格上涨的最强前置指标。
+- [decrease] 头部养殖企业（如圣农、温氏等）的产能扩张计划若如期执行，且2026年未出现严重去产能，2027年市场供给可能过剩，导致价格下跌。 | weighted_log_odds=-0.179 | quality_weight=0.358 | source=background/background_prior
+  - 规模化养殖企业的产能投放具有计划性和刚性。若行业整体产能未有效出清，新增产能将加剧供过于求，压制价格。
+- [increase] 鸡肉与猪肉存在显著的替代效应。若2027年中国猪肉价格处于高位（例如猪周期上行阶段），消费者和餐饮B端将增加鸡肉消费，拉动鸡价上涨。 | weighted_log_odds=+0.103 | quality_weight=0.206 | source=background/background_prior
+  - 中国肉类消费结构中，猪鸡替代关系明确。猪周期与鸡周期往往不同步，猪价高企是鸡价上涨的重要外部需求驱动力。
+- [increase] 饲料成本（玉米、豆粕）占肉鸡养殖成本的60%-70%。若2027年全球粮食供应紧张或地缘政治导致原料价格显著上涨，将抬升养殖成本底线，支撑终端批发价上涨。 | weighted_log_odds=+0.094 | quality_weight=0.235 | source=background/background_prior
+  - 成本推动型通胀在农产品中常见。虽然需求端可能抑制高价，但成本刚性会限制价格下跌空间，并可能在供给偏紧时转化为价格上涨动力。
+- [increase] 突发高致病性禽流感疫情若发生，将导致区域性扑杀和供给瞬间收缩，引发价格短期暴涨。 | weighted_log_odds=+0.056 | quality_weight=0.080 | source=background/background_prior
+  - 虽然发生概率低（尾部风险），但一旦发生对价格的冲击极大。作为背景先验，需考虑其不对称的影响。
+- [neutral] 2026年作为基准年，若其全年平均价格因前期产能过剩而处于历史低位，则2027年价格即使仅小幅反弹或持平，也可能在同比上表现为‘高于’，但这更多是基数效应而非强劲上涨。 | weighted_log_odds=+0.054 | quality_weight=0.269 | source=background/background_prior
+  - 合约比较的是绝对值。低基数会增加‘高于’的概率，但这属于统计偏差，需结合2027年实际供需判断趋势强度。
+
+## 多 Agent 分歧
+- **outside_view**：48.0%，confidence=0.65。基于2015-2025年中国鸡肉价格年度同比变动的历史基准，价格上涨与下跌的概率大致均衡。考虑到均值回归特性，若无极端外部冲击，先验概率略低于50%，反映市场常态下的对称波动。
+  - 更新触发器：2026年全年的实际平均鸡肉价格数据（确定基准高低）以及2026年底父母代种鸡存栏量的显著变化数据。
+- **inside_view**：62.0%，confidence=0.70。核心逻辑在于产能周期。若2026年因价格低迷导致行业去产能（概率0.6），2027年供给将收缩。同时，若2027年猪周期上行带动替代需求，将进一步推高鸡价。供给侧的滞后效应是主要驱动因素。
+  - 更新触发器：2026年Q4至2027年Q1的父母代种鸡淘汰率数据，以及2027年玉米豆粕饲料成本的季度走势。
+- **skeptic**：42.0%，confidence=0.60。头部养殖企业（如圣农、温氏）的产能扩张计划具有刚性，若2026年未出现严重去产能，2027年新增产能投放将导致供给过剩。此外，宏观经济疲软可能抑制整体肉类消费需求，压制价格上涨空间。
+  - 更新触发器：主要养殖企业2027年实际出栏量数据超预期增长，或宏观经济数据显示居民肉类消费支出显著萎缩。
+- **optimist**：68.0%，confidence=0.65。看好成本推动和需求替代的双重利好。若2027年饲料成本上涨抬升价格底线，且猪肉价格处于高位引发强劲替代效应，鸡肉价格有望显著上涨。此外，低基数效应（若2026年价格较低）也增加了同比上涨的概率。
+  - 更新触发器：2027年猪肉批发均价大幅高于2026年，或发生区域性高致病性禽流感导致供给瞬间收缩。
+- **base_rate_guardian**：46.0%，confidence=0.75。严格锚定历史基准率0.45。虽然内部观点提示周期上行可能，但考虑到预测的不确定性和均值回归的强大力量，不应过度偏离历史平均水平。小幅上调以反映潜在的周期反弹预期，但保持保守。
+  - 更新触发器：长期历史数据显示鸡肉价格周期趋势发生结构性改变（如持续单边上涨或下跌），而非周期性波动。
+- **domain_generalist**：55.0%，confidence=0.70。综合供需、成本和替代品因素。供给端去产能预期（+10%）和猪周期替代效应（+5%）略占上风，但被头部企业扩产风险（-5%）和宏观需求疲软（-5%）部分抵消。考虑到尾部风险（禽流感）的不对称正向影响，整体概率略高于50%。
+  - 更新触发器：2027年Q1-Q2的全国鸡肉批发均价实际走势，以及农业农村部发布的2026年全年产能去化确认报告。
+
+## 关键未知项
+- 2026年全年的实际平均鸡肉价格水平（作为分母，若2026年价格极低，2027年即使持平也可能被视为‘高于’，但合约比较的是绝对值）
+- 2027年具体的父母代种鸡存栏量数据（需等到2027年底或2028年初才能确认）
+- 2027年国际地缘政治对饲料进口成本的具体影响幅度
+- 2027年国内餐饮行业复苏的具体程度
+
+## 模糊点与假设
+- 模糊点：需明确‘鸡肉’的具体统计口径，建议采用农业农村部发布的‘鸡肉’大类平均价
+- 假设：假设用户关心的‘鸡肉价格’主要指市场流通的批发价格，而非养殖端成本或零售端最终售价
+
+## 校准信息
+- calibration_mode：cold_start_conservative_shrinkage
+- temperature：1.160
+- domain_history_n：0
+- domain_avg_brier：None
+
+## 结论
+当前给出的概率是 **48.0%**。这个数字由 base rate、证据 log-odds、Bayesian causal graph / Monte Carlo、多 Agent panel 和本地校准共同计算得到。
+
+
+
+版本：LLM 结构化先验 + bayesian_causal_graph_logistic_cpd_monte_carlo
+模型：qwen/qwen3.6-27b
 问题：2028年后北京房价会不会小幅上涨？
 结果：
 预测类型：multi_contract_portfolio原始问题：2028年后北京房价会不会小幅上涨？综合概率：46.4%粗略区间：21.7% - 73.1%问题类型：cloud_judgment语义坍缩风险：high推荐模式：multi_contract_portfolio
