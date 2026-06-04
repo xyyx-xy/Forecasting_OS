@@ -3,7 +3,8 @@ conda create -n forecasting_os python=3.12
 conda activate forecasting_os
 pip install -r requirements.txt
 
-```flowchart TD
+```mermaid
+flowchart TD
     A["用户输入问题"] --> B["Cloud-to-Contract 拆解"]
     B --> C{"问题类型"}
 
