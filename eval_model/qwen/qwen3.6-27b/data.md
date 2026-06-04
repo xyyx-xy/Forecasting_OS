@@ -414,7 +414,7 @@ portfolio logit sigma：1.142
 
 对原始云状问题，当前综合概率是 46.4%。
 
-
+27b
 问题：2030年中美会不会发生军事冲突？
 结果：
 **预测类型**：multi_contract_portfolio

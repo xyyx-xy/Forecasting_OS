@@ -2,6 +2,187 @@
 版本：LLM 结构化先验 + bayesian_causal_graph_logistic_cpd_monte_carlo
 35b-a3
 **预测类型**：multi_contract_portfolio
+**原始问题**：2028年固态电池是否会普及？
+**综合概率**：25.5%
+**粗略区间**：6.6% - 62.3%
+**问题类型**：cloud_judgment
+**语义坍缩风险**：high
+**推荐模式**：multi_contract_portfolio
+
+## 原始语义
+用户希望评估固态电池技术在2028年是否已从实验室或小众应用阶段跨越到大众消费市场，成为主流且易于获取的技术选项。核心在于判断其是否具备大规模商业落地的经济性和市场接受度。
+
+语义坍缩说明：原始问题中的'普及'是一个典型的多维云状概念，涉及技术代际（全固态vs半固态）、市场渗透、成本竞争力、供应链成熟度及消费者感知等多个独立维度。若仅使用单一合约（如仅看渗透率或仅看产能）进行结算，将导致严重的语义坍缩：1. 混淆技术路线：半固态的普及不等于全固态的普及，单一指标会掩盖全固态仍处于小众阶段的事实；2. 忽视竞争动态：未考虑液态锂电池持续迭代对固态电池市场空间的挤压；3. 忽略用户体验：高能量密度不等于高市场接受度，缺乏对消费者感知价值和实际使用痛点的度量。因此，必须使用多合约组合来完整捕捉'普及'的语义。
+
+如果强行单指标化，会丢失这些维度：
+- 技术代际区分（全固态与半固态的市场表现差异）
+- 相对成本竞争力（与液态锂电池的价差及TCO对比）
+- 消费者感知价值（充电便利性、续航可靠性等实际体验）
+- 供应链良率与稳定性（高出货量背后的生产效率与质量风险）
+- 液态锂电池的竞争挤压效应（替代技术的迭代速度）
+
+## 维度展开
+- **主流市场渗透率** | weight=0.35 | measurability=0.85 | 衡量固态电池在终端消费市场（特别是乘用车领域）的实际覆盖广度。这是“普及”最核心的经济含义，即消费者是否能在主流价位买到搭载该技术的车辆。需严格区分全固态与半固态。
+- **供应链与量产能力成熟度** | weight=0.20 | measurability=0.75 | 衡量上游材料、中游制造设备到下游组装的工业化能力。普及的前提是能够稳定、大规模地生产，而非仅靠实验室或小批量试制。核心瓶颈在于良率和原材料稳定性。
+- **成本竞争力与经济性** | weight=0.20 | measurability=0.65 | 衡量固态电池相对于现有液态锂电池的成本优势或劣势。普及的关键在于“用得起”，即成本需降至接近或低于液态电池水平，或通过性能溢价被市场接受。需关注相对价差而非绝对成本。
+- **技术性能突破与可靠性** | weight=0.15 | measurability=0.80 | 衡量固态电池是否解决了核心痛点（如能量密度、充电速度、安全性、循环寿命）。普及需要技术不仅“好”，而且“可靠”，无重大安全隐患。需区分实验室数据与量产数据。
+- **液态锂电池的竞争挤压** | weight=0.10 | measurability=0.70 | 普及是相对概念。需评估液态锂电池（如磷酸铁锂、高镍三元）通过结构创新（CTC/CTB）或材料优化（如钠离子）带来的成本下降和性能提升，判断固态电池是否具备替代优势。
+
+## Contract Portfolio 结果
+- **全固态市场渗透率** | P=6.9% | weight=0.226 | proxy=2028年搭载全固态电池的新车销量占全球新能源车总销量的比例 | proxy_risk=medium
+  - 预测题：到2028年12月31日，全球搭载全固态电池（ASSB）的新能源乘用车销量占全球新能源车总销量的比例是否超过0.1%？
+- **成本竞争力与经济性** | P=26.8% | weight=0.224 | proxy=同级别固态电池车型与液态电池车型的终端售价差（%） | proxy_risk=low
+  - 预测题：到2028年12月31日，主流车型（年销量超过10万辆）中，固态电池车型与同级别液态电池车型的终端售价差是否低于10%？
+- **半固态市场渗透率** | P=14.2% | weight=0.170 | proxy=2028年搭载半固态电池的新车销量占全球新能源车总销量的比例 | proxy_risk=medium
+  - 预测题：到2028年12月31日，全球搭载半固态电池的新能源乘用车销量占全球新能源车总销量的比例是否超过5%？
+- **供应链与量产能力成熟度** | P=23.1% | weight=0.156 | proxy=2028年全球固态/半固态电池实际年出货量（GWh）及平均良率 | proxy_risk=medium
+  - 预测题：到2028年12月31日，全球固态电池（含半固态和全固态）的实际年出货量是否超过10 GWh，且主要厂商的平均良率是否稳定在80%以上？
+- **技术性能突破与可靠性** | P=62.7% | weight=0.140 | proxy=2028年量产固态/半固态电池的平均能量密度（Wh/kg）及安全事故率 | proxy_risk=medium
+  - 预测题：到2028年12月31日，量产固态电池的平均能量密度是否超过350 Wh/kg，且未发生因电池安全问题导致的大规模召回事件？
+- **液态锂电池的竞争挤压** | P=87.2% | weight=0.084 | proxy=2028年主流液态锂电池的平均能量密度和单位成本 | proxy_risk=low
+  - 预测题：到2028年12月31日，液态锂电池的平均能量密度是否仍低于250 Wh/kg且单位成本是否低于100美元/kWh？
+
+## 子预测摘要
+- **半固态市场渗透率**：14.2% 区间 3.1% - 45.9%
+  - contract：到2028年12月31日，全球搭载半固态电池的新能源乘用车销量占全球新能源车总销量的比例是否超过5%？
+  - base=15.0%, evidence=4.1%, causal=12.9%, panel=20.6%
+  - causal_graph：method=bayesian_causal_graph_logistic_cpd_monte_carlo, samples=12000, nodes=5, edges=2, causal_interval=2.7%-32.2%
+  - top causal sensitivity：
+    - 液态锂电池成本优势持续: do_true=8.5%, do_false=22.4%, swing=0.139
+    - 头部车企量产交付规模: do_true=15.7%, do_false=7.4%, swing=0.084
+    - 供应链良率与产能瓶颈: do_true=16.9%, do_false=10.1%, swing=0.068
+- **全固态市场渗透率**：6.9% 区间 1.2% - 31.3%
+  - contract：到2028年12月31日，全球搭载全固态电池（ASSB）的新能源乘用车销量占全球新能源车总销量的比例是否超过0.1%？
+  - base=5.0%, evidence=1.8%, causal=4.1%, panel=8.9%
+  - causal_graph：method=bayesian_causal_graph_logistic_cpd_monte_carlo, samples=12000, nodes=5, edges=1, causal_interval=1.0%-12.7%
+  - top causal sensitivity：
+    - 丰田等头部车企的量产时间表兑现: do_true=9.2%, do_false=2.2%, swing=0.070
+    - 全固态电池量产良率与成本达标: do_true=8.6%, do_false=2.9%, swing=0.057
+    - 液态锂电池的持续成本下降与技术迭代: do_true=2.2%, do_false=6.4%, swing=0.042
+- **供应链与量产能力成熟度**：23.1% 区间 5.3% - 61.7%
+  - contract：到2028年12月31日，全球固态电池（含半固态和全固态）的实际年出货量是否超过10 GWh，且主要厂商的平均良率是否稳定在80%以上？
+  - base=25.0%, evidence=10.4%, causal=19.7%, panel=27.1%
+  - causal_graph：method=bayesian_causal_graph_logistic_cpd_monte_carlo, samples=12000, nodes=5, edges=4, causal_interval=1.8%-65.2%
+  - top causal sensitivity：
+    - 技术路线收敛与良率突破: do_true=41.7%, do_false=12.7%, swing=0.290
+    - 头部车企的订单落地与产能释放: do_true=28.7%, do_false=12.8%, swing=0.159
+    - 液态锂电池的持续挤压: do_true=12.0%, do_false=26.3%, swing=0.143
+- **成本竞争力与经济性**：26.8% 区间 6.0% - 67.7%
+  - contract：到2028年12月31日，主流车型（年销量超过10万辆）中，固态电池车型与同级别液态电池车型的终端售价差是否低于10%？
+  - base=15.0%, evidence=33.3%, causal=43.9%, panel=14.9%
+  - causal_graph：method=bayesian_causal_graph_logistic_cpd_monte_carlo, samples=12000, nodes=5, edges=2, causal_interval=8.7%-71.4%
+  - top causal sensitivity：
+    - 液态锂电池成本持续下降: do_true=47.0%, do_false=13.6%, swing=0.333
+    - 量产良率与规模效应: do_true=29.1%, do_false=51.9%, swing=0.229
+    - 原材料成本波动: do_true=27.2%, do_false=49.7%, swing=0.225
+- **技术性能突破与可靠性**：62.7% 区间 24.1% - 89.9%
+  - contract：到2028年12月31日，量产固态电池的平均能量密度是否超过350 Wh/kg，且未发生因电池安全问题导致的大规模召回事件？
+  - base=65.0%, evidence=52.6%, causal=82.4%, panel=54.5%
+  - causal_graph：method=bayesian_causal_graph_logistic_cpd_monte_carlo, samples=12000, nodes=5, edges=3, causal_interval=46.8%-95.5%
+  - top causal sensitivity：
+    - 能量密度技术达标: do_true=86.3%, do_false=57.6%, swing=0.288
+    - 早期安全缺陷暴露: do_true=65.0%, do_false=87.1%, swing=0.221
+    - 制造工艺良率与一致性: do_true=86.8%, do_false=75.6%, swing=0.112
+- **液态锂电池的竞争挤压**：87.2% 区间 57.5% - 97.1%
+  - contract：到2028年12月31日，液态锂电池的平均能量密度是否仍低于250 Wh/kg且单位成本是否低于100美元/kWh？
+  - base=85.0%, evidence=92.7%, causal=93.1%, panel=88.5%
+  - causal_graph：method=bayesian_causal_graph_logistic_cpd_monte_carlo, samples=12000, nodes=5, edges=2, causal_interval=82.6%-96.9%
+  - top causal sensitivity：
+    - 规模效应与制造良率提升: do_true=94.2%, do_false=80.9%, swing=0.132
+    - 结构创新（CTP/CTC）的普及: do_true=93.7%, do_false=85.6%, swing=0.081
+    - 原材料价格波动: do_true=94.5%, do_false=90.7%, swing=0.038
+
+## 聚合方法
+- 使用 weighted logit portfolio，不是简单平均概率。
+- 权重由 semantic_coverage_weight、measurability、user_intent_preservation_score、proxy_risk 共同决定。
+- 子预测 logit 分歧：1.500
+- portfolio logit sigma：1.575
+
+## 结论
+对原始云状问题，当前综合概率是 **25.5%**。
+
+
+**预测类型**：multi_contract_portfolio
+**原始问题**：2030年中美会不会发生军事冲突？
+**综合概率**：7.5%
+**粗略区间**：2.5% - 20.5%
+**问题类型**：explicit_binary
+**语义坍缩风险**：high
+**推荐模式**：multi_contract_portfolio
+
+## 原始语义
+用户希望评估在2030年这一特定日历年内，中美两国之间爆发具有实质性物理暴力或军事对抗性质（包括直接交火及通过正式盟友卷入的间接对抗）的事件可能性。
+
+语义坍缩说明：原始候选合约中存在严重的语义偷换（C4、C5将条件/背景偷换为事件），且对‘军事冲突’的定义过于狭隘（仅关注中美直接交火，忽略盟友卷入和灰色地带升级）。若仅保留C1-C3，会遗漏‘代理人战争’这一关键路径，导致对‘中美冲突’的预测出现系统性偏差。此外，C3（网络战）的结算标准存在高争议性，若作为单一指标或主要指标，极易因归因困难导致预测失效。必须通过多合约组合（Portfolio）来覆盖直接冲突、盟友卷入和灰色地带升级，避免将复杂的地缘政治博弈坍缩为单一的二元事件。
+
+如果强行单指标化，会丢失这些维度：
+- 盟友/代理人卷入导致的间接军事对抗
+- 网络战与太空战中的非动能军事行动
+- 国内政治压力对冲突决策的催化作用
+- 军事现代化带来的威慑平衡变化
+
+## 维度展开
+- **台海危机触发与升级** | weight=0.45 | measurability=0.70 | 评估2030年前后，围绕台湾问题发生的军事对峙、封锁或实战冲突的可能性。这是中美军事冲突最高概率的触发点，涵盖从灰色地带行动到全面入侵的频谱。
+- **南海摩擦与代理人冲突** | weight=0.25 | measurability=0.80 | 评估在南海海域，中美海军/海警力量因岛礁主权、航行自由或资源开发引发的直接碰撞、水炮对峙或意外交火风险，以及通过盟友（如菲律宾）进行的间接对抗。
+- **网络战与太空资产攻击** | weight=0.15 | measurability=0.40 | 评估中美之间在网络空间（关键基础设施、军事指挥系统）或太空领域（卫星干扰、摧毁）发生的敌对行动，这些行动可能构成“冲突”的灰色地带或先兆。
+- **盟友卷入与间接对抗** | weight=0.15 | measurability=0.60 | 评估中美两国通过其正式军事盟友（如日本、菲律宾、澳大利亚）发生的实质性军事对抗。这是2030年背景下极高风险的冲突形态，原方案C2明确排除了此类情况，属于重大遗漏。
+
+## Contract Portfolio 结果
+- **台海危机触发与升级** | P=8.8% | weight=0.588 | proxy=解放军环台演习中进入台湾防空识别区（ADIZ）的战机架次及持续时长 | proxy_risk=medium
+  - 预测题：在2030年1月1日至2030年12月31日期间，中国人民解放军是否对台湾本岛或其附属岛屿（如金门、马祖、东沙、太平岛等）实施了旨在改变现状的武装入侵、两栖登陆作战、全面海上/空中封锁，或针对台湾本岛或附属岛屿的大规模常规导弹打击？
+- **南海摩擦与代理人冲突** | P=4.1% | weight=0.298 | proxy=中美舰船在南海海域的近距离相遇事件（Close Encounters）中，涉及武器锁定或开火警告的频率 | proxy_risk=low
+  - 预测题：在2030年1月1日至2030年12月31日期间，中美两国正规军（海军、空军）在南海海域是否发生直接交火、造成人员伤亡或舰机损毁的武装冲突？
+- **盟友卷入与间接对抗** | P=17.7% | weight=0.093 | proxy=盟友国家军队在争议海域与中方军队的对峙记录及升级频率 | proxy_risk=medium
+  - 预测题：在2030年1月1日至2030年12月31日期间，中美两国是否通过其正式军事盟友（如日本、菲律宾、澳大利亚等）发生实质性的军事对抗？
+- **网络战与太空资产攻击** | P=7.3% | weight=0.022 | proxy=重大国家级网络攻击事件中，归因于中美双方的数量及造成的实际损害（如关键基础设施停机时间） | proxy_risk=high
+  - 预测题：在2030年1月1日至2030年12月31日期间，中美之间是否发生导致关键基础设施（如电网、金融系统、军事指挥网络）大规模瘫痪或造成平民/军事人员重大伤亡的网络攻击或太空资产物理摧毁事件？
+
+## 子预测摘要
+- **台海危机触发与升级**：8.8% 区间 1.6% - 36.8%
+  - contract：在2030年1月1日至2030年12月31日期间，中国人民解放军是否对台湾本岛或其附属岛屿（如金门、马祖、东沙、太平岛等）实施了旨在改变现状的武装入侵、两栖登陆作战、全面海上/空中封锁，或针对台湾本岛或附属岛屿的大规模常规导弹打击？
+  - base=5.0%, evidence=6.3%, causal=3.9%, panel=8.5%
+  - causal_graph：method=bayesian_causal_graph_logistic_cpd_monte_carlo, samples=12000, nodes=6, edges=0, causal_interval=1.0%-10.6%
+  - top causal sensitivity：
+    - 台海政治红线突破: do_true=8.6%, do_false=2.8%, swing=0.057
+    - 意外升级与误判风险: do_true=6.6%, do_false=3.1%, swing=0.034
+    - 盟友介入的威慑效应: do_true=3.2%, do_false=5.5%, swing=0.023
+- **南海摩擦与代理人冲突**：4.1% 区间 0.6% - 21.8%
+  - contract：在2030年1月1日至2030年12月31日期间，中美两国正规军（海军、空军）在南海海域是否发生直接交火、造成人员伤亡或舰机损毁的武装冲突？
+  - base=2.0%, evidence=2.1%, causal=2.1%, panel=3.3%
+  - causal_graph：method=bayesian_causal_graph_logistic_cpd_monte_carlo, samples=12000, nodes=5, edges=2, causal_interval=1.0%-5.0%
+  - top causal sensitivity：
+    - 代理人挑衅引发直接介入: do_true=3.7%, do_false=1.5%, swing=0.022
+    - 海上意外相遇规则（CUES）失效: do_true=3.3%, do_false=1.6%, swing=0.017
+    - 双方战略克制与威慑平衡: do_true=1.6%, do_false=3.1%, swing=0.015
+- **网络战与太空资产攻击**：7.3% 区间 1.1% - 34.9%
+  - contract：在2030年1月1日至2030年12月31日期间，中美之间是否发生导致关键基础设施（如电网、金融系统、军事指挥网络）大规模瘫痪或造成平民/军事人员重大伤亡的网络攻击或太空资产物理摧毁事件？
+  - base=5.0%, evidence=2.3%, causal=3.3%, panel=6.4%
+  - causal_graph：method=bayesian_causal_graph_logistic_cpd_monte_carlo, samples=12000, nodes=5, edges=2, causal_interval=1.2%-7.6%
+  - top causal sensitivity：
+    - 国际规范与核威慑约束: do_true=2.5%, do_false=5.8%, swing=0.033
+    - 危机升级螺旋与误判风险: do_true=5.1%, do_false=2.4%, swing=0.027
+    - 太空资产脆弱性与反制能力: do_true=4.7%, do_false=2.6%, swing=0.020
+- **盟友卷入与间接对抗**：17.7% 区间 3.1% - 59.1%
+  - contract：在2030年1月1日至2030年12月31日期间，中美两国是否通过其正式军事盟友（如日本、菲律宾、澳大利亚等）发生实质性的军事对抗？
+  - base=12.0%, evidence=12.0%, causal=17.0%, panel=16.1%
+  - causal_graph：method=bayesian_causal_graph_logistic_cpd_monte_carlo, samples=12000, nodes=5, edges=1, causal_interval=3.8%-31.8%
+  - top causal sensitivity：
+    - 美国对盟友安全承诺的明确化程度: do_true=19.9%, do_false=7.4%, swing=0.125
+    - 解放军反介入/区域拒止（A2/AD）能力的成熟度: do_true=15.8%, do_false=25.2%, swing=0.093
+    - 意外事件升级机制的有效性: do_true=12.4%, do_false=21.8%, swing=0.093
+
+## 聚合方法
+- 使用 weighted logit portfolio，不是简单平均概率。
+- 权重由 semantic_coverage_weight、measurability、user_intent_preservation_score、proxy_risk 共同决定。
+- 子预测 logit 分歧：0.579
+- portfolio logit sigma：1.161
+
+## 结论
+对原始云状问题，当前综合概率是 **7.5%**。
+
+
+
+**预测类型**：multi_contract_portfolio
 **原始问题**：2028年后北京房价会不会小幅上涨？
 **综合概率**：50.3%
 **粗略区间**：26.3% - 74.1%
