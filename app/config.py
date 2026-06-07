@@ -184,6 +184,54 @@ CONFIG = {
         "max_target_probability": 0.99,
         "default_node_confidence": 0.50,
         "default_edge_confidence": 0.55,
+        "default_base_confidence": 0.50,
+        "default_evidence_update_confidence": 0.45,
+
+        # v0.5.3: Monte Carlo 不再只采样 factor true/false，
+        # 而是做“预测不确定性传播”。
+        # 这些参数只影响 causal_graph_probability，不改变 base/evidence/panel/portfolio 主流程。
+        "uncertainty_sampling": {
+            "enabled": True,
+
+            # 1. base rate 不确定性：每轮从 Beta(base_p, base_confidence) 采样 base_p。
+            "sample_base_rate": True,
+
+            # 2. factor 状态不确定性：保留旧逻辑，节点概率先 Beta 采样，再 Bernoulli 采样 true/false。
+            "sample_factor_state": True,
+
+            # 3. factor effect 不确定性：每轮扰动 factor 对目标的 log-odds 影响强度。
+            "sample_factor_effect": True,
+            "factor_effect_sigma_min": 0.03,
+            "factor_effect_sigma_max": 0.45,
+            "factor_effect_relative_sigma": 0.20,
+            "factor_effect_clip_abs": 1.75,
+
+            # 4. evidence update 不确定性：每轮扰动 target evidence delta。
+            "sample_evidence_update": True,
+            "evidence_delta_sigma_min": 0.02,
+            "evidence_delta_sigma_max": 0.35,
+            "evidence_delta_relative_sigma": 0.25,
+            "evidence_delta_clip_abs": 1.20,
+            "sample_evidence_noise_when_zero": False,
+
+            # 5. target logit 不确定性：保留一项模型/结构残差噪声。
+            "sample_target_logit_noise": True,
+            "target_logit_noise_sigma_min": 0.00,
+            "target_logit_noise_sigma_max": 0.30,
+            "target_logit_noise_confidence_key": "graph_confidence",
+
+            # 采样诊断输出。
+            "return_sampling_diagnostics": True,
+        },
+
+        # causal graph 自身置信度标签，用于报告或 JSON 诊断。
+        "confidence_label": {
+            "wide_interval_threshold": 0.55,
+            "medium_interval_threshold": 0.30,
+            "sparse_edge_ratio_threshold": 0.35,
+            "low_score_threshold": 0.40,
+            "medium_score_threshold": 0.70,
+        },
     },
 
     # -------------------------
