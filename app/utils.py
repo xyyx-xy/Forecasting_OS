@@ -3,16 +3,15 @@ from __future__ import annotations
 
 import json
 import math
-
+import random
 import re
 import uuid
 from datetime import date, datetime
 from pathlib import Path
-from statistics import mean
+from statistics import mean, pstdev
 from typing import Any, Dict, List, Tuple, Optional
 
-from app.config import CONFIG
-from app.model import llm_qwen
+from config import CONFIG
 # =============================================================================
 # 2. 基础工具函数
 # =============================================================================
@@ -138,6 +137,8 @@ def llm_json(
 4. 不要输出代码块。
 5. 所有字符串必须使用双引号。
 """
+    from model import llm_qwen
+
     raw = llm_qwen(
         strict_prompt,
         config=config,
@@ -208,60 +209,147 @@ def get_record_probability(record: Dict[str, Any]) -> float:
         return float(record["portfolio_probability_engine"]["calibrated_probability"])
     return float(record.get("probability_engine", {}).get("calibrated_probability", 0.5))
 # =============================================================================
-# 3. JSON 本地存储
+# 3. 本地输出：每个问题一个 Markdown + 可选单条 JSON
 # =============================================================================
+
 
 def empty_store() -> Dict[str, Any]:
     return {
         "meta": {
-            "name": "superforecast_mvp_json_store",
-            "version": "0.2-cloud-expansion",
+            "name": "superforecast_file_outputs",
+            "version": "0.6-md-output",
             "created_at": now_iso(),
             "updated_at": now_iso(),
+            "mode": "one_record_per_file",
         },
         "forecasts": [],
     }
 
 
-def load_store(config: Dict[str, Any] = CONFIG) -> Dict[str, Any]:
-    path = Path(config["storage_path"])
-    if not path.exists():
-        return empty_store()
+def slugify_filename(text: str, max_len: int = 48) -> str:
+    """生成适合文件名的短 slug。中文保留，去掉危险字符。"""
+    text = str(text or "forecast").strip()
+    text = re.sub(r"[\\/:*?\"<>|\r\n\t]+", "_", text)
+    text = re.sub(r"\s+", "_", text).strip("._ ")
+    if not text:
+        text = "forecast"
+    return text[:max_len]
 
+
+def output_dirs(config: Dict[str, Any] = CONFIG) -> Tuple[Path, Path]:
+    report_dir = Path(config.get("report_output_dir", "./outputs/md"))
+    json_dir = Path(config.get("json_output_dir", "./outputs/json"))
+    report_dir.mkdir(parents=True, exist_ok=True)
+    json_dir.mkdir(parents=True, exist_ok=True)
+    return report_dir, json_dir
+
+
+def record_output_basename(record: Dict[str, Any]) -> str:
+    forecast_id = str(record.get("id") or short_id())
+    created_at = str(record.get("created_at") or now_iso()).replace(":", "").replace("-", "")
+    created_at = created_at.replace("T", "_")[:15]
+    question = record.get("original_question") or record.get("contract", {}).get("normalized_question") or "forecast"
+    return f"{created_at}_{forecast_id}_{slugify_filename(question)}"
+
+
+def save_markdown_report(record: Dict[str, Any], config: Dict[str, Any] = CONFIG) -> Optional[str]:
+    if not config.get("save_markdown_report", True):
+        return None
+    report_dir, _ = output_dirs(config)
+    basename = record_output_basename(record)
+    path = report_dir / f"{basename}.md"
+    markdown = str(record.get("markdown_report") or "")
+    path.write_text(markdown, encoding="utf-8")
+    return str(path)
+
+
+def save_json_record(record: Dict[str, Any], config: Dict[str, Any] = CONFIG) -> Optional[str]:
+    if not config.get("save_json_record", True):
+        return None
+    _, json_dir = output_dirs(config)
+    basename = record_output_basename(record)
+    path = json_dir / f"{basename}.json"
+    path.write_text(json.dumps(record, ensure_ascii=False, indent=2), encoding="utf-8")
+    return str(path)
+
+
+def save_forecast_record(record: Dict[str, Any], config: Dict[str, Any] = CONFIG) -> Dict[str, Optional[str]]:
+    """
+    v0.6 输出策略：不再追加写入一个巨大的 forecast_mvp_store.json。
+
+    每次预测输出：
+    - outputs/md/<timestamp>_<id>_<question>.md
+    - outputs/json/<timestamp>_<id>_<question>.json  可关闭
+
+    函数名保留，是为了兼容 main.py 的既有调用。
+    """
+    record.setdefault("created_at", now_iso())
+    record["updated_at"] = now_iso()
+
+    # 先写入初版路径，随后把路径写回 record，再重写 JSON，保证 JSON 里也有输出路径。
+    md_path = save_markdown_report(record, config=config)
+    record.setdefault("output_paths", {})
+    record["output_paths"]["markdown"] = md_path
+    json_path = save_json_record(record, config=config)
+    record["output_paths"]["json"] = json_path
+    if json_path:
+        Path(json_path).write_text(json.dumps(record, ensure_ascii=False, indent=2), encoding="utf-8")
+    return {"markdown": md_path, "json": json_path}
+
+
+def _load_json_record_file(path: Path) -> Optional[Dict[str, Any]]:
     try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-        if not isinstance(data, dict):
-            return empty_store()
-        if "forecasts" not in data:
-            data["forecasts"] = []
-        if "meta" not in data:
-            data["meta"] = {}
-        return data
+        obj = json.loads(path.read_text(encoding="utf-8"))
+        return obj if isinstance(obj, dict) else None
     except Exception:
-        backup = path.with_suffix(path.suffix + f".broken.{datetime.now().strftime('%Y%m%d_%H%M%S')}")
-        path.rename(backup)
-        print(f"原 JSON 文件解析失败，已备份到：{backup}")
-        return empty_store()
+        return None
+
+
+def load_store(config: Dict[str, Any] = CONFIG) -> Dict[str, Any]:
+    """
+    兼容旧接口：从 outputs/json/*.json 聚合出一个内存 store。
+    不再依赖旧的单文件 storage_path。
+    """
+    store = empty_store()
+    _, json_dir = output_dirs(config)
+    records = []
+    for path in sorted(json_dir.glob("*.json")):
+        if path.name.startswith("_"):
+            continue
+        obj = _load_json_record_file(path)
+        if obj and obj.get("id"):
+            obj.setdefault("output_paths", {})
+            obj["output_paths"].setdefault("json", str(path))
+            records.append(obj)
+
+    # 兼容读取旧单文件，但不再写回旧 store。
+    legacy_path = Path(config.get("storage_path", "./forecast_mvp_store.json"))
+    if legacy_path.exists():
+        try:
+            legacy = json.loads(legacy_path.read_text(encoding="utf-8"))
+            for item in legacy.get("forecasts", []) if isinstance(legacy, dict) else []:
+                if isinstance(item, dict) and item.get("id") and not any(r.get("id") == item.get("id") for r in records):
+                    records.append(item)
+        except Exception:
+            pass
+
+    records = sorted(records, key=lambda x: x.get("created_at", ""), reverse=True)
+    store["forecasts"] = records
+    store["meta"]["updated_at"] = now_iso()
+    store["meta"]["count"] = len(records)
+    return store
 
 
 def save_store(store: Dict[str, Any], config: Dict[str, Any] = CONFIG) -> None:
-    path = Path(config["storage_path"])
-    path.parent.mkdir(parents=True, exist_ok=True)
-
-    store.setdefault("meta", {})
-    store["meta"]["updated_at"] = now_iso()
-    store["meta"]["version"] = "0.2-cloud-expansion"
-
-    tmp_path = path.with_suffix(path.suffix + ".tmp")
-    tmp_path.write_text(json.dumps(store, ensure_ascii=False, indent=2), encoding="utf-8")
-    tmp_path.replace(path)
-
-
-def save_forecast_record(record: Dict[str, Any], config: Dict[str, Any] = CONFIG) -> None:
-    store = load_store(config)
-    store.setdefault("forecasts", [])
-    store["forecasts"].append(record)
-    save_store(store, config)
+    """
+    兼容旧函数名。新版本不写 forecast_mvp_store.json。
+    如确实需要索引，可打开 save_output_index。
+    """
+    if not config.get("save_output_index", False):
+        return
+    _, json_dir = output_dirs(config)
+    index_path = json_dir / "_index.json"
+    index_path.write_text(json.dumps(store, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 def find_forecast(forecast_id: str, config: Dict[str, Any] = CONFIG) -> Optional[Dict[str, Any]]:
@@ -273,15 +361,19 @@ def find_forecast(forecast_id: str, config: Dict[str, Any] = CONFIG) -> Optional
 
 
 def update_forecast_record(forecast_id: str, patch: Dict[str, Any], config: Dict[str, Any] = CONFIG) -> Dict[str, Any]:
-    store = load_store(config)
-    for idx, item in enumerate(store.get("forecasts", [])):
-        if item.get("id") == forecast_id:
-            item.update(patch)
-            item["updated_at"] = now_iso()
-            store["forecasts"][idx] = item
-            save_store(store, config)
-            return item
-    raise ValueError(f"forecast_id 不存在：{forecast_id}")
+    item = find_forecast(forecast_id, config=config)
+    if item is None:
+        raise ValueError(f"forecast_id 不存在：{forecast_id}")
+    item.update(patch)
+    item["updated_at"] = now_iso()
+
+    # 重新写 JSON；Markdown 不自动改历史报告正文，除非调用方主动更新 markdown_report。
+    json_path = item.get("output_paths", {}).get("json")
+    if json_path:
+        Path(json_path).write_text(json.dumps(item, ensure_ascii=False, indent=2), encoding="utf-8")
+    else:
+        save_json_record(item, config=config)
+    return item
 
 
 def local_domain_brier_stats(domain: str, config: Dict[str, Any] = CONFIG) -> Dict[str, Any]:
@@ -300,12 +392,6 @@ def local_domain_brier_stats(domain: str, config: Dict[str, Any] = CONFIG) -> Di
             scores.append(float(item["brier_score"]))
 
     if not scores:
-        return {
-            "n": 0,
-            "avg_brier": None,
-        }
+        return {"n": 0, "avg_brier": None}
 
-    return {
-        "n": len(scores),
-        "avg_brier": mean(scores),
-    }
+    return {"n": len(scores), "avg_brier": mean(scores)}

@@ -1,7 +1,7 @@
 from typing import Any, Dict, List, Tuple, Optional
 from openai import OpenAI
 
-from app.config import CONFIG
+from config import CONFIG
 # =============================================================================
 # 1. LLM Client
 # =============================================================================

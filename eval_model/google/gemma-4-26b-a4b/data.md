@@ -1,3 +1,69 @@
+==========================================================
+# v0.5.2 Mechanism Chain Factor Graph Patch
+**预测类型**：multi_contract_portfolio
+**原始问题**：2028年后北京房价会不会小幅上涨？
+**综合概率**：38.0%
+**粗略区间**：23.1% - 55.6%
+**问题类型**：explicit_binary
+**语义坍缩风险**：medium
+**推荐模式**：multi_contract_portfolio
+
+## 原始语义
+用户关心北京房地产市场在2028年及之后的时间段内，价格水平是否呈现出温和、非爆发性的上升趋势，并隐含了对这种上涨是否具有实质价值（剔除通胀）以及是否由真实交易支撑的关注。
+
+语义坍缩说明：拆解过程中存在将‘市场状态’（如流动性、结构分化）误认为‘价格变动代理指标’的风险。若仅使用单一均价，会因样本偏差产生伪上涨；若使用分化比值，则会偷换为描述差异而非描述涨跌。
+
+如果强行单指标化，会丢失这些维度：
+- 价格变动的质量（成交量支撑）
+- 实际购买力维度（通胀调整）
+- 市场结构性分化风险
+
+## 维度展开
+- **名义价格变动趋势** | weight=0.40 | measurability=0.90 | 直接反映货币计价的价格水平变动。
+- **实际购买力与通胀调整** | weight=0.25 | measurability=0.70 | 区分名义上涨与实际价值提升，判断是否仅为货币贬值产物。
+- **价格变动的质量（成交量支撑）** | weight=0.20 | measurability=0.80 | 判断价格上涨是基于真实需求，还是由于交易萎缩导致的“缩量上涨”假象。
+- **住房类型结构性差异** | weight=0.15 | measurability=0.60 | 识别上涨是否仅局限于特定细分市场，避免均价掩盖局部崩盘。
+
+## Contract Portfolio 结果
+- **名义价格变动趋势** | P=34.0% | weight=0.657 | proxy=北京市住建委二手房成交均价指数 | proxy_risk=medium
+  - 预测题：到2029年6月4日，北京市住建委公布的二手房成交均价是否较2026年6月4日的水平上涨了1%至10%之间，且同期北京二手房月度成交套数不低于2026年同期的80%？
+- **实际购买力与通胀调整** | P=46.2% | weight=0.343 | proxy=剔除CPI后的房地产实际增长率 | proxy_risk=medium
+  - 预测题：到2029年6月4日，剔除CPI影响后的北京住宅销售价格实际增长率是否大于零？
+
+## 子预测摘要
+- **名义价格变动趋势**：34.0% 区间 11.6% - 66.9%
+  - contract：到2029年6月4日，北京市住建委公布的二手房成交均价是否较2026年6月4日的水平上涨了1%至10%之间，且同期北京二手房月度成交套数不低于2026年同期的80%？
+  - base=35.0%, evidence=29.6%, causal=28.6%, panel=37.4%
+  - causal_graph：method=mechanism_chain_factor_graph_monte_carlo, samples=12000, nodes=4, edges=3, chains=2, weak_edges=2, double_counting=enabled, causal_interval=27.3%-30.2%
+  - top chain sensitivity：
+    - 市场基本面供需链: do_true=27.9%, do_false=29.6%, swing=0.017
+    - 宏观货币与通胀传导链: do_true=29.2%, do_false=27.9%, swing=0.013
+  - top causal sensitivity：
+    - 房地产供需关系（库存压力）: do_true=27.9%, do_false=29.6%, swing=0.017
+    - 货币供应与通胀预期: do_true=29.2%, do_false=27.9%, swing=0.013
+    - 人口与需求结构变化: do_true=28.5%, do_false=28.7%, swing=0.001
+- **实际购买力与通胀调整**：46.2% 区间 14.6% - 81.2%
+  - contract：到2029年6月4日，剔除CPI影响后的北京住宅销售价格实际增长率是否大于零？
+  - base=45.0%, evidence=43.9%, causal=46.5%, panel=47.5%
+  - causal_graph：method=mechanism_chain_factor_graph_monte_carlo, samples=12000, nodes=4, edges=3, chains=2, weak_edges=2, double_counting=enabled, causal_interval=46.2%-46.7%
+  - top chain sensitivity：
+    - 资产稀缺性与政策约束链: do_true=46.6%, do_false=46.3%, swing=0.003
+    - 宏观货币与购买力传导链: do_true=46.6%, do_false=46.4%, swing=0.002
+  - top causal sensitivity：
+    - 核心区资产稀缺性溢价: do_true=46.6%, do_false=46.3%, swing=0.003
+    - 货币供应与通胀水平 (M2 vs CPI): do_true=46.6%, do_false=46.4%, swing=0.002
+    - 政策性去杠杆与房地产税预期: do_true=46.5%, do_false=46.5%, swing=0.000
+
+## 聚合方法
+- 使用 weighted logit portfolio，不是简单平均概率。
+- 权重由 semantic_coverage_weight、measurability、user_intent_preservation_score、proxy_risk 共同决定。
+- 子预测 logit 分歧：0.254
+- portfolio logit sigma：0.714
+
+## 结论
+对原始云状问题，当前综合概率是 **38.0%**。
+
+
 =================================================
 版本：LLM 结构化先验 + bayesian_causal_graph_logistic_cpd_monte_carlo
 **预测类型**：multi_contract_portfolio

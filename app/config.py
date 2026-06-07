@@ -12,10 +12,19 @@ CONFIG = {
     "model": "Qwen3.5-27B",
 
     # -------------------------
-    # 本地 JSON 存储
+    # 输出文件配置
     # -------------------------
+    # v0.6 起默认不再把所有预测 append 到一个 forecast_mvp_store.json。
+    # 每个问题直接输出一个 Markdown，JSON 也按单条记录保存到 outputs/json。
+    "report_output_dir": "./outputs/md",
+    "json_output_dir": "./outputs/json",
+    "save_markdown_report": True,
+    "save_json_record": True,
+    "save_output_index": False,
+
+    # 旧字段保留给兼容读取，不再默认写入。
     "storage_path": "./forecast_mvp_store.json",
-    "question_decomposition_storage_path": "./question_decomposition_store.json",
+    "question_decomposition_storage_path": "./outputs/json/question_decomposition_store.json",
     "save_question_decomposition_record": True,
 
     # -------------------------
@@ -175,37 +184,6 @@ CONFIG = {
         "max_target_probability": 0.99,
         "default_node_confidence": 0.50,
         "default_edge_confidence": 0.55,
-
-        # Mechanism Chain Factor Graph 配置
-        # 目标：让 causal graph 从“所有 factor 独立相加”改为
-        # “机制链内先防重复计数聚合，再链间进入目标事件”。
-        "mechanism_chain": {
-            "enabled": True,
-            "llm_enabled": True,
-            "llm_temperature": 0.20,
-            "llm_max_tokens": 4096,
-            "min_chains": 1,
-            "max_chains": 6,
-            "same_direction_corroboration_weight": 0.30,
-            "opposite_direction_counter_weight": 0.70,
-            "chain_effect_min_log_odds": -1.50,
-            "chain_effect_max_log_odds": 1.50,
-            "default_chain_confidence": 0.55,
-            "max_weak_edges": 8,
-            "weak_edge_max_abs_log_odds": 0.25,
-            "weak_edge_default_confidence": 0.30,
-            "max_chain_sensitivity": 6,
-            "fallback_chain_id": "main_chain",
-            "role_discount": {
-                "upstream_driver": 0.45,
-                "mediator": 0.70,
-                "direct_driver": 1.00,
-                "proxy_indicator": 0.55,
-                "shock_driver": 0.80,
-                "counterforce": 0.70,
-                "unknown": 0.75
-            }
-        },
     },
 
     # -------------------------

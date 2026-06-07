@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import math
+import random
 import re
 import uuid
 from datetime import date, datetime
@@ -9,8 +11,8 @@ from statistics import mean, pstdev
 from typing import Any, Dict, List, Tuple, Optional
 from openai import OpenAI
 
-from app.config import CONFIG
-from app.utils import current_date_context_text
+from config import CONFIG
+from utils import current_date_context_text
 # =============================================================================
 # 5. Question Expansion / Contract 生成
 # =============================================================================

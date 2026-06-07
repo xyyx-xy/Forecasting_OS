@@ -1,3 +1,197 @@
+==========================================================
+# v0.5.2 Mechanism Chain Factor Graph Patch
+**预测类型**：multi_contract_portfolio
+**原始问题**：2030年前是否会发生第三次世界大战？
+**综合概率**：3.9%
+**粗略区间**：1.3% - 11.1%
+**问题类型**：explicit_binary
+**语义坍缩风险**：high
+**推荐模式**：multi_contract_portfolio
+
+## 原始语义
+用户希望评估在2026年6月5日至2029年12月31日期间，全球是否会爆发一场具有系统性、大规模且涉及主要大国直接军事对抗或全球阵营固化与总体战动员的第三次世界大战。
+
+语义坍缩说明：原始问题'第三次世界大战'是一个高度模糊的云状概念，缺乏统一的操作性定义。若直接回答二元预测，极易发生语义坍缩，即把'世界大战'偷换为'大国直接交火'、'核武器使用'或'全球阵营固化'中的单一指标。目前的拆解方案虽然试图通过多维合约来避免坍缩，但反方审计指出合约间存在逻辑冗余和定义偏差（如将后果作为事件判定），且遗漏了'代理人战争实质化'和'总体战动员'等关键维度。若仅依赖单一合约（如仅看直接交火），将严重漏判非对称或代理人主导的世界大战形态；若依赖单一经济或外交指标，则存在极高的误报风险。因此，必须通过多合约组合（Portfolio）并明确逻辑关系（如AND/OR组合）来保留语义完整性，严禁简化为单一指标。
+
+如果强行单指标化，会丢失这些维度：
+- 代理人战争实质化：大国通过深度介入代理人战争（如大规模地面部队介入、直接指挥）导致冲突升级，但未与对方正规军正面直接交火。
+- 总体战社会动员：主要大国进入战时经济体制、全面征兵和社会管制，即使物理战场有限，社会层面已处于'世界大战'状态。
+- 全球阵营固化：世界分裂为两个排他性的、军事对峙的全球性同盟体系，导致全球秩序二元分裂，即使未爆发大规模热战。
+- 关键基础设施战略性摧毁：针对全球命脉（能源、金融、通信）的大规模物理或网络攻击，导致全球社会功能停摆。
+
+## 维度展开
+- **地理范围与参战方层级** | weight=0.30 | measurability=0.95 | 界定冲突是否跨越单一区域，是否涉及多个全球主要大国（如中美俄欧）的直接军事介入，以及是否形成全球性联盟对抗体系。这是区分‘世界大战’与‘区域性大国战争’的核心维度。
+- **物理军事冲突的烈度与规模** | weight=0.25 | measurability=0.85 | 评估冲突中常规武器使用的规模、伤亡人数、基础设施破坏程度以及是否涉及大规模地面部队部署。排除仅通过网络战、经济制裁或太空资产干扰进行的非动能对抗。
+- **核武器使用或核升级风险** | weight=0.20 | measurability=0.98 | 评估冲突中是否涉及核武器的战术或战略使用，或是否出现核威慑失效、核试验重启等导致全球核秩序崩溃的事件。这是世界大战最具毁灭性的特征。
+- **全球系统性中断与供应链崩溃** | weight=0.15 | measurability=0.85 | 评估冲突是否导致全球贸易、金融、能源和粮食供应链的系统性中断，是否引发全球性经济大萧条或社会秩序动荡。即使物理战场有限，若全球系统瘫痪，也可视为广义的世界大战后果。
+- **国际秩序与外交机制的彻底失效** | weight=0.10 | measurability=0.90 | 评估联合国、北约、欧盟等国际组织是否完全瘫痪，是否出现主要大国断交、驱逐外交官、废除国际条约等标志性事件。这反映了政治层面的‘世界’级分裂。
+
+## Contract Portfolio 结果
+- **地理范围与参战方层级** | P=3.7% | weight=0.434 | proxy=主要大国（中美俄欧）正规军跨境作战或在本土遭受直接军事打击的事件频率 | proxy_risk=low
+  - 预测题：在2026年6月5日至2029年12月31日期间，是否发生至少两个全球主要军事强国（定义为拥有核武器或GDP全球前5的国家）的正规军（非雇佣兵、非纯情报/网络人员）在第三国领土或彼此本土发生直接物理交火（包括相互射击、轰炸、登陆作战等）？
+- **核武器使用或核升级风险** | P=3.5% | weight=0.328 | proxy=核武器是否被实际使用（无论战术或战略）或发生核试验 | proxy_risk=low
+  - 预测题：在2026年6月5日至2029年12月31日期间，是否有任何核武器（包括战术或战略核弹头）在冲突中被实际引爆、投掷或使用，或主要核大国是否进行了公开的核试验？
+- **物理军事冲突的烈度与规模** | P=3.6% | weight=0.162 | proxy=主要大国本土关键基础设施遭受大规模物理破坏或实施全面战争经济体制 | proxy_risk=medium
+  - 预测题：在2026年6月5日至2029年12月31日期间，是否发生涉及主要大国（中美俄欧）的大规模常规战争，导致主要大国本土关键基础设施遭受大规模物理破坏，或主要大国实施全面战争经济体制（民用生产转军用、配给制）？
+- **国际秩序与外交机制的彻底失效** | P=10.5% | weight=0.076 | proxy=联合国安理会因常任理事国否决而完全停摆（无法通过任何决议）的持续时间 | proxy_risk=medium
+  - 预测题：在2026年6月5日至2029年12月31日期间，联合国安理会是否因常任理事国否决而完全停摆（无法通过任何实质性决议）超过6个月，或主要大国之间是否发生相互断绝外交关系并关闭大使馆的事件？
+
+## 子预测摘要
+- **地理范围与参战方层级**：3.7% 区间 0.7% - 17.1%
+  - contract：在2026年6月5日至2029年12月31日期间，是否发生至少两个全球主要军事强国（定义为拥有核武器或GDP全球前5的国家）的正规军（非雇佣兵、非纯情报/网络人员）在第三国领土或彼此本土发生直接物理交火（包括相互射击、轰炸、登陆作战等）？
+  - base=2.0%, evidence=2.0%, causal=1.3%, panel=3.1%
+  - causal_graph：method=mechanism_chain_factor_graph_monte_carlo, samples=12000, nodes=5, edges=6, chains=3, weak_edges=4, double_counting=enabled, causal_interval=1.2%-1.6%
+  - top chain sensitivity：
+    - 欧洲战区升级路径: do_true=1.7%, do_false=1.3%, swing=0.004
+    - 亚太战区意外碰撞路径: do_true=1.5%, do_false=1.3%, swing=0.002
+    - 全球稳定与危机管控机制: do_true=1.3%, do_false=1.3%, swing=0.000
+  - top causal sensitivity：
+    - 乌克兰战争的外溢与北约直接卷入: do_true=1.7%, do_false=1.3%, swing=0.004
+    - 台海或南海的意外军事碰撞: do_true=1.5%, do_false=1.3%, swing=0.002
+    - 大国危机管控机制的有效性: do_true=1.3%, do_false=1.3%, swing=0.000
+- **核武器使用或核升级风险**：3.5% 区间 0.6% - 19.1%
+  - contract：在2026年6月5日至2029年12月31日期间，是否有任何核武器（包括战术或战略核弹头）在冲突中被实际引爆、投掷或使用，或主要核大国是否进行了公开的核试验？
+  - base=2.0%, evidence=1.2%, causal=1.3%, panel=3.0%
+  - causal_graph：method=mechanism_chain_factor_graph_monte_carlo, samples=12000, nodes=5, edges=2, chains=3, weak_edges=1, double_counting=enabled, causal_interval=1.2%-2.0%
+  - top chain sensitivity：
+    - 大国冲突升级与核使用决策链: do_true=2.0%, do_false=1.2%, swing=0.008
+    - 核禁忌与危机管控机制侵蚀链: do_true=1.4%, do_false=1.3%, swing=0.001
+    - 技术故障与AI误判风险链: do_true=1.4%, do_false=1.3%, swing=0.000
+  - top causal sensitivity：
+    - 大国直接军事冲突的烈度: do_true=2.0%, do_false=1.2%, swing=0.008
+    - 核禁忌的侵蚀程度: do_true=1.4%, do_false=1.3%, swing=0.000
+    - 技术故障与AI自主武器系统的误判: do_true=1.4%, do_false=1.3%, swing=0.000
+- **物理军事冲突的烈度与规模**：3.6% 区间 0.6% - 17.5%
+  - contract：在2026年6月5日至2029年12月31日期间，是否发生涉及主要大国（中美俄欧）的大规模常规战争，导致主要大国本土关键基础设施遭受大规模物理破坏，或主要大国实施全面战争经济体制（民用生产转军用、配给制）？
+  - base=2.0%, evidence=1.4%, causal=1.8%, panel=2.9%
+  - causal_graph：method=mechanism_chain_factor_graph_monte_carlo, samples=12000, nodes=5, edges=5, chains=3, weak_edges=4, double_counting=enabled, causal_interval=1.5%-2.1%
+  - top chain sensitivity：
+    - 联盟激活与国内政治驱动的升级链: do_true=2.2%, do_false=1.7%, swing=0.005
+    - 经济约束与军事学说克制链: do_true=1.6%, do_false=2.0%, swing=0.004
+    - 核威慑的复杂稳定效应: do_true=1.8%, do_false=1.7%, swing=0.000
+  - top causal sensitivity：
+    - 联盟自动激活与误判升级: do_true=2.2%, do_false=1.7%, swing=0.005
+    - 远程精确打击常态化: do_true=1.6%, do_false=2.0%, swing=0.004
+    - 核威慑的稳定性: do_true=1.8%, do_false=1.7%, swing=0.000
+- **国际秩序与外交机制的彻底失效**：10.5% 区间 2.4% - 36.1%
+  - contract：在2026年6月5日至2029年12月31日期间，联合国安理会是否因常任理事国否决而完全停摆（无法通过任何实质性决议）超过6个月，或主要大国之间是否发生相互断绝外交关系并关闭大使馆的事件？
+  - base=8.0%, evidence=6.9%, causal=5.6%, panel=10.4%
+  - causal_graph：method=mechanism_chain_factor_graph_monte_carlo, samples=12000, nodes=4, edges=6, chains=2, weak_edges=4, double_counting=enabled, causal_interval=4.8%-10.6%
+  - top chain sensitivity：
+    - 大国危机管控与外交韧性机制: do_true=4.9%, do_false=10.9%, swing=0.060
+    - 系统性秩序崩溃与直接冲突机制: do_true=6.2%, do_false=5.4%, swing=0.008
+  - top causal sensitivity：
+    - 主要大国间外交沟通渠道的韧性: do_true=4.9%, do_false=10.9%, swing=0.060
+    - 全球性军事冲突的直接爆发: do_true=6.2%, do_false=5.5%, swing=0.007
+    - 国内政治极端化对外交政策的冲击: do_true=5.8%, do_false=5.5%, swing=0.003
+
+## 聚合方法
+- 使用 weighted logit portfolio，不是简单平均概率。
+- 权重由 semantic_coverage_weight、measurability、user_intent_preservation_score、proxy_risk 共同决定。
+- 子预测 logit 分歧：0.501
+- portfolio logit sigma：1.125
+
+## 结论
+对原始云状问题，当前综合概率是 **3.9%**。
+
+
+**预测类型**：multi_contract_portfolio
+**原始问题**：在中国ai会促进共产主义的实现吗？
+**综合概率**：43.3%
+**粗略区间**：14.9% - 77.0%
+**问题类型**：cloud_judgment
+**语义坍缩风险**：high
+**推荐模式**：multi_contract_portfolio
+
+## 原始语义
+用户希望评估在中国特定政治体制下，人工智能技术的发展与应用是否会对实现共产主义这一终极社会形态产生正向的推动作用。
+
+语义坍缩说明：原始问题涉及‘共产主义实现’这一长期历史哲学命题，而候选合约试图用2026-2029年的短期经济指标（TFP、基尼系数、工时）来结算。这存在严重的本体论错位：将‘社会形态质变’偷换为‘治理优化’或‘效率提升’。特别是‘全要素生产率’和‘算法透明度’等指标，既不能定义共产主义（高效资本主义同样具备），甚至可能与共产主义的去中心化、国家消亡目标背道而驰（方向冲突）。此外，‘促进’被简化为线性因果，忽略了技术异化和权力集中的反向路径。
+
+如果强行单指标化，会丢失这些维度：
+- 政治权力结构的去中心化与社会自治能力
+- 劳动性质的质变（从谋生手段到生活第一需要）
+- 意识形态与价值观的演变（集体主义 vs 原子化）
+- 国家机器的演变轨迹（强化 vs 消亡）
+
+## 维度展开
+- **生产力极大丰富与物质基础夯实** | weight=0.21 | measurability=0.70 | 对应共产主义核心定义中的‘生产力高度发达’和‘物质财富涌流’。评估AI是否显著提升了全要素生产率，降低了社会必要劳动时间，从而为按需分配提供物质前提。
+- **分配机制的公平性与精准度** | weight=0.21 | measurability=0.60 | 对应共产主义中‘各尽所能，按需分配’的过渡阶段特征。评估AI是否优化了资源配置效率，减少了因信息不对称导致的分配不公，以及是否有助于缩小贫富差距。
+- **人的自由全面发展与劳动异化消除** | weight=0.17 | measurability=0.40 | 对应马克思关于共产主义中‘劳动成为生活第一需要’及‘人的自由个性发展’的愿景。评估AI是否将人类从异化劳动中解放出来，使人有更多时间从事创造性、社会性活动。
+- **社会治理的透明、高效与去官僚化** | weight=0.12 | measurability=0.65 | 对应共产主义高级阶段‘国家消亡’前的过渡期特征，即社会管理从政治统治转向对物的管理和对生产过程的指导。评估AI是否提升了公共治理的理性化、透明度和响应速度。
+- **社会关系和谐与共同体意识构建** | weight=0.12 | measurability=0.30 | 对应共产主义中‘自由人联合体’的社会基础。评估AI是促进了人与人之间的连接、信任与合作，还是加剧了信息茧房、社会撕裂和对立。
+- **政治权力结构的去中心化与社会自治** | weight=0.08 | measurability=0.30 | 对应共产主义‘自由人联合体’的核心政治特征，即社会自我管理取代国家强制统治。评估AI是否赋能了底层社会的自治能力，而非仅用于自上而下的控制。
+- **意识形态中的集体主义与利他倾向** | weight=0.08 | measurability=0.40 | 对应共产主义的精神境界，即集体主义和利他主义价值观的普及。评估AI内容生态是否促进了共同体意识，而非加剧原子化和消费主义。
+
+## Contract Portfolio 结果
+- **分配机制的公平性与精准度** | P=63.8% | weight=0.588 | proxy=基本公共服务（教育、医疗、住房）的AI赋能均等化指数 | proxy_risk=medium
+  - 预测题：到2029年6月4日，中国基本公共服务（教育、医疗、住房）的AI赋能均等化指数是否较2026年有显著提升（定义为城乡及区域间差距缩小超过10%）？
+- **人的自由全面发展与劳动异化消除** | P=16.1% | weight=0.239 | proxy=劳动者自主性指数（通过调查测量员工对工作流程的控制权、创造性参与度） | proxy_risk=medium
+  - 预测题：到2029年6月4日，中国城镇职工对工作流程的自主控制权及创造性参与度是否较2026年有显著提升（定义为劳动者满意度调查中‘自主性’维度评分提升超过15%）？
+- **意识形态中的集体主义与利他倾向** | P=39.0% | weight=0.120 | proxy=主流AI内容平台上‘利他’、‘协作’、‘公共福祉’主题内容的占比及互动率 | proxy_risk=medium
+  - 预测题：到2029年6月4日，中国主流AI内容平台（如抖音、微信、B站）上，以‘利他’、‘协作’、‘公共福祉’为主题的内容占比及互动率是否较2026年有显著提升（定义为占比提升超过5个百分点且正向情感比例高于基准年）？
+- **政治权力结构的去中心化与社会自治** | P=5.5% | weight=0.054 | proxy=基层社区或行业组织中AI辅助集体决策机制的普及率和实际决策权重 | proxy_risk=high
+  - 预测题：到2029年6月4日，中国基层社区或行业组织中，由AI辅助的集体决策机制（如DAO、数字议会）的普及率和实际决策权重是否显著高于2026年（定义为至少有10%的基层社区或大型国企部门引入并拥有实质性决策权）？
+
+## 子预测摘要
+- **分配机制的公平性与精准度**：63.8% 区间 28.1% - 88.8%
+  - contract：到2029年6月4日，中国基本公共服务（教育、医疗、住房）的AI赋能均等化指数是否较2026年有显著提升（定义为城乡及区域间差距缩小超过10%）？
+  - base=65.0%, evidence=67.5%, causal=65.8%, panel=64.9%
+  - causal_graph：method=mechanism_chain_factor_graph_monte_carlo, samples=12000, nodes=5, edges=7, chains=2, weak_edges=4, double_counting=enabled, causal_interval=64.7%-66.2%
+  - top chain sensitivity：
+    - 政策驱动与财政投入传导链: do_true=66.0%, do_false=64.5%, swing=0.016
+    - 技术成熟度与基层采纳阻力链: do_true=66.0%, do_false=65.0%, swing=0.010
+  - top causal sensitivity：
+    - 政策执行力与财政投入持续性: do_true=66.0%, do_false=64.4%, swing=0.016
+    - AI技术在医疗/教育领域的成熟度与成本: do_true=66.0%, do_false=65.0%, swing=0.010
+    - 算法偏见与资源错配风险: do_true=65.8%, do_false=65.8%, swing=0.000
+- **人的自由全面发展与劳动异化消除**：16.1% 区间 3.5% - 50.4%
+  - contract：到2029年6月4日，中国城镇职工对工作流程的自主控制权及创造性参与度是否较2026年有显著提升（定义为劳动者满意度调查中‘自主性’维度评分提升超过15%）？
+  - base=15.0%, evidence=7.8%, causal=14.1%, panel=14.6%
+  - causal_graph：method=mechanism_chain_factor_graph_monte_carlo, samples=12000, nodes=5, edges=5, chains=3, weak_edges=4, double_counting=enabled, causal_interval=13.1%-16.7%
+  - top chain sensitivity：
+    - AI算法管理与监控强化对自主性的压制: do_true=13.4%, do_false=16.6%, swing=0.033
+    - 政策导向与体面劳动落实对自主性的潜在提升: do_true=14.3%, do_false=13.9%, swing=0.005
+    - AI辅助赋能与创造性工作转化: do_true=14.3%, do_false=13.9%, swing=0.004
+  - top causal sensitivity：
+    - AI作为监控工具而非辅助工具的渗透率: do_true=13.4%, do_false=16.6%, swing=0.033
+    - AI辅助工具对创造性工作的实际赋能效果: do_true=14.3%, do_false=13.9%, swing=0.005
+    - 政策导向对‘体面劳动’与‘共同富裕’的落实力度: do_true=14.3%, do_false=13.9%, swing=0.004
+- **政治权力结构的去中心化与社会自治**：5.5% 区间 1.0% - 25.7%
+  - contract：到2029年6月4日，中国基层社区或行业组织中，由AI辅助的集体决策机制（如DAO、数字议会）的普及率和实际决策权重是否显著高于2026年（定义为至少有10%的基层社区或大型国企部门引入并拥有实质性决策权）？
+  - base=5.0%, evidence=1.2%, causal=2.9%, panel=5.4%
+  - causal_graph：method=mechanism_chain_factor_graph_monte_carlo, samples=12000, nodes=5, edges=6, chains=5, weak_edges=4, double_counting=enabled, causal_interval=1.4%-6.6%
+  - top chain sensitivity：
+    - 政治体制与权力集中度的结构性约束: do_true=2.3%, do_false=6.4%, swing=0.040
+    - 技术成熟度与责任归属的法律空白: do_true=2.3%, do_false=5.9%, swing=0.037
+    - 政策导向对‘技术赋能自治’的支持力度: do_true=3.9%, do_false=2.7%, swing=0.012
+  - top causal sensitivity：
+    - 政治体制与权力集中度的结构性约束: do_true=2.3%, do_false=6.4%, swing=0.041
+    - 技术成熟度与责任归属的法律空白: do_true=2.3%, do_false=5.9%, swing=0.035
+    - 政策导向对‘技术赋能自治’的支持力度: do_true=3.8%, do_false=2.7%, swing=0.011
+- **意识形态中的集体主义与利他倾向**：39.0% 区间 9.3% - 80.0%
+  - contract：到2029年6月4日，中国主流AI内容平台（如抖音、微信、B站）上，以‘利他’、‘协作’、‘公共福祉’为主题的内容占比及互动率是否较2026年有显著提升（定义为占比提升超过5个百分点且正向情感比例高于基准年）？
+  - base=35.0%, evidence=36.2%, causal=35.5%, panel=43.6%
+  - causal_graph：method=mechanism_chain_factor_graph_monte_carlo, samples=12000, nodes=5, edges=6, chains=3, weak_edges=4, double_counting=enabled, causal_interval=32.9%-37.1%
+  - top chain sensitivity：
+    - 政策监管与算法合规驱动链: do_true=36.0%, do_false=33.6%, swing=0.025
+    - AI商业化与娱乐化趋势链: do_true=35.0%, do_false=36.3%, swing=0.013
+    - 社会情绪与集体主义共鸣链: do_true=35.7%, do_false=35.3%, swing=0.004
+  - top causal sensitivity：
+    - 政策监管与算法合规压力: do_true=36.0%, do_false=33.6%, swing=0.025
+    - AI生成内容的商业化与娱乐化倾向: do_true=35.0%, do_false=36.3%, swing=0.013
+    - 社会情绪与集体主义共鸣: do_true=35.7%, do_false=35.3%, swing=0.004
+
+## 聚合方法
+- 使用 weighted logit portfolio，不是简单平均概率。
+- 权重由 semantic_coverage_weight、measurability、user_intent_preservation_score、proxy_risk 共同决定。
+- 子预测 logit 分歧：1.277
+- portfolio logit sigma：1.475
+
+## 结论
+对原始云状问题，当前综合概率是 **43.3%**。
+
+
 =================================================
 版本：LLM 结构化先验 + bayesian_causal_graph_logistic_cpd_monte_carlo
 35b-a3
