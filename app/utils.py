@@ -79,48 +79,444 @@ def current_date_context_text() -> str:
 """.strip()
 
 
+import ast
+import json
+import re
+from typing import Any, Dict, Iterable, List, Optional, Tuple
+
+
 def strip_think_blocks(text: str) -> str:
-    return re.sub(
-        r"<think>.*?</think>",
+    """
+    去掉 Qwen / DeepSeek 等模型常见的 <think>...</think>。
+    对未闭合 think 标签，只移除标签本身，不粗暴删除后文。
+    """
+    if text is None:
+        return ""
+
+    text = str(text)
+
+    text = re.sub(
+        r"<think\b[^>]*>.*?</think>",
         "",
         text,
         flags=re.DOTALL | re.IGNORECASE,
-    ).strip()
+    )
+
+    # 处理残留标签
+    text = re.sub(r"</?think\b[^>]*>", "", text, flags=re.IGNORECASE)
+
+    return text.strip()
 
 
-def extract_json_object(text: str) -> Dict[str, Any]:
-    text = strip_think_blocks(text).strip()
+def _strip_markdown_fence(text: str) -> str:
+    text = text.strip()
 
     fence = re.search(
-        r"```(?:json)?\s*(.*?)\s*```",
+        r"```(?:json|JSON)?\s*(.*?)\s*```",
         text,
         flags=re.DOTALL | re.IGNORECASE,
     )
     if fence:
-        text = fence.group(1).strip()
+        return fence.group(1).strip()
 
+    return text
+
+
+def _try_json_loads(s: str) -> Any:
+    return json.loads(s)
+
+
+def _try_ast_literal_eval(s: str) -> Any:
+    """
+    兼容 Python dict 风格：
+    {'a': 1, 'b': True, 'c': None}
+    """
+    obj = ast.literal_eval(s)
+    return obj
+
+
+def _to_dict(obj: Any) -> Dict[str, Any]:
+    if isinstance(obj, dict):
+        obj.setdefault("__json_parse_ok__", True)
+        return obj
+    return {
+        "value": obj,
+        "__json_parse_ok__": True,
+    }
+
+
+def _remove_json_comments(s: str) -> str:
+    """
+    移除 // 和 /* */ 注释。
+    注意：这是宽松修复，不适合保留字符串中的 // URL。
+    所以只在严格解析失败后使用。
+    """
+    s = re.sub(r"/\*.*?\*/", "", s, flags=re.DOTALL)
+    s = re.sub(r"(?m)^\s*//.*$", "", s)
+    return s
+
+
+def _normalize_quotes(s: str) -> str:
+    """
+    标准化常见智能引号。
+    """
+    return (
+        s.replace("\ufeff", "")
+        .replace("“", '"')
+        .replace("”", '"')
+        .replace("＂", '"')
+        .replace("‘", "'")
+        .replace("’", "'")
+    )
+
+
+def _replace_python_literals(s: str) -> str:
+    """
+    Python literal → JSON literal.
+    """
+    s = re.sub(r"\bNone\b", "null", s)
+    s = re.sub(r"\bTrue\b", "true", s)
+    s = re.sub(r"\bFalse\b", "false", s)
+    return s
+
+
+def _remove_trailing_commas(s: str) -> str:
+    """
+    删除 JSON 尾逗号：
+    {"a": 1,}
+    [1,2,]
+    """
+    return re.sub(r",\s*([}\]])", r"\1", s)
+
+
+def _quote_unquoted_ascii_keys(s: str) -> str:
+    """
+    宽松支持：
+    {a: 1, foo_bar: 2}
+    只处理 ASCII key，避免误伤中文正文。
+    """
+    return re.sub(
+        r'([{\[,]\s*)([A-Za-z_][A-Za-z0-9_\-]*)\s*:',
+        r'\1"\2":',
+        s,
+    )
+
+
+def _single_quoted_strings_to_double(s: str) -> str:
+    """
+    将简单单引号字符串转成 JSON 双引号字符串。
+    已经优先 ast.literal_eval，这里只是兜底修复。
+    """
+    def repl(m: re.Match) -> str:
+        content = m.group(1)
+        try:
+            # 让 json.dumps 负责转义内部字符
+            return json.dumps(content, ensure_ascii=False)
+        except Exception:
+            return '"' + content.replace('"', '\\"') + '"'
+
+    return re.sub(
+        r"'([^'\\]*(?:\\.[^'\\]*)*)'",
+        repl,
+        s,
+    )
+
+
+def _insert_missing_commas(s: str) -> str:
+    """
+    修复模型常见错误：
+    {
+      "a": "xxx"
+      "b": "yyy"
+    }
+
+    或：
+    {
+      "a": 1
+      "b": 2
+    }
+
+    或同一行：
+    {"a": "x" "b": "y"}
+    """
+    # value 后换行接下一个 "key":
+    s = re.sub(
+        r'((?:"(?:[^"\\]|\\.)*"|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|true|false|null|[}\]]))\s*\n\s*("([^"\\]|\\.)+"\s*:)',
+        r"\1,\n\2",
+        s,
+    )
+
+    # value 后同一行接下一个 "key":
+    s = re.sub(
+        r'((?:"(?:[^"\\]|\\.)*"|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|true|false|null|[}\]]))\s+(?="([^"\\]|\\.)+"\s*:)',
+        r"\1, ",
+        s,
+    )
+
+    # } 或 ] 后接 "key":
+    s = re.sub(
+        r"([}\]])\s*(\"[^\"\\]*(?:\\.[^\"\\]*)*\"\s*:)",
+        r"\1, \2",
+        s,
+    )
+
+    # 连续逗号
+    s = re.sub(r",\s*,+", ",", s)
+
+    return s
+
+
+def _repair_json_like_text(s: str) -> str:
+    """
+    对“接近 JSON”的模型输出做有限修复。
+    """
+    s = s.strip()
+    s = _strip_markdown_fence(s)
+    s = _normalize_quotes(s)
+    s = _remove_json_comments(s)
+    s = _replace_python_literals(s)
+    s = _remove_trailing_commas(s)
+    s = _quote_unquoted_ascii_keys(s)
+
+    # ast 已经处理过单引号，这里作为兜底再转一次
+    s = _single_quoted_strings_to_double(s)
+
+    # 缺逗号是你这次遇到的主要问题
+    s = _insert_missing_commas(s)
+
+    # 修完缺逗号后再删一次尾逗号
+    s = _remove_trailing_commas(s)
+
+    return s.strip()
+
+
+def _iter_fenced_blocks(text: str) -> Iterable[str]:
+    for m in re.finditer(
+        r"```(?:json|JSON)?\s*(.*?)\s*```",
+        text,
+        flags=re.DOTALL | re.IGNORECASE,
+    ):
+        yield m.group(1).strip()
+
+
+def _iter_balanced_json_candidates(text: str) -> Iterable[str]:
+    """
+    从混杂文本中扫描平衡的 {...} 或 [...] 片段。
+    比 first { + last } 更安全。
+    """
+    pairs = {
+        "{": "}",
+        "[": "]",
+    }
+
+    for start, ch in enumerate(text):
+        if ch not in pairs:
+            continue
+
+        expected_stack = [pairs[ch]]
+        in_string = False
+        string_quote = ""
+        escaped = False
+
+        for i in range(start + 1, len(text)):
+            c = text[i]
+
+            if in_string:
+                if escaped:
+                    escaped = False
+                elif c == "\\":
+                    escaped = True
+                elif c == string_quote:
+                    in_string = False
+                continue
+
+            if c in ('"', "'"):
+                in_string = True
+                string_quote = c
+                continue
+
+            if c in pairs:
+                expected_stack.append(pairs[c])
+                continue
+
+            if expected_stack and c == expected_stack[-1]:
+                expected_stack.pop()
+                if not expected_stack:
+                    yield text[start:i + 1].strip()
+                    break
+
+
+def _loose_key_value_parse(text: str) -> Optional[Dict[str, Any]]:
+    """
+    最后兜底：从类似
+    key: value
+    "key": value
+    的行里抽取扁平 dict。
+
+    这个不能还原嵌套结构，只用于保证流程不中断。
+    """
+    out: Dict[str, Any] = {}
+
+    for line in text.splitlines():
+        line = line.strip().rstrip(",")
+        if not line or line.startswith(("#", "-", "*", "//")):
+            continue
+
+        m = re.match(r"""^["']?([^"'{}\[\]:]{1,80})["']?\s*:\s*(.+?)$""", line)
+        if not m:
+            continue
+
+        key = m.group(1).strip()
+        val_raw = m.group(2).strip().rstrip(",")
+
+        if not key:
+            continue
+
+        # 尝试解析 value
+        val: Any
+        try:
+            val = json.loads(_repair_json_like_text(val_raw))
+        except Exception:
+            try:
+                val = ast.literal_eval(val_raw)
+            except Exception:
+                val = val_raw.strip().strip('"').strip("'")
+
+        out[key] = val
+
+    if out:
+        out["__json_parse_ok__"] = False
+        out["__parse_mode__"] = "loose_key_value_parse"
+        return out
+
+    return None
+
+
+def _parse_candidate(candidate: str) -> Optional[Dict[str, Any]]:
+    """
+    对单个候选 JSON 字符串进行多策略解析。
+    """
+    candidate = candidate.strip()
+    if not candidate:
+        return None
+
+    # 1. 严格 JSON
     try:
-        obj = json.loads(text)
-        if isinstance(obj, dict):
-            return obj
-        return {"value": obj}
+        return _to_dict(_try_json_loads(candidate))
     except Exception:
         pass
 
-    start = text.find("{")
-    end = text.rfind("}")
+    # 2. Python dict/list 风格
+    try:
+        return _to_dict(_try_ast_literal_eval(candidate))
+    except Exception:
+        pass
+
+    # 3. 修复后 JSON
+    repaired = _repair_json_like_text(candidate)
+    try:
+        obj = _try_json_loads(repaired)
+        d = _to_dict(obj)
+        d.setdefault("__json_repaired__", True)
+        return d
+    except Exception:
+        pass
+
+    # 4. 修复后 Python literal
+    try:
+        obj = _try_ast_literal_eval(repaired)
+        d = _to_dict(obj)
+        d.setdefault("__json_repaired__", True)
+        return d
+    except Exception:
+        pass
+
+    return None
+
+
+def extract_json_object(text: str) -> Dict[str, Any]:
+    """
+    尽最大努力从模型输出中提取 JSON。
+
+    保证：
+    - 能解析就返回解析结果；
+    - 解析不了也不 raise，返回 fallback dict；
+    - fallback dict 带 raw_text，避免批量任务中断。
+
+    注意：
+    - fallback 不保证有业务字段；
+    - 下游最好对 __json_parse_ok__ == False 的情况做 repair_status 或重试。
+    """
+    raw_text = "" if text is None else str(text)
+    text = strip_think_blocks(raw_text).strip()
+
+    if not text:
+        return {
+            "__json_parse_ok__": False,
+            "__parse_mode__": "empty_output",
+            "__raw_text__": raw_text,
+        }
+
+    candidates: List[Tuple[str, str]] = []
+
+    # 1. markdown fenced blocks 优先
+    for block in _iter_fenced_blocks(text):
+        candidates.append(("fenced_block", block))
+
+    # 2. 去掉 fence 后的全文
+    stripped = _strip_markdown_fence(text)
+    candidates.append(("full_text", stripped))
+
+    # 3. 平衡 JSON 片段
+    for cand in _iter_balanced_json_candidates(stripped):
+        candidates.append(("balanced_candidate", cand))
+
+    # 4. 旧逻辑兜底：first { 到 last }
+    start = stripped.find("{")
+    end = stripped.rfind("}")
     if start >= 0 and end > start:
-        candidate = text[start:end + 1]
+        candidates.append(("first_last_brace", stripped[start:end + 1]))
+
+    # 5. array 兜底：first [ 到 last ]
+    start = stripped.find("[")
+    end = stripped.rfind("]")
+    if start >= 0 and end > start:
+        candidates.append(("first_last_bracket", stripped[start:end + 1]))
+
+    # 去重，保持顺序
+    seen = set()
+    uniq_candidates: List[Tuple[str, str]] = []
+    for mode, cand in candidates:
+        key = cand.strip()
+        if key and key not in seen:
+            seen.add(key)
+            uniq_candidates.append((mode, key))
+
+    last_error = None
+
+    for mode, candidate in uniq_candidates:
         try:
-            obj = json.loads(candidate)
-            if isinstance(obj, dict):
+            obj = _parse_candidate(candidate)
+            if obj is not None:
+                obj.setdefault("__parse_mode__", mode)
                 return obj
-            return {"value": obj}
         except Exception as e:
-            raise ValueError(f"JSON 解析失败：{e}\n\n原始输出前2000字符：\n{text[:2000]}")
+            last_error = e
 
-    raise ValueError(f"没有找到 JSON 对象。\n\n原始输出前2000字符：\n{text[:2000]}")
+    # 6. loose key-value parse
+    loose = _loose_key_value_parse(stripped)
+    if loose is not None:
+        loose["__raw_text__"] = raw_text
+        return loose
 
+    # 7. 最后兜底：不再抛异常，避免批量流程崩掉
+    return {
+        "__json_parse_ok__": False,
+        "__parse_mode__": "raw_fallback",
+        "__parse_error__": str(last_error) if last_error else "unable_to_parse_json",
+        "__raw_text__": raw_text,
+        "__raw_text_head__": raw_text[:2000],
+    }
 
 def llm_json(
     prompt: str,

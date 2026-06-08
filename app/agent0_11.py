@@ -12,7 +12,31 @@ from typing import Any, Dict, List, Tuple, Optional
 from openai import OpenAI
 
 from config import CONFIG
-from utils import current_date_context_text
+from utils import (
+    now_iso,
+    short_id,
+    clamp,
+    safe_float,
+    logit,
+    sigmoid,
+    probability_to_percent,
+    json_dumps,
+    current_date_context_text,
+    strip_think_blocks,
+    extract_json_object,
+    llm_json,
+    normalize_weight_list,
+    has_cloud_term,
+    risk_factor,
+    get_record_probability,
+    empty_store,
+    load_store,
+    save_store,
+    save_forecast_record,
+    find_forecast,
+    update_forecast_record,
+    local_domain_brier_stats,
+)
 # =============================================================================
 # 5. Question Expansion / Contract 生成
 # =============================================================================
@@ -123,154 +147,6 @@ def run_question_decomposition(question: str, config: Dict[str, Any] = CONFIG) -
             top_p=top_p,
         )
         return response.choices[0].message.content or ""
-
-
-    # =============================================================================
-    # 2. JSON 工具
-    # =============================================================================
-
-    def now_iso() -> str:
-        return datetime.now().replace(microsecond=0).isoformat()
-
-
-    def short_id() -> str:
-        return uuid.uuid4().hex[:12]
-
-
-    def clamp(x: Any, lo: float, hi: float, default: float = 0.0) -> float:
-        try:
-            x = float(x)
-        except Exception:
-            x = default
-        return max(lo, min(hi, x))
-
-
-    def safe_float(x: Any, default: float = 0.0) -> float:
-        try:
-            if x is None:
-                return default
-            return float(x)
-        except Exception:
-            return default
-
-
-    def json_dumps(obj: Any) -> str:
-        return json.dumps(obj, ensure_ascii=False, indent=2)
-
-
-    def strip_think_blocks(text: str) -> str:
-        return re.sub(
-            r"<think>.*?</think>",
-            "",
-            text,
-            flags=re.DOTALL | re.IGNORECASE,
-        ).strip()
-
-
-    def extract_json_object(text: str) -> Dict[str, Any]:
-        text = strip_think_blocks(text).strip()
-
-        fence = re.search(
-            r"```(?:json)?\s*(.*?)\s*```",
-            text,
-            flags=re.DOTALL | re.IGNORECASE,
-        )
-        if fence:
-            text = fence.group(1).strip()
-
-        try:
-            obj = json.loads(text)
-            if isinstance(obj, dict):
-                return obj
-            return {"value": obj}
-        except Exception:
-            pass
-
-        start = text.find("{")
-        end = text.rfind("}")
-        if start >= 0 and end > start:
-            candidate = text[start:end + 1]
-            try:
-                obj = json.loads(candidate)
-                if isinstance(obj, dict):
-                    return obj
-                return {"value": obj}
-            except Exception as e:
-                raise ValueError(f"JSON 解析失败：{e}\n\n原始输出前2000字符：\n{text[:2000]}")
-
-        raise ValueError(f"没有找到 JSON 对象。\n\n原始输出前2000字符：\n{text[:2000]}")
-
-
-    def llm_json(
-        prompt: str,
-        config: Dict[str, Any] = CONFIG,
-        temperature: float = 0.20,
-        max_tokens: Optional[int] = None,
-    ) -> Dict[str, Any]:
-        strict_prompt = current_date_context_text() + "\n\n" + prompt.strip() + """
-
-    硬性要求：
-    1. 只输出一个合法 JSON 对象。
-    2. 不要输出 Markdown。
-    3. 不要输出解释。
-    4. 不要输出代码块。
-    5. 所有字符串必须使用双引号。
-    """
-        raw = llm_qwen(
-            strict_prompt,
-            config=config,
-            temperature=temperature,
-            max_tokens=max_tokens,
-        )
-
-        try:
-            return extract_json_object(raw)
-        except Exception:
-            repair_prompt = f"""
-    下面是一段模型输出。请把它修复成一个合法 JSON 对象。
-
-    要求：
-    1. 只输出 JSON。
-    2. 不要解释。
-    3. 不要 Markdown。
-    4. 不要代码块。
-
-    原始输出：
-    {raw}
-    """
-            repaired = llm_qwen(
-                repair_prompt,
-                config=config,
-                temperature=config["temperature"]["json_repair"],
-                max_tokens=max_tokens,
-            )
-            return extract_json_object(repaired)
-
-
-    def has_cloud_term(question: str, config: Dict[str, Any] = CONFIG) -> bool:
-        q = str(question)
-        return any(term in q for term in config["cloud_question"]["cloud_terms"])
-
-
-    def normalize_weight_list(items: List[Dict[str, Any]], key: str) -> List[Dict[str, Any]]:
-        vals = []
-        for item in items:
-            v = safe_float(item.get(key), 0.0)
-            if v < 0:
-                v = 0.0
-            vals.append(v)
-
-        s = sum(vals)
-        if s <= 0:
-            n = max(1, len(items))
-            for item in items:
-                item[key] = 1.0 / n
-            return items
-
-        for item, v in zip(items, vals):
-            item[key] = v / s
-        return items
-
 
     # =============================================================================
     # 3. 本地 JSON 存储
