@@ -1137,7 +1137,7 @@ def compute_probability_bundle(
     }
 
 
-
+# 流程测试
 def _assert_probability(x: Any, name: str) -> None:
     assert isinstance(x, (int, float)), f"{name} should be numeric, got {type(x)}"
     assert math.isfinite(float(x)), f"{name} should be finite, got {x}"
