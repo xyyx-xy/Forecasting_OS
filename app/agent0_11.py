@@ -1260,7 +1260,6 @@ def run_question_decomposition(question: str, config: Dict[str, Any] = CONFIG) -
     6. 如果 semantic_collapse_risk 为 high，allowed_single_contract 必须是 false。
     7. 云状问题默认 recommended_mode 为 multi_contract_portfolio。
     8. 不要输出概率。
-    9. 如果收入合约仍使用“增速高于基准年增速”的形式，需要检查是否发生语义偷换。只有用户明确关心“增长速度”时才保留增速口径。
 
     输出 JSON schema：
     {json_dumps(FINAL_SCHEMA)}
