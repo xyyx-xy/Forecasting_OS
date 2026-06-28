@@ -32,7 +32,7 @@ CONFIG = {
     # -------------------------
     "llm": {
         "max_tokens": 100000,
-        "top_p": 0.95,
+        "top_p": 0.80,
         "system": "You are a rigorous superforecasting research assistant. Output exactly what the user asks for.",
     },
 
@@ -40,13 +40,13 @@ CONFIG = {
     # 不同阶段的 temperature
     # -------------------------
     "temperature": {
-        "question_expansion": 0.10,
-        "contract": 0.10,
-        "decomposition": 0.25,
-        "evidence": 0.20,
-        "panel": 0.55,
-        "portfolio_summary": 0.20,
-        "json_repair": 0.00,
+        "question_expansion": 0.7,
+        "contract": 0.7,
+        "decomposition": 0.7,
+        "evidence": 0.7,
+        "panel": 0.7,
+        "portfolio_summary": 0.7,
+        "json_repair": 0.7,
     },
 
     # -------------------------
